@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="600" height="800">
+    <!-- Shield background -->
+    <defs>
+        <clipPath id="shieldClip">
+            <path d="M60 60  H540  Q 560 60 560 80  L 540 480  C 540 480 540 660 300 660  C 300 660 80 660 60 480  L 40 80 Q40 60 60 60 Z"/>
+        </clipPath>
+
+        <clipPath id="shieldClip-right">
+            <path d="M300 60  H540  Q 560 60 560 80  L 540 480  C 540 480 540 660 300 660 Z"/>
+        </clipPath>
+
+        <clipPath id="shieldClip-left">
+            <path d="M60 60  H300 V 660  C 300 660 80 660 60 480  L 40 80 Q40 60 60 60 Z"/>
+        </clipPath>
+    </defs>
+
+    <!-- Left half (gold) and right half (white with red bendlets) -->
+    <g clip-path="url(#shieldClip)">
+        <!-- Left gold field -->
+        <path d="M40 60 H300 V740 H 40 Z" fill="#FFD84D" stroke="none"/>
+        <!-- Right white field (transparent since base is white) -->
+        <path d="M300 60 H560 V740 H300" fill="#ffffff" stroke="none"/>
+    </g>
+
+    <g clip-path="url(#shieldClip-right)">
+        <!-- Two red diagonal bendlets (stylized) -->
+        <g transform="translate(0,0)">
+            <!-- upper diagonal -->
+            <polygon points="300,80 580,300 580,450 300,230" fill="#D73A2C" opacity="1"/>
+        </g>
+
+        <g transform="translate(0,300)">
+            <!-- lower diagonal -->
+            <polygon points="300,80 580,300 580,450 300,230" fill="#D73A2C" opacity="1"/>
+        </g>
+    </g>
+
+    <!-- Eagle -->
+    <!-- I'm too lazy to actually create the eagle -->
+    <g clip-path="url(#shieldClip-left)" fill="#111">
+        <path d="M300,660 Q280,660 280,630 L280,600 Q280,630 250,630 Q250,600 265,580 L250,500 H300 Z" />
+    </g>
+
+    <!-- Outline -->
+    <g fill="none" stroke="#111" stroke-width="6" stroke-linejoin="round">
+        <path d="M60 60  H540  Q 560 60 560 80  L 540 480  C 540 480 540 660 300 660  C 300 660 80 660 60 480  L 40 80 Q40 60 60 60 Z"/>
+        <path d="M300 60 V660"/>
+    </g>
+</svg>
