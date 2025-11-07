@@ -1,10 +1,6 @@
 import * as React from "react";
 import {createContext, useContext, useState} from "react";
-
-export interface Workspace {
-    id?: number;
-    name: string;
-}
+import type {Workspace} from "./types.ts";
 
 type WorkspaceContextType = {
     workspace: Workspace,

@@ -1,7 +1,4 @@
-interface UserDto {
-    username: string;
-    roles: string[];
-}
+import type {UserDto} from "./types.ts";
 
 async function login(username: string, password: string): Promise<UserDto | null> {
     const response = await fetch('/auth/login', {

@@ -46,7 +46,7 @@
             <column name="depot_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="nodes" type="VARCHAR(255)"/>
+            <column name="notes" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet id="1762354052443-10" author="bethibande">
