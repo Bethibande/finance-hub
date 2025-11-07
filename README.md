@@ -3,6 +3,9 @@
 > [!CAUTION]
 > This project is still work-in-progress.
 > There's nothing to see here yet.
+> 
+> Please note that a lot of the code here is going to be a bit messy since the project
+> is still in very early development. I'll get around to refactoring some stuff later.
 
 This is my personal finance app used for tracking my income and expenses.
 
