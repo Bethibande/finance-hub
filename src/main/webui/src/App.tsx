@@ -1,26 +1,42 @@
-import {createBrowserRouter, RouterProvider} from "react-router";
+import {createBrowserRouter, type RouteObject, RouterProvider} from "react-router";
 import ErrorLayout from "./layouts/ErrorLayout.tsx";
 import Setup from "./views/setup/Setup.tsx";
 import AssetView from "./views/assets/AssetView.tsx";
 import MainLayout from "./views/MainLayout.tsx";
 import {ViewConfigProvider} from "./lib/view-config.tsx";
+import LoginView from "./views/LoginView.tsx";
+import DashboardView from "./views/DashboardView.tsx";
 
 function App() {
+    const primaryRoutes: RouteObject[] = [
+        {
+            path: "/",
+            Component: DashboardView
+        },
+        {
+            path: "/assets",
+            Component: AssetView,
+        }
+    ]
+
+    const secondaryRoutes: RouteObject[] = [
+        {
+            path: "/setup",
+            Component: Setup,
+        },
+        {
+            path: "/login",
+            Component: LoginView
+        }
+    ]
+
     const router = createBrowserRouter([{
         children: [
             {
-                children: [
-                    {
-                        path: "/assets",
-                        Component: AssetView
-                    }
-                ],
+                children: primaryRoutes,
                 Component: MainLayout
             },
-            {
-                path: "/setup",
-                Component: Setup,
-            }
+            ...secondaryRoutes,
         ],
         ErrorBoundary: ErrorLayout
     }])

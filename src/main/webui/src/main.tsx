@@ -33,11 +33,14 @@ i18next.init({
                 "next": "Next",
                 "create": "Create",
                 "delete": "Delete",
+                "deleteN": "Delete {{n, number}}",
                 "delete.confirmMessage": "Are you sure you want to delete this entry?",
                 "cancel": "Cancel",
                 "save": "Save",
                 "edit": "Edit",
-                "deleteN": "Delete {{n, number}}",
+                "login": "Login",
+                "login.error.credentials": "Invalid username or password",
+                "login.welcome": "Welcome {{user.name}}",
                 "username": "Username",
                 "password": "Password",
                 "password.repeat": "Repeat password",
@@ -52,7 +55,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <WorkspaceProvider>
             <App/>
-            <Toaster />
+            <Toaster/>
         </WorkspaceProvider>
     </StrictMode>,
 )

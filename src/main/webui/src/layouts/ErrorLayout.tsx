@@ -5,6 +5,7 @@ import {HouseFill} from "react-bootstrap-icons";
 export default function ErrorLayout() {
     const error: any = useRouteError()
 
+    // TODO: i18n
     return (
         <div className={"w-full h-full flex flex-col items-center justify-center"}>
             <h1>Error {error.status}</h1>

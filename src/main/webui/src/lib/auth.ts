@@ -1,6 +1,11 @@
 import type {UserDto} from "./types.ts";
 
-async function login(username: string, password: string): Promise<UserDto | null> {
+export interface LoginResult {
+    user?: UserDto;
+    error?: Response;
+}
+
+async function login(username: string, password: string): Promise<LoginResult> {
     const response = await fetch('/auth/login', {
         method: 'POST',
         headers: {
@@ -12,10 +17,11 @@ async function login(username: string, password: string): Promise<UserDto | null
     if (!response.ok) {
         // Handle HTTP error (e.g. 401)
         console.error('Login failed:', response.status);
-        return null;
+        return { user: undefined, error: response };
     }
 
-    return (await response.json()) as UserDto;
+    const user = (await response.json()) as UserDto;
+    return { user };
 }
 
 async function logout() {
