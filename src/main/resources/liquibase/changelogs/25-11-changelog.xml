@@ -60,7 +60,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="code" type="VARCHAR(8)">
+            <column name="code" type="VARCHAR(12)">
                 <constraints nullable="false"/>
             </column>
             <column name="symbol" type="VARCHAR(10)"/>
@@ -281,5 +281,19 @@
                                  constraintName="fk_user_roles_on_user"
                                  referencedColumnNames="id"
                                  referencedTableName="Users"/>
+    </changeSet>
+
+    <changeSet id="1762600004295-1" author="bethibande">
+        <addColumn tableName="Asset">
+            <column name="provider_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="1762600014117-1" author="bethibande">
+        <addForeignKeyConstraint baseColumnNames="provider_id"
+                                 baseTableName="Asset"
+                                 constraintName="FK_ASSET_ON_PROVIDER"
+                                 referencedColumnNames="id"
+                                 referencedTableName="Partner"/>
     </changeSet>
 </databaseChangeLog>

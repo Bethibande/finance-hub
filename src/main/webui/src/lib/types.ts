@@ -8,6 +8,7 @@ export interface Asset {
     name: string;
     code: string;
     workspace: Workspace;
+    provider?: Partner;
     symbol?: string;
     notes?: string;
 }

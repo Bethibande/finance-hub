@@ -1,7 +1,9 @@
 package de.bethibande.finance.model.jpa;
 
+import de.bethibande.finance.model.jpa.partner.Partner;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
@@ -15,7 +17,7 @@ public class Asset extends WorkspaceEntity {
     public String name;
 
     @NotBlank
-    @Size(min = 3, max = 8)
+    @Size(min = 3, max = 12)
     @Column(nullable = false)
     public String code;
 
@@ -26,5 +28,8 @@ public class Asset extends WorkspaceEntity {
     @Column
     @Length(max = 1024)
     public String notes;
+
+    @ManyToOne
+    public Partner provider;
 
 }
