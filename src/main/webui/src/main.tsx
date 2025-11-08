@@ -27,7 +27,7 @@ i18next.init({
                 "asset.code": "Code",
                 "asset.symbol": "Symbol",
                 "asset.notes": "Notes",
-                "asset.notes.placeholder": "The primary currency of the European union",
+                "asset.notes.placeholder": "Some notes...",
                 "menu.open": "Open menu",
                 "menu.actions": "Actions",
                 "next": "Next",
@@ -45,6 +45,8 @@ i18next.init({
                 "password": "Password",
                 "password.repeat": "Repeat password",
                 "workspace": "Workspace",
+                "workspaces": "Workspaces",
+                "workspace.create": "Create Workspace",
                 "error.delete.dependents": "Cannot delete entry because it is referenced by other entities"
             }
         }

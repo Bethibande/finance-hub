@@ -1,7 +1,7 @@
 "use client"
 
+import * as React from "react";
 import {type ReactNode, useState} from "react";
-import * as React from "react"
 import {
     Sidebar,
     SidebarContent,
@@ -15,6 +15,9 @@ import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "../ui/collaps
 import {Cash, ChevronDown, ClipboardData, Database} from "react-bootstrap-icons";
 import {NavLink} from "react-router";
 import {cn} from "../../lib/utils.ts";
+import WorkspaceSelect from "./workspace-select.tsx";
+import UserItem from "./user-item.tsx";
+import {Separator} from "../ui/separator.tsx";
 
 export interface NavItem {
     text: string;
@@ -125,6 +128,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="offcanvas" {...props}>
             <SidebarHeader>
+                <div className={"px-3 h-12 flex items-center gap-2"}>
+                    <WorkspaceSelect/>
+                </div>
+            </SidebarHeader>
+            <Separator className={"mt-[-1px]"}/>
+            <SidebarHeader>
                 {primaryItems}
             </SidebarHeader>
             <SidebarContent>
@@ -132,7 +141,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     {secondaryItems}
                 </SidebarMenu>
             </SidebarContent>
+            <Separator/>
             <SidebarFooter>
+                <UserItem/>
             </SidebarFooter>
         </Sidebar>
     )

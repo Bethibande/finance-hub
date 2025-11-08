@@ -81,8 +81,8 @@ export interface BookedAmount {
 }
 
 export interface UserDto {
-    name: String,
-    roles: String[]
+    name: string,
+    roles: string[]
 }
 
 export interface ErrorResponse {

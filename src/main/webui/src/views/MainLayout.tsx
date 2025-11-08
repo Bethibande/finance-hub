@@ -10,8 +10,8 @@ export default function MainLayout() {
         <SidebarProvider>
             <AppSidebar/>
             <main className={"w-full h-full"}>
-                <div className={"w-full p-3 bg-white border-b flex gap-2 items-center"}>
-                    <SidebarTrigger/>
+                <div className={"w-full p-3 bg-white border-b flex gap-2 items-center h-16"}>
+                    <SidebarTrigger className={"size-10"}/>
                     { viewConfig.toolbar }
                 </div>
                 <div className={"w-full h-full p-5 overflow-y-auto"}>
