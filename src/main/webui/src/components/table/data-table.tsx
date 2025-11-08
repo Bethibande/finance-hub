@@ -7,7 +7,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table"
 import {type Table as TTable} from "@tanstack/table-core"
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "./ui/table.tsx";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "./../ui/table.tsx";
 import {type RefObject, useEffect, useState} from "react";
 
 interface DataTableProps<TData, TValue> {
@@ -44,7 +44,7 @@ export function DataTable<TData, TValue>({
     }, [])
 
     return (
-        <div className="overflow-hidden rounded-md border">
+        <div className="overflow-hidden rounded-md border bg-white">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (

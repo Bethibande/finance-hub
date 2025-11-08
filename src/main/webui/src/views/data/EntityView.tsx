@@ -3,7 +3,6 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import i18next from "i18next";
 import {Button} from "../../components/ui/button.tsx";
-import {DataTable} from "../../components/data-table.tsx";
 import {showError, showHttpError} from "../../lib/errors.tsx";
 import {
     DropdownMenu,
@@ -14,6 +13,8 @@ import {
     DropdownMenuTrigger
 } from "../../components/ui/dropdown-menu.tsx";
 import {MoreHorizontal} from "lucide-react";
+import {DataTable} from "../../components/table/data-table.tsx";
+import {useViewConfig} from "../../lib/view-config.tsx";
 
 export interface EntityActions<TEntity> {
     load: () => Promise<Response>,
@@ -125,13 +126,17 @@ export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
         }
     }
 
+    const {setViewConfig} = useViewConfig()
+    useEffect(() => {
+        setViewConfig({
+            toolbar: (<h2>{i18next.t("views." + i18nKey + ".title")}</h2>)
+        })
+    }, []);
+
     return (
         <div className={"w-full h-full flex flex-col items-center gap-6"}>
             {editDialog(editDialogProps)}
 
-            <div className={"w-full p-3 border-b"}>
-                <h2>{i18next.t("views." + i18nKey + ".title")}</h2>
-            </div>
             <div className={"w-full lg:w-1/2 px-4"}>
                 <div className={"pb-2 flex items-center justify-between gap-2"}>
                     <Button onClick={() => {
