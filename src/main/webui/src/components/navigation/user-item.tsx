@@ -36,8 +36,6 @@ export default function UserItem() {
                 align="start"
                 side={isMobile ? "bottom" : "right"}
                 sideOffset={4}>
-
-                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => logout().then(() => navigate("/login"))}
                                   className="gap-2 p-2"
                                   variant={"destructive"}>
