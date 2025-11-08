@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import i18next from "i18next";
 import {WorkspaceProvider} from "./lib/workspace.tsx";
+import {Toaster} from "./components/ui/sonner.tsx";
 
 i18next.init({
     lng: 'en',
@@ -17,11 +18,31 @@ i18next.init({
                 "setup.done.title": "That's it",
                 "setup.done.description": "The setup is complete. You can now start using the application",
                 "setup.user.passwords.dontMatch": "Passwords don't match",
+                "views.asset.title": "Assets",
+                "asset.dialog.title.create": "Create Asset",
+                "asset.dialog.desc.create": "Create a new asset",
+                "asset.dialog.title.edit": "Edit Asset",
+                "asset.dialog.desc.edit": "Edit the asset '{{name}}'",
+                "asset.name": "Name",
+                "asset.code": "Code",
+                "asset.symbol": "Symbol",
+                "asset.notes": "Notes",
+                "asset.notes.placeholder": "The primary currency of the European union",
+                "menu.open": "Open menu",
+                "menu.actions": "Actions",
                 "next": "Next",
+                "create": "Create",
+                "delete": "Delete",
+                "delete.confirmMessage": "Are you sure you want to delete this entry?",
+                "cancel": "Cancel",
+                "save": "Save",
+                "edit": "Edit",
+                "deleteN": "Delete {{n, number}}",
                 "username": "Username",
                 "password": "Password",
                 "password.repeat": "Repeat password",
                 "workspace": "Workspace",
+                "error.delete.dependents": "Cannot delete entry because it is referenced by other entities"
             }
         }
     }
@@ -31,6 +52,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <WorkspaceProvider>
             <App/>
+            <Toaster />
         </WorkspaceProvider>
     </StrictMode>,
 )

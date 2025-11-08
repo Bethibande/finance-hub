@@ -27,36 +27,35 @@ export class ApiClientBuilder {
     }
 }
 
+export async function deleteClient(input: RequestInfo | URL,
+                                   init?: RequestInit): Promise<Response> {
+    return fetchClient(input, {
+        method: "DELETE",
+        ...init,
+    })
+}
+
 export async function post(input: RequestInfo | URL,
                            body: any,
                            init?: RequestInit): Promise<Response> {
-    return fetch(input, {
+    return fetchClient(input, {
         body: JSON.stringify(body),
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            ...init?.headers
-        },
-        ...init
-    }).then(response => {
-        if (response.status === 401) {
-            const navigate = useNavigate();
-            navigate("/login");
+            ...init?.headers,
         }
-
-        return response;
-    });
+    })
 }
 
 export async function fetchClient(input: RequestInfo | URL,
                                   init?: RequestInit): Promise<Response> {
-    return fetch(input, init).then(response => {
-        if (response.status === 401) {
-            const navigate = useNavigate();
-            navigate("/login");
+    return fetch(input, {
+        ...init,
+        headers: {
+            "Accept": "application/json",
+            ...init?.headers,
         }
-
-        return response;
     });
 }
 

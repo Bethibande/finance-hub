@@ -7,6 +7,7 @@ import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {post} from "../../lib/api.ts";
 import {useState} from "react";
+import {useWorkspace} from "../../lib/workspace.tsx";
 
 export default function CreateWorkspaceCard(props: {next: () => void}) {
     const {next} = props;
@@ -23,12 +24,17 @@ export default function CreateWorkspaceCard(props: {next: () => void}) {
         }
     })
 
+    const {setWorkspace} = useWorkspace()
+
     function onSubmit(data: z.infer<typeof formSchema>) {
         post("/api/v1/workspace", {
             name: data.name
         }).then(res => {
             if (res.ok) {
-                next()
+                res.json().then(workspace => {
+                    setWorkspace(workspace)
+                    next()
+                })
             } else {
                 setError(res.statusText)
             }

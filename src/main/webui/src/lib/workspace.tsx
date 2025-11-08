@@ -11,13 +11,13 @@ export const WorkspaceContext = createContext<WorkspaceContextType | undefined>(
 
 export const WorkspaceProvider = ({children}: { children: React.ReactNode }) => {
     const [workspace, setWorkspace] = useState<Workspace>(() => {
-        const stored = window.sessionStorage.getItem('workspace');
+        const stored = window.localStorage.getItem('workspace');
         return stored ? JSON.parse(stored) : null;
     })
 
     const setContext = (newContext: Workspace) => {
         setWorkspace(newContext)
-        window.sessionStorage.setItem('workspace', JSON.stringify(newContext))
+        window.localStorage.setItem('workspace', JSON.stringify(newContext))
     }
 
     return (

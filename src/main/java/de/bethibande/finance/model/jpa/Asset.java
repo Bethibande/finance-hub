@@ -15,7 +15,7 @@ public class Asset extends WorkspaceEntity {
     public String name;
 
     @NotBlank
-    @Size(min = 3, max = 3)
+    @Size(min = 3, max = 8)
     @Column(nullable = false)
     public String code;
 

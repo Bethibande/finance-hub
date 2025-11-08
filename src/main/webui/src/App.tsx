@@ -1,13 +1,20 @@
 import {createBrowserRouter, RouterProvider} from "react-router";
 import ErrorLayout from "./layouts/ErrorLayout.tsx";
 import Setup from "./views/setup/Setup.tsx";
+import AssetView from "./views/assets/AssetView.tsx";
 
 function App() {
     const router = createBrowserRouter([{
-        children: [{
-            path: "/setup",
-            Component: Setup
-        }],
+        children: [
+            {
+                path: "/setup",
+                Component: Setup
+            },
+            {
+                path: "/assets",
+                Component: AssetView
+            }
+        ],
         ErrorBoundary: ErrorLayout
     }])
 

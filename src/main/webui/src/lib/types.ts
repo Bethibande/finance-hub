@@ -61,10 +61,10 @@ export interface Transaction {
     amount: string;
     asset: Asset;
     date: Date;
-    status: TransactionStatus,
-    bookedAmounts: BookedAmount[]
-    type: TransactionType,
-    deopt: Depot,
+    status: TransactionStatus;
+    bookedAmounts: BookedAmount[];
+    type: TransactionType;
+    deopt: Depot;
     partner?: Partner;
     internalRef?: Transaction;
     notes?: string;
@@ -82,4 +82,10 @@ export interface BookedAmount {
 export interface UserDto {
     name: String,
     roles: String[]
+}
+
+export interface ErrorResponse {
+    code: number;
+    message: string;
+    translationKey: string;
 }
