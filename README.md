@@ -14,6 +14,15 @@ This is my personal finance app used for tracking my income and expenses.
 - Track all your assets, not just cash
 - Create different workspaces to separate and share payments
 
+### Preview
+
+> [!WARNING]
+> Most things shown here are not yet implemented and just a mock-up.
+
+| Assets                       | Create a new asset                       |
+|------------------------------|------------------------------------------|
+| ![Assets](images/assets.png) | ![Create asset](images/create-asset.png) |
+
 ### Data model
 ![Classes](images/classes.png)
 - Workspaces are used to separate and share all resources such as assets, transactions, exchange rates and depots
