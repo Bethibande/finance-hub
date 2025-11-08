@@ -8,15 +8,14 @@ import {
 import {SidebarMenuButton, useSidebar} from "../ui/sidebar.tsx";
 import {ChevronExpand, DoorClosed, Person} from "react-bootstrap-icons";
 import i18next from "i18next";
-import type {UserDto} from "../../lib/types.ts";
+import {useAuth} from "../../lib/auth.tsx";
+import {useNavigate} from "react-router";
 
 export default function UserItem() {
     const {isMobile} = useSidebar();
 
-    const user: UserDto = {
-        name: "admin",
-        roles: ["ADMIN", "USER"]
-    }
+    const {user, logout} = useAuth();
+    const navigate = useNavigate();
 
     return (
         <DropdownMenu>
@@ -27,7 +26,7 @@ export default function UserItem() {
                 >
                     <Person/>
                     <div className={"grid flex-1 text-left text-sm leading-tight"}>
-                        <span className={"truncate font-medium"}>{user.name}</span>
+                        <span className={"truncate font-medium"}>{user?.name}</span>
                     </div>
                     <ChevronExpand className="ml-auto" />
                 </SidebarMenuButton>
@@ -39,8 +38,10 @@ export default function UserItem() {
                 sideOffset={4}>
 
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="gap-2 p-2" variant={"destructive"}>
-                    <DoorClosed className="size-4" />
+                <DropdownMenuItem onClick={() => logout().then(() => navigate("/login"))}
+                                  className="gap-2 p-2"
+                                  variant={"destructive"}>
+                    <DoorClosed className="size-4"/>
                     <div className="font-medium"> {i18next.t("logout")}</div>
                 </DropdownMenuItem>
             </DropdownMenuContent>

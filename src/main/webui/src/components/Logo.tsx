@@ -37,7 +37,7 @@ export default function Logo(props: SVGProps<SVGSVGElement>) {
             </g>
 
             { /* Outline */ }
-            <g fill="none" stroke="currentColor" stroke-width="15" stroke-linejoin="round">
+            <g fill="none" stroke="currentColor" strokeWidth="15" strokeLinejoin="round">
                 <path d="M60 60  H540  Q 560 60 560 80  L 540 480  C 540 480 540 660 300 660  C 300 660 80 660 60 480  L 40 80 Q40 60 60 60 Z"/>
                 <path d="M300 60 V660"/>
             </g>

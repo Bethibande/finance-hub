@@ -7,7 +7,7 @@ import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {post} from "../../lib/api.ts";
 import {useState} from "react";
-import {login} from "../../lib/auth.ts";
+import {useAuth} from "../../lib/auth.tsx";
 
 export default function CreateUserCard(props: { next: () => void }) {
     const {next} = props;
@@ -36,6 +36,8 @@ export default function CreateUserCard(props: { next: () => void }) {
             passwordRepeat: ""
         }
     })
+
+    const {login} = useAuth()
 
     function onSubmit(data: z.infer<typeof formSchema>) {
         post("/api/v1/setup/user", {

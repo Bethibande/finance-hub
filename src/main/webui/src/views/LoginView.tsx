@@ -7,9 +7,9 @@ import i18next from "i18next";
 import {Input} from "../components/ui/input.tsx";
 import {Button} from "../components/ui/button.tsx";
 import {toast} from "sonner";
-import {login} from "../lib/auth.ts";
 import {showErrorMessage, showHttpError} from "../lib/errors.tsx";
 import {useNavigate} from "react-router";
+import {useAuth} from "../lib/auth.tsx";
 
 export default function LoginView() {
     const formSchema = z.object({
@@ -26,6 +26,7 @@ export default function LoginView() {
     })
 
     const navigate = useNavigate()
+    const {login} = useAuth()
 
     function onSubmit(data: z.infer<typeof formSchema>) {
         login(data.username, data.password).then(({user, error}) => {

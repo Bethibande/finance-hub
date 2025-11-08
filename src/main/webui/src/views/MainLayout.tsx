@@ -1,10 +1,17 @@
-import {Outlet} from "react-router";
+import {Outlet, useNavigate} from "react-router";
 import {AppSidebar} from "../components/navigation/app-sidebar.tsx";
 import {SidebarProvider, SidebarTrigger} from "../components/ui/sidebar.tsx";
 import {useViewConfig} from "../lib/view-config.tsx";
+import {useAuth} from "../lib/auth.tsx";
 
 export default function MainLayout() {
     const {viewConfig} = useViewConfig();
+
+    const {user, pending} = useAuth();
+    if (!user && !pending) {
+        const navigate = useNavigate();
+        navigate("/login");
+    }
 
     return (
         <SidebarProvider>

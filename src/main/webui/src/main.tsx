@@ -5,6 +5,7 @@ import App from './App.tsx'
 import i18next from "i18next";
 import {WorkspaceProvider} from "./lib/workspace.tsx";
 import {Toaster} from "./components/ui/sonner.tsx";
+import {AuthProvider} from "./lib/auth.tsx";
 
 i18next.init({
     lng: 'en',
@@ -40,6 +41,7 @@ i18next.init({
                 "edit": "Edit",
                 "login": "Login",
                 "login.error.credentials": "Invalid username or password",
+                "login.error.load": "Failed to load authentication data. Please try again later.",
                 "login.welcome": "Welcome {{user.name}}",
                 "username": "Username",
                 "password": "Password",
@@ -55,9 +57,11 @@ i18next.init({
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <WorkspaceProvider>
-            <App/>
-            <Toaster/>
-        </WorkspaceProvider>
+        <AuthProvider>
+            <WorkspaceProvider>
+                <App/>
+                <Toaster/>
+            </WorkspaceProvider>
+        </AuthProvider>
     </StrictMode>,
 )
