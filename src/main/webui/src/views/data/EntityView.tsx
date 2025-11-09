@@ -79,26 +79,6 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
             .catch(showError)
     }, [version, workspace])
 
-    function handleCrudResponse(response: Response) {
-        if (!response.ok) {
-            showHttpError(response)
-            return;
-        }
-        setVersion(version + 1)
-    }
-
-    function wrapEntityAction(action: (entity: TEntity) => Promise<any>) {
-        return (entity: TEntity) => action(entity).then(handleCrudResponse).catch(showError)
-    }
-
-    const dialogActions: EntityActions<TEntity> = {
-        create: wrapEntityAction(actions.create),
-        delete: wrapEntityAction(actions.delete),
-        save: wrapEntityAction(actions.save),
-        load: actions.load,
-        format: actions.format,
-    }
-
     const {setViewConfig} = useViewConfig()
     useEffect(() => {
         setViewConfig({
@@ -121,7 +101,8 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
         <div className={"w-full h-full flex flex-col items-center gap-6"}>
             {<EntityDialog form={editForm}
                            translations={dialogTranslations}
-                           actions={dialogActions}
+                           actions={actions}
+                           onChange={() => setVersion(version + 1)}
                            ref={dialogControls}/>}
 
             <div className={"w-full lg:w-1/2 px-4"}>

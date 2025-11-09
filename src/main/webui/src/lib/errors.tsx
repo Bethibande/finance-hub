@@ -2,6 +2,15 @@ import {toast} from "sonner";
 import type {ErrorResponse} from "./types.ts";
 import i18next from "i18next";
 
+export async function showHttpErrorAndContinue(response: Response): Promise<Response> {
+    if (!response.ok) {
+        showHttpError(response)
+        return response
+    }
+
+    return response
+}
+
 export function showHttpError(response: Response) {
     const contentLength = parseInt(response.headers.get("Content-Length") || "0")
     const contentType = response.headers.get("Content-Type") || ""

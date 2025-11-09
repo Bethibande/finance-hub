@@ -47,6 +47,9 @@ i18next.init({
                 "password": "Password",
                 "password.repeat": "Repeat password",
                 "workspace": "Workspace",
+                "workspace.name": "Name",
+                "workspace.dialog.create.title": "Create Workspace",
+                "workspace.dialog.create.desc": "Create a new workspace",
                 "workspaces": "Workspaces",
                 "workspace.create": "Create Workspace",
                 "error.delete.dependents": "Cannot delete entry because it is referenced by other entities"
