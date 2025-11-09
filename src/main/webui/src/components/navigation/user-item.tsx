@@ -1,10 +1,4 @@
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
-} from "../ui/dropdown-menu.tsx";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../ui/dropdown-menu.tsx";
 import {SidebarMenuButton, useSidebar} from "../ui/sidebar.tsx";
 import {ChevronExpand, DoorClosed, Person} from "react-bootstrap-icons";
 import i18next from "i18next";

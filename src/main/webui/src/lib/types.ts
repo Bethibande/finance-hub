@@ -28,6 +28,7 @@ export interface Partner {
     id?: number;
     name: string;
     type: PartnerType;
+    workspace: Workspace;
     notes?: string;
 }
 
@@ -83,6 +84,14 @@ export interface BookedAmount {
 export interface UserDto {
     name: string,
     roles: string[]
+}
+
+export interface PagedResponse<T> {
+    page: number;
+    size: number;
+    pages: number;
+    totalElements: number;
+    data: T[]
 }
 
 export interface ErrorResponse {

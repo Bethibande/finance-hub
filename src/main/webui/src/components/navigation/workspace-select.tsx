@@ -14,23 +14,25 @@ import Logo from "../Logo.tsx";
 import type {Workspace} from "../../lib/types.ts";
 import {Button} from "../ui/button.tsx";
 import i18next from "i18next";
+import {fetchClient} from "../../lib/api.ts";
+import {showHttpError} from "../../lib/errors.tsx";
 
 export default function WorkspaceSelect() {
     const {isMobile} = useSidebar();
+
+    const [version, setVersion] = useState(0)
     const {workspace, setWorkspace} = useWorkspace();
     const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
     useEffect(() => {
-        setWorkspaces([
-            {
-                id: 1,
-                name: "Private",
-            },
-            {
-                id: 2,
-                name: "Some other workspace",
+        fetchClient("/api/v1/workspace").then(res => {
+            if (!res.ok) {
+                showHttpError(res)
+                return
             }
-        ])
-    }, [])
+
+            res.json().then(page => setWorkspaces(page.data))
+        })
+    }, [version])
 
     return (
         <DropdownMenu>

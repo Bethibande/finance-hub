@@ -15,6 +15,7 @@ import {
 import {MoreHorizontal} from "lucide-react";
 import {DataTable} from "../../components/table/data-table.tsx";
 import {useViewConfig} from "../../lib/view-config.tsx";
+import type {PagedResponse} from "../../lib/types.ts";
 
 export interface EntityActions<TEntity> {
     load: () => Promise<Response>,
@@ -89,7 +90,7 @@ export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
     ]
 
     const [version, setVersion] = useState(0)
-    const [data, setData] = useState<TEntity[]>([])
+    const [data, setData] = useState<PagedResponse<TEntity>>({page: 0, size: 0, pages: 0, totalElements: 0, data:[]})
     useEffect(() => {
         actions.load()
             .then(response => {
@@ -143,7 +144,7 @@ export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
                         edit(null)
                     }}>+ {i18next.t("create")}</Button>
                 </div>
-                <DataTable columns={columns} data={data}/>
+                <DataTable columns={columns} data={data.data}/>
             </div>
         </div>
     )

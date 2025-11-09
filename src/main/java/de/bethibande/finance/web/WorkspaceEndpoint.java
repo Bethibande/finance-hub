@@ -1,7 +1,10 @@
 package de.bethibande.finance.web;
 
+import de.bethibande.finance.model.jpa.Asset;
+import de.bethibande.finance.model.jpa.Depot;
 import de.bethibande.finance.model.jpa.Workspace;
 import de.bethibande.finance.security.Roles;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -9,29 +12,26 @@ import jakarta.ws.rs.*;
 import java.util.List;
 
 @Path("/api/v1/workspace")
-public class WorkspaceEndpoint {
+public class WorkspaceEndpoint extends AbstractCRUDEndpoint<Workspace> {
 
-    @POST
-    @Transactional
-    @RolesAllowed(Roles.USER)
-    public Workspace create(final Workspace workspace) {
-        workspace.persist();
-        return workspace;
+    @Override
+    protected PanacheQuery<Workspace> find(final String query, final Object... params) {
+        return Workspace.find(query, params);
     }
 
-    @GET
-    @Transactional
-    @RolesAllowed(Roles.USER)
-    public List<Workspace> list() {
-        return Workspace.listAll();
+    @Override
+    protected PanacheQuery<Workspace> list() {
+        return Workspace.findAll();
     }
 
-    @DELETE
-    @Path("/{id}")
-    @Transactional
-    @RolesAllowed(Roles.USER)
-    public void delete(final @PathParam("id") long id) {
+    @Override
+    protected void deleteById(final long id) {
         Workspace.deleteById(id);
     }
 
+    @Override
+    protected boolean hasDependents(final long id) {
+        // All workspace-bound entities directly or indirectly depend on an asset, if there are no assets, then the workspace is empty
+        return Asset.find("workspace.id = ?1", id).count() > 0;
+    }
 }
