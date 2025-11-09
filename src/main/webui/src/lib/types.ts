@@ -89,7 +89,7 @@ export interface UserDto {
 export interface PagedResponse<T> {
     page: number;
     size: number;
-    pages: number;
+    totalPages: number;
     totalElements: number;
     data: T[]
 }

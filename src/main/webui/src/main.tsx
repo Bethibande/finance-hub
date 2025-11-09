@@ -52,6 +52,9 @@ i18next.init({
                 "workspace.dialog.create.desc": "Create a new workspace",
                 "workspaces": "Workspaces",
                 "workspace.create": "Create Workspace",
+                "table.rows": "Rows total",
+                "table.previous": "Previous",
+                "table.next": "Next",
                 "error.delete.dependents": "Cannot delete entry because it is referenced by other entities"
             }
         }

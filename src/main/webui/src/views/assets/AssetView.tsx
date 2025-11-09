@@ -75,15 +75,15 @@ export function useAssetEditForm() {
     function reset(entity?: Asset) {
         form.reset(entity || {
             name: "",
+            provider: undefined,
             code: "",
-            symbol: "",
-            notes: ""
+            symbol: undefined,
+            notes: undefined
         })
     }
 
     return {form, toEntity, reset, fields}
 }
-
 
 export default function AssetView() {
     const columns: ColumnDef<Asset>[] = [

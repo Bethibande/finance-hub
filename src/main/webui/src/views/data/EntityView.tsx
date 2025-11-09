@@ -65,10 +65,11 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
 
     const {workspace} = useWorkspace()
 
+    const [page, setPage] = useState(0)
     const [version, setVersion] = useState(0)
-    const [data, setData] = useState<PagedResponse<TEntity>>({page: 0, size: 0, pages: 0, totalElements: 0, data: []})
+    const [data, setData] = useState<PagedResponse<TEntity>>({page: 0, size: 0, totalPages: 0, totalElements: 0, data: []})
     useEffect(() => {
-        actions.load(workspace, 0, 25)
+        actions.load(workspace, page, 25)
             .then(response => {
                 if (!response.ok) {
                     showHttpError(response)
@@ -77,7 +78,7 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
                 response.json().then(setData)
             })
             .catch(showError)
-    }, [version, workspace])
+    }, [version, workspace, page])
 
     const {setViewConfig} = useViewConfig()
     useEffect(() => {
@@ -111,7 +112,7 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
                         dialogControls.current?.edit(undefined)
                     }}>+ {i18next.t("create")}</Button>
                 </div>
-                <DataTable columns={columns} data={data.data}/>
+                <DataTable columns={columns} page={data} changePage={setPage}/>
             </div>
         </div>
     )
