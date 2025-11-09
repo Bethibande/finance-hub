@@ -1,11 +1,89 @@
 import type {ColumnDef} from "@tanstack/react-table";
-import type {Asset} from "../../lib/types.ts";
+import type {Asset, Workspace} from "../../lib/types.ts";
 import i18next from "i18next";
 import {columnHeader} from "../../components/ui/table.tsx";
-import {type EntityActions, EntityView} from "../data/EntityView.tsx";
-import AssetEditDialog from "./AssetEditDialog.tsx";
-import {useWorkspace} from "../../lib/workspace.tsx";
+import {EntityView} from "../data/EntityView.tsx";
 import {deleteClient, fetchClient, post} from "../../lib/api.ts";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {z} from "zod";
+import {type EntityActions} from "../data/EntityDialog.tsx";
+import {ControlledInput, ControlledTextArea} from "../../components/ControlledInput.tsx";
+
+export const AssetActions: EntityActions<Asset> = {
+    load: (workspace, page, size) => fetchClient("/api/v1/asset/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
+    create: (asset) => post("/api/v1/asset", asset),
+    delete: (asset) => deleteClient("/api/v1/asset/" + asset.id),
+    save: (asset) => post("/api/v1/asset", asset),
+    format: (asset) => {
+        if (asset.provider) {
+            return asset.name + "@" + asset.provider.name
+        }
+        return asset.name
+    }
+}
+
+export function useAssetEditForm() {
+    const formSchema = z.object({
+        name: z.string().min(3).max(255),
+        provider: z.any().optional(),
+        code: z.string().min(3).max(8),
+        symbol: z.string().min(1).max(10).optional(),
+        notes: z.string().min(0).max(1024).optional(),
+    })
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+            code: ""
+        }
+    })
+
+    function toEntity(data: z.infer<typeof formSchema>, workspace: Workspace): Asset {
+        return {
+            ...data,
+            workspace: workspace
+        }
+    }
+
+    function fields() {
+        return (
+            <>
+                <ControlledInput name={"name"}
+                                 control={form.control}
+                                 placeholder={"Euro"}
+                                 label={i18next.t("asset.name")}/>
+                <div className={"flex gap-2"}>
+                    <ControlledInput name={"code"}
+                                     control={form.control}
+                                     placeholder={"EUR"}
+                                     label={i18next.t("asset.code")}/>
+                    <ControlledInput name={"symbol"}
+                                     control={form.control}
+                                     placeholder={"€"}
+                                     label={i18next.t("asset.symbol")}/>
+                </div>
+                <ControlledTextArea name={"notes"}
+                                    control={form.control}
+                                    placeholder={i18next.t("asset.notes.placeholder")}
+                                    label={i18next.t("asset.notes")}/>
+            </>
+        )
+    }
+
+    function reset(entity?: Asset) {
+        form.reset(entity || {
+            name: "",
+            code: "",
+            symbol: "",
+            notes: ""
+        })
+    }
+
+    return {form, toEntity, reset, fields}
+}
+
 
 export default function AssetView() {
     const columns: ColumnDef<Asset>[] = [
@@ -37,16 +115,10 @@ export default function AssetView() {
         }
     ]
 
-    const {workspace} = useWorkspace()
-
-    const actions: EntityActions<Asset> = {
-        load: () => fetchClient("/api/v1/asset/workspace/" + workspace.id),
-        create: (asset) => post("/api/v1/asset", asset),
-        delete: (asset) => deleteClient("/api/v1/asset/" + asset.id),
-        save: (asset) => post("/api/v1/asset", asset)
-    }
-
     return (
-        <EntityView i18nKey={"asset"} actions={actions} columns={columns} editDialog={AssetEditDialog}/>
+        <EntityView i18nKey={"asset"}
+                    actions={AssetActions}
+                    columns={columns}
+                    editForm={useAssetEditForm()}/>
     )
 }

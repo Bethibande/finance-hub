@@ -1,6 +1,5 @@
 import type {ColumnDef} from "@tanstack/react-table";
-import * as React from "react";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import i18next from "i18next";
 import {Button} from "../../components/ui/button.tsx";
 import {showError, showHttpError} from "../../lib/errors.tsx";
@@ -16,53 +15,28 @@ import {MoreHorizontal} from "lucide-react";
 import {DataTable} from "../../components/table/data-table.tsx";
 import {useViewConfig} from "../../lib/view-config.tsx";
 import type {PagedResponse} from "../../lib/types.ts";
+import {useWorkspace} from "../../lib/workspace.tsx";
+import {
+    type EntityActions,
+    EntityDialog,
+    type EntityDialogControls,
+    type EntityDialogTranslations,
+    type EntityEditForm
+} from "./EntityDialog.tsx";
+import type {FieldValues} from "react-hook-form";
 
-export interface EntityActions<TEntity> {
-    load: () => Promise<Response>,
-    create: (entity: TEntity) => Promise<any>,
-    save: (entity: TEntity) => Promise<any>,
-    delete: (entity: TEntity) => Promise<any>
-}
-
-export const EntityDialogState = {
-    CLOSED: "CLOSED",
-    EDITING: "EDITING",
-    DELETING: "DELETING",
-} as const
-
-export type EntityDialogState = typeof EntityDialogState[keyof typeof EntityDialogState]
-
-export interface EntityEditDialogProps<TEntity> {
-    entity: TEntity | null,
-    state: EntityDialogState,
-    close: () => void,
-    actions: EntityActions<TEntity>
-}
-
-export interface EntityViewProps<TEntity> {
+export interface EntityViewProps<TEntity, TForm extends FieldValues> {
     actions: EntityActions<TEntity>,
     columns: ColumnDef<TEntity>[],
     i18nKey: string,
-    editDialog: (props: EntityEditDialogProps<TEntity>) => React.JSX.Element
+    editForm: EntityEditForm<TEntity, TForm>
 }
 
-interface ViewState<TEntity> {
-    editing: EntityDialogState,
-    entity: TEntity | null,
-}
+export function EntityView<TEntity, TForm extends FieldValues>(props: EntityViewProps<TEntity, TForm>) {
+    const {actions, i18nKey, editForm} = props
 
-export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
-    const [state, setState] = useState<ViewState<TEntity>>({editing: EntityDialogState.CLOSED, entity: null})
+    const dialogControls = useRef<EntityDialogControls<TEntity> | undefined>(undefined)
 
-    function edit(entity: TEntity | null) {
-        setState({editing: EntityDialogState.EDITING, entity: entity})
-    }
-
-    function deleteEntity(entity: TEntity) {
-        setState({editing: EntityDialogState.DELETING, entity: entity})
-    }
-
-    const {actions, editDialog, i18nKey} = props
     const columns: ColumnDef<TEntity>[] = [
         ...props.columns,
         {
@@ -79,8 +53,8 @@ export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>{i18next.t("menu.actions")}</DropdownMenuLabel>
                             <DropdownMenuSeparator/>
-                            <DropdownMenuItem onClick={() => edit(row.original)}>{i18next.t("edit")}</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => deleteEntity(row.original)}
+                            <DropdownMenuItem onClick={() => dialogControls.current?.edit(row.original)}>{i18next.t("edit")}</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => dialogControls.current?.delete(row.original)}
                                               variant={"destructive"}>{i18next.t("delete")}</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -89,10 +63,12 @@ export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
         }
     ]
 
+    const {workspace} = useWorkspace()
+
     const [version, setVersion] = useState(0)
-    const [data, setData] = useState<PagedResponse<TEntity>>({page: 0, size: 0, pages: 0, totalElements: 0, data:[]})
+    const [data, setData] = useState<PagedResponse<TEntity>>({page: 0, size: 0, pages: 0, totalElements: 0, data: []})
     useEffect(() => {
-        actions.load()
+        actions.load(workspace, 0, 25)
             .then(response => {
                 if (!response.ok) {
                     showHttpError(response)
@@ -101,7 +77,7 @@ export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
                 response.json().then(setData)
             })
             .catch(showError)
-    }, [version])
+    }, [version, workspace])
 
     function handleCrudResponse(response: Response) {
         if (!response.ok) {
@@ -115,16 +91,12 @@ export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
         return (entity: TEntity) => action(entity).then(handleCrudResponse).catch(showError)
     }
 
-    const editDialogProps: EntityEditDialogProps<TEntity> = {
-        entity: state.entity,
-        state: state.editing,
-        close: () => setState({...state, editing: EntityDialogState.CLOSED}),
-        actions: {
-            create: wrapEntityAction(actions.create),
-            delete: wrapEntityAction(actions.delete),
-            save: wrapEntityAction(actions.save),
-            load: actions.load
-        }
+    const dialogActions: EntityActions<TEntity> = {
+        create: wrapEntityAction(actions.create),
+        delete: wrapEntityAction(actions.delete),
+        save: wrapEntityAction(actions.save),
+        load: actions.load,
+        format: actions.format,
     }
 
     const {setViewConfig} = useViewConfig()
@@ -134,14 +106,28 @@ export function EntityView<TEntity>(props: EntityViewProps<TEntity>) {
         })
     }, []);
 
+    const dialogTranslations: EntityDialogTranslations = {
+        edit: {
+            title: i18nKey + ".dialog.title.edit",
+            description: i18nKey + ".dialog.desc.edit",
+        },
+        create: {
+            title: i18nKey + ".dialog.title.create",
+            description: i18nKey + ".dialog.desc.create",
+        }
+    }
+
     return (
         <div className={"w-full h-full flex flex-col items-center gap-6"}>
-            {editDialog(editDialogProps)}
+            {<EntityDialog form={editForm}
+                           translations={dialogTranslations}
+                           actions={dialogActions}
+                           ref={dialogControls}/>}
 
             <div className={"w-full lg:w-1/2 px-4"}>
                 <div className={"pb-2 flex items-center justify-between gap-2"}>
                     <Button onClick={() => {
-                        edit(null)
+                        dialogControls.current?.edit(undefined)
                     }}>+ {i18next.t("create")}</Button>
                 </div>
                 <DataTable columns={columns} data={data.data}/>
