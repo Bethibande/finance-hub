@@ -6,6 +6,7 @@ import MainLayout from "./views/MainLayout.tsx";
 import {ViewConfigProvider} from "./lib/view-config.tsx";
 import LoginView from "./views/LoginView.tsx";
 import DashboardView from "./views/DashboardView.tsx";
+import PartnerView from "./views/partners/Partners.tsx";
 
 function App() {
     const primaryRoutes: RouteObject[] = [
@@ -16,7 +17,11 @@ function App() {
         {
             path: "/assets",
             Component: AssetView,
-        }
+        },
+        {
+            path: "/partners",
+            Component: PartnerView,
+        },
     ]
 
     const secondaryRoutes: RouteObject[] = [

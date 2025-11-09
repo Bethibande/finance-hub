@@ -2,6 +2,8 @@ import {Field, FieldError, FieldLabel} from "./ui/field.tsx";
 import {Input} from "./ui/input.tsx";
 import {type Control, Controller, type FieldPath, type FieldValues} from "react-hook-form";
 import {Textarea} from "./ui/textarea.tsx";
+import {type ReactNode} from "react";
+import {Select} from "./Select.tsx";
 
 export interface ControlledInputProps<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues> {
     name: TName;
@@ -9,6 +11,39 @@ export interface ControlledInputProps<TFieldValues extends FieldValues = FieldVa
     label: string;
     placeholder?: string;
     type?: string;
+}
+
+export interface ControlledSelectProps<TOption, TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues> {
+    name: TName
+    control: Control<TFieldValues, any, TTransformedValues>
+    label: string
+    placeholder?: string
+    options: TOption[]
+    render: (value: TOption) => ReactNode
+    keyGenerator: (value: TOption) => string
+}
+
+export function ControlledSelect<TOption, TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>(props: ControlledSelectProps<TOption, TFieldValues, TName, TTransformedValues>) {
+    const {name, control, label, placeholder, options, render, keyGenerator} = props;
+
+    return (
+        <Controller name={name} control={control} render={({field, fieldState}) => {
+            return (
+                <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={name}>{label}</FieldLabel>
+                    <Select emptyLabel={placeholder || ""}
+                            onChange={field.onChange}
+                            value={field.value}
+                            options={options}
+                            render={render}
+                            keyGenerator={keyGenerator}/>
+                    {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]}/>
+                    )}
+                </Field>
+            )
+        }}/>
+    )
 }
 
 export function ControlledInput<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>(props: ControlledInputProps<TFieldValues, TName, TTransformedValues>) {
