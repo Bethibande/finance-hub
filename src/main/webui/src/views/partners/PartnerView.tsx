@@ -8,6 +8,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {ControlledInput, ControlledSelect, ControlledTextArea} from "../../components/ControlledInput.tsx";
 import i18next from "i18next";
+import {columnHeader} from "../../components/ui/table.tsx";
 
 export const PartnerActions: EntityActions<Partner> = {
     load: (workspace, page, size) => fetchClient("/api/v1/partner/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
@@ -21,13 +22,13 @@ export function usePartnerEditForm() {
     const formSchema = z.object({
         name: z.string().min(3).max(255),
         type: z.enum(PartnerType),
-        notes: z.string().min(0).max(1024).optional(),
+        notes: z.string().min(0).max(1024).nullable(),
     })
 
     const defaultValues: z.infer<typeof formSchema> = {
         name: "",
         type: "COMPANY",
-        notes: undefined
+        notes: null
     }
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -69,19 +70,21 @@ export function usePartnerEditForm() {
         )
     }
 
-    return {form, toEntity, reset, fields, formSchema}
+    return {form, toEntity, reset, fields}
 }
 
 export default function PartnerView() {
     const columns: ColumnDef<Partner>[] = [
         {
             id: "name",
-            header: i18next.t("partner.name"),
+            header: columnHeader(i18next.t("partner.name")),
+            enableSorting: true,
             accessorKey: "name",
         },
         {
             id: "type",
-            header: i18next.t("partner.type"),
+            header: columnHeader(i18next.t("partner.type")),
+            enableSorting: true,
             cell: ({row}) => i18next.t("PartnerType." + row.original.type),
             accessorKey: "type",
         },

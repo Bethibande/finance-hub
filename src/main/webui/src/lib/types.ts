@@ -29,16 +29,16 @@ export interface Partner {
     name: string;
     type: PartnerType;
     workspace: Workspace;
-    notes?: string;
+    notes: string | null;
 }
 
 export interface Depot {
     id?: number;
     name: string;
     workspace: Workspace;
-    notes?: string;
-    provider?: Partner;
-    asset?: Asset;
+    notes: string | null;
+    provider: Partner | null;
+    asset: Asset | null;
 }
 
 export const TransactionStatus = {

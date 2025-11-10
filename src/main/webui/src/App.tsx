@@ -6,7 +6,8 @@ import MainLayout from "./views/MainLayout.tsx";
 import {ViewConfigProvider} from "./lib/view-config.tsx";
 import LoginView from "./views/LoginView.tsx";
 import DashboardView from "./views/DashboardView.tsx";
-import PartnerView from "./views/partners/Partners.tsx";
+import PartnerView from "./views/partners/PartnerView.tsx";
+import {DepotView} from "./views/Depots.tsx";
 
 function App() {
     const primaryRoutes: RouteObject[] = [
@@ -21,6 +22,10 @@ function App() {
         {
             path: "/partners",
             Component: PartnerView,
+        },
+        {
+            path: "/depots",
+            Component: DepotView,
         },
     ]
 

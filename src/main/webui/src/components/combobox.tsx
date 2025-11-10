@@ -55,13 +55,13 @@ export function ComboBox<TOption>(props: ComboBoxProps<TOption>) {
                             {options.map((option) => (
                                 <CommandItem key={keyGenerator(option)} value={render(option)} onSelect={() => change(option)}>
                                     {render(option)}
-                                    <Check className={cn("ml-auto", value === option ? "opacity-100" : "opacity-0")}/>
+                                    <Check className={cn("ml-auto", (value && keyGenerator(value) === keyGenerator(option)) ? "opacity-100" : "opacity-0")}/>
                                 </CommandItem>
                             ))}
                         </CommandGroup>
 
                         {createAction && (
-                            <div className={"w-full p-2"}>
+                            <div className={"w-full p-1 pt-0"}>
                                 <Button variant={"ghost"} className={"w-full"} onClick={createAction}>+ {i18next.t("combobox.create")}</Button>
                             </div>
                         )}

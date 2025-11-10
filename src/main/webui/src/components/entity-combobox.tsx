@@ -43,16 +43,13 @@ export function EntityComboBox<TEntity, TForm extends FieldValues>(props: Entity
     }, [])
 
     const dialogActions: EntityActions<TEntity> = {
+        ...actions,
         create: (entity) => actions.create(entity).then(response => {
             if (response.ok) {
                 response.json().then((result) => onChange(result))
             }
             return response
         }),
-        load: actions.load,
-        save: actions.save,
-        delete: actions.delete,
-        format: actions.format
     }
 
     return (

@@ -23,6 +23,10 @@ This is my personal finance app used for tracking my income and expenses.
 |------------------------------|------------------------------------------|
 | ![Assets](images/assets.png) | ![Create asset](images/create-asset.png) |
 
+| Depots                       | Edit a depot                         |
+|------------------------------|--------------------------------------|
+| ![Depots](images/depots.png) | ![Edit depot](images/edit-depot.png) |
+
 ### Data model
 ![Classes](images/classes.png)
 - Workspaces are used to separate and share all resources such as assets, transactions, exchange rates and depots

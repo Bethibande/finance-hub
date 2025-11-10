@@ -9,7 +9,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import {type EntityActions} from "../data/EntityDialog.tsx";
 import {ControlledEntityComboBox, ControlledInput, ControlledTextArea} from "../../components/ControlledInput.tsx";
-import {PartnerActions, usePartnerEditForm} from "../partners/Partners.tsx";
+import {PartnerActions, usePartnerEditForm} from "../partners/PartnerView.tsx";
 
 export const AssetActions: EntityActions<Asset> = {
     load: (workspace, page, size) => fetchClient("/api/v1/asset/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
