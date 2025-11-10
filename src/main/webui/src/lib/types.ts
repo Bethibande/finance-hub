@@ -8,9 +8,9 @@ export interface Asset {
     name: string;
     code: string;
     workspace: Workspace;
-    provider?: Partner;
-    symbol?: string;
-    notes?: string;
+    provider: Partner | null;
+    symbol: string | null;
+    notes: string | null;
 }
 
 export const PartnerType = {

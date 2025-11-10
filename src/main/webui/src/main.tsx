@@ -25,6 +25,7 @@ i18next.init({
                 "asset.dialog.title.edit": "Edit Asset",
                 "asset.dialog.desc.edit": "Edit the asset '{{name}}'",
                 "asset.name": "Name",
+                "asset.provider": "Provider",
                 "asset.code": "Code",
                 "asset.symbol": "Symbol",
                 "asset.notes": "Notes",
@@ -68,6 +69,9 @@ i18next.init({
                 "PartnerType.GOVERNMENTAL": "Governmental",
                 "PartnerType.EXCHANGE": "Exchange",
                 "PartnerType.OTHER": "Other",
+                "combobox.search": "Search...",
+                "combobox.empty": "Nothing found",
+                "combobox.create": "Create",
                 "table.previous": "Previous",
                 "table.next": "Next",
                 "error.delete.dependents": "Cannot delete entry because it is referenced by other entities"

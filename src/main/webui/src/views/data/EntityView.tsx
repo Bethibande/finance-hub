@@ -20,8 +20,8 @@ import {
     type EntityActions,
     EntityDialog,
     type EntityDialogControls,
-    type EntityDialogTranslations,
-    type EntityEditForm
+    type EntityEditForm,
+    namespacedTranslations
 } from "./EntityDialog.tsx";
 import type {FieldValues} from "react-hook-form";
 
@@ -35,7 +35,7 @@ export interface EntityViewProps<TEntity, TForm extends FieldValues> {
 export function EntityView<TEntity, TForm extends FieldValues>(props: EntityViewProps<TEntity, TForm>) {
     const {actions, i18nKey, editForm} = props
 
-    const dialogControls = useRef<EntityDialogControls<TEntity> | undefined>(undefined)
+    const dialogControls = useRef<EntityDialogControls<TEntity>>(null)
 
     const columns: ColumnDef<TEntity>[] = [
         ...props.columns,
@@ -87,16 +87,7 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
         })
     }, []);
 
-    const dialogTranslations: EntityDialogTranslations = {
-        edit: {
-            title: i18nKey + ".dialog.title.edit",
-            description: i18nKey + ".dialog.desc.edit",
-        },
-        create: {
-            title: i18nKey + ".dialog.title.create",
-            description: i18nKey + ".dialog.desc.create",
-        }
-    }
+    const dialogTranslations = namespacedTranslations(i18nKey)
 
     return (
         <div className={"w-full h-full flex flex-col items-center gap-6"}>

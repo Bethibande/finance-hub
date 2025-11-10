@@ -41,7 +41,7 @@ export interface EditDialogProps<TEntity, TForm extends FieldValues> {
     translations: EntityDialogTranslations,
     actions: EntityActions<TEntity>,
     form: EntityEditForm<TEntity, TForm>,
-    ref: RefObject<EntityDialogControls<TEntity> | undefined>,
+    ref: RefObject<EntityDialogControls<TEntity> | null>,
     onChange?: () => void,
 }
 
@@ -70,6 +70,19 @@ interface EditFormProps<TEntity, TForm extends FieldValues> {
     onSubmit: (data: TForm) => void,
 }
 
+export function namespacedTranslations(i18nKey: string): EntityDialogTranslations {
+    return {
+        edit: {
+            title: i18nKey + ".dialog.title.edit",
+            description: i18nKey + ".dialog.desc.edit",
+        },
+        create: {
+            title: i18nKey + ".dialog.title.create",
+            description: i18nKey + ".dialog.desc.create",
+        }
+    }
+}
+
 export function EntityEditForm<TEntity, TForm extends FieldValues>(props: EditFormProps<TEntity, TForm>) {
     const {entity, format, form, onSubmit, translations, close} = props;
 
@@ -77,7 +90,10 @@ export function EntityEditForm<TEntity, TForm extends FieldValues>(props: EditFo
     const description = entity ? i18next.t(translations.edit.description, {name: format(entity)}) : i18next.t(translations.create.description)
 
     return (
-        <form onSubmit={form.form.handleSubmit(onSubmit)} className={"flex flex-col gap-4"}>
+        <form onSubmit={e => {
+            e.stopPropagation()
+            form.form.handleSubmit(onSubmit)(e)
+        }} className={"flex flex-col gap-4"}>
             <div className={"flex flex-col gap-4"}>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>

@@ -8,7 +8,8 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import {type EntityActions} from "../data/EntityDialog.tsx";
-import {ControlledInput, ControlledTextArea} from "../../components/ControlledInput.tsx";
+import {ControlledEntityComboBox, ControlledInput, ControlledTextArea} from "../../components/ControlledInput.tsx";
+import {PartnerActions, usePartnerEditForm} from "../partners/Partners.tsx";
 
 export const AssetActions: EntityActions<Asset> = {
     load: (workspace, page, size) => fetchClient("/api/v1/asset/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
@@ -17,7 +18,7 @@ export const AssetActions: EntityActions<Asset> = {
     save: (asset) => post("/api/v1/asset", asset),
     format: (asset) => {
         if (asset.provider) {
-            return asset.name + "@" + asset.provider.name
+            return asset.name + " @ " + asset.provider.name
         }
         return asset.name
     }
@@ -26,18 +27,23 @@ export const AssetActions: EntityActions<Asset> = {
 export function useAssetEditForm() {
     const formSchema = z.object({
         name: z.string().min(3).max(255),
-        provider: z.any().optional(),
+        provider: z.any().nullable(),
         code: z.string().min(3).max(8),
-        symbol: z.string().min(1).max(10).optional(),
-        notes: z.string().min(0).max(1024).optional(),
+        symbol: z.string().min(1).max(10).nullable(),
+        notes: z.string().min(0).max(1024).nullable(),
     })
+
+    const defaultValues = {
+        name: "",
+        provider: null,
+        code: "",
+        symbol: null,
+        notes: null
+    }
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-            code: ""
-        }
+        defaultValues: defaultValues
     })
 
     function toEntity(data: z.infer<typeof formSchema>, workspace: Workspace): Asset {
@@ -50,10 +56,22 @@ export function useAssetEditForm() {
     function fields() {
         return (
             <>
-                <ControlledInput name={"name"}
-                                 control={form.control}
-                                 placeholder={"Euro"}
-                                 label={i18next.t("asset.name")}/>
+                <div className={"flex gap-2"}>
+                    <ControlledInput name={"name"}
+                                     control={form.control}
+                                     placeholder={"Euro"}
+                                     label={i18next.t("asset.name")}/>
+                    <ControlledEntityComboBox name={"provider"}
+                                              control={form.control}
+                                              placeholder={"Apple inc."}
+                                              optional={true}
+                                              actions={PartnerActions}
+                                              form={usePartnerEditForm()}
+                                              i18nKey={"partner"}
+                                              render={option => option.name}
+                                              keyGenerator={option => option.name}
+                                              label={i18next.t("asset.provider")}/>
+                </div>
                 <div className={"flex gap-2"}>
                     <ControlledInput name={"code"}
                                      control={form.control}
@@ -73,13 +91,7 @@ export function useAssetEditForm() {
     }
 
     function reset(entity?: Asset) {
-        form.reset(entity || {
-            name: "",
-            provider: undefined,
-            code: "",
-            symbol: undefined,
-            notes: undefined
-        })
+        form.reset(entity || defaultValues)
     }
 
     return {form, toEntity, reset, fields}
@@ -107,6 +119,13 @@ export default function AssetView() {
             accessorKey: "symbol",
             enableSorting: true,
             sortingFn: "alphanumeric"
+        },
+        {
+            id: "provider",
+            header: columnHeader(i18next.t("asset.provider")),
+            accessorKey: "provider.name",
+            enableSorting: true,
+            sortingFn: "text"
         },
         {
             id: "notes",

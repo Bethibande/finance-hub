@@ -69,7 +69,7 @@ export function usePartnerEditForm() {
         )
     }
 
-    return {form, toEntity, reset, fields}
+    return {form, toEntity, reset, fields, formSchema}
 }
 
 export default function PartnerView() {
