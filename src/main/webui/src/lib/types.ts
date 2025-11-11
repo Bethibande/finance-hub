@@ -60,23 +60,23 @@ export interface Transaction {
     id?: number;
     workspace: Workspace;
     name: string;
-    amount: string;
+    amount: number;
     asset: Asset;
-    date: Date;
+    date: string;
     status: TransactionStatus;
     bookedAmounts: BookedAmount[];
     type: TransactionType;
-    deopt: Depot;
-    partner?: Partner;
-    internalRef?: Transaction;
-    notes?: string;
+    depot: Depot;
+    partner: Partner | null;
+    internalRef: Transaction | null;
+    notes: string | null;
 }
 
 export interface BookedAmount {
     id?: number;
-    amount: string,
+    amount: number,
     asset: Asset;
-    date: Date;
+    date: string;
     depot: Depot;
     notes?: string;
 }

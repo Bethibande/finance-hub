@@ -9,12 +9,17 @@ import DashboardView from "./views/DashboardView.tsx";
 import PartnerView from "./views/partners/PartnerView.tsx";
 import {DepotView} from "./views/Depots.tsx";
 import {UserView} from "./views/users/UserView.tsx";
+import {TransactionView} from "./views/payments/Payments.tsx";
 
 function App() {
     const primaryRoutes: RouteObject[] = [
         {
             path: "/",
             Component: DashboardView
+        },
+        {
+            path: "/payments",
+            Component: TransactionView
         },
         {
             path: "/assets",

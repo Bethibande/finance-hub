@@ -20,7 +20,6 @@ public class BookedAmount extends PanacheEntity {
     public Transaction transaction;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     public BigDecimal amount;
 
     @ManyToOne(optional = false)

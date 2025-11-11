@@ -1,4 +1,5 @@
 import {
+    type Column,
     type ColumnDef,
     flexRender,
     getCoreRowModel,
@@ -8,23 +9,53 @@ import {
 } from "@tanstack/react-table"
 import {type Table as TTable} from "@tanstack/table-core"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "./../ui/table.tsx";
-import {type RefObject, useEffect, useState} from "react";
+import {type CSSProperties, type RefObject, useEffect, useState} from "react";
 import type {PagedResponse} from "../../lib/types.ts";
 import {Button} from "../ui/button.tsx";
 import i18next from "i18next";
+import {cn} from "../../lib/utils.ts";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     page: PagedResponse<TData>,
     changePage: (page: number) => void,
-    ref?: RefObject<TTable<TData> | null>
+    ref?: RefObject<TTable<TData> | null>,
+    pinned?: string[],
+}
+
+export function renderAmount(amount: number) {
+    return (
+        <p className={cn("text-right", amount < 0.0 && "text-red-600")}>{amount.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })}</p>
+    )
+}
+
+export function renderDate(value: string) {
+    const date = new Date(value);
+    return (
+        <p>{date.toLocaleDateString()}</p>
+    )
+}
+
+const getCommonPinningStyles = (column: Column<any>): CSSProperties => {
+    const isPinned = column.getIsPinned()
+    return {
+        left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
+        right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+        position: isPinned ? 'sticky' : 'relative',
+        width: column.getSize(),
+        zIndex: isPinned ? 1 : 0,
+    }
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
                                              page,
                                              changePage,
-                                             ref
+                                             ref,
+                                             pinned,
                                          }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [rowSelection, setRowSelection] = useState({})
@@ -39,6 +70,9 @@ export function DataTable<TData, TValue>({
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         state: {
+            columnPinning: {
+                right: pinned
+            },
             sorting,
             rowSelection: rowSelection,
         }
@@ -77,14 +111,16 @@ export function DataTable<TData, TValue>({
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    onClick={() => row.toggleSelected()}
                                     data-state={row.getIsSelected() && "selected"}
                                 >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
+                                    {row.getVisibleCells().map((cell) => {
+                                        const column = cell.column
+                                        return (
+                                            <TableCell key={cell.id} style={{...getCommonPinningStyles(column)}} className={cn(column.getIsPinned() && "bg-white")}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        )
+                                    })}
                                 </TableRow>
                             ))
                         ) : (

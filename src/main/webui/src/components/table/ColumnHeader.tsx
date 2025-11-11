@@ -10,11 +10,11 @@ export default function ColumnHeader<TData>(props: { column: Column<TData>, head
     function toggleSort(e: React.MouseEvent<HTMLButtonElement>) {
         const sorted = column.getIsSorted();
         if (sorted === "asc") {
-            column.toggleSorting(true, e.shiftKey);
-        } else if (sorted === "desc") {
             column.clearSorting();
-        } else {
+        } else if (sorted === "desc") {
             column.toggleSorting(false, e.shiftKey);
+        } else {
+            column.toggleSorting(true, e.shiftKey);
         }
     }
 

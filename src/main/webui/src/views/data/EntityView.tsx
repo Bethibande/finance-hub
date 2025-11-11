@@ -41,6 +41,8 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
         ...props.columns,
         {
             id: "actions",
+            enablePinning: true,
+            maxSize: 50,
             cell: ({row}) => {
                 return (
                     <DropdownMenu>
@@ -103,7 +105,7 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
                         dialogControls.current?.edit(undefined)
                     }}>+ {i18next.t("create")}</Button>
                 </div>
-                <DataTable columns={columns} page={data} changePage={setPage}/>
+                <DataTable columns={columns} pinned={["actions"]} page={data} changePage={setPage}/>
             </div>
         </div>
     )

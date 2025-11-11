@@ -38,6 +38,7 @@ public abstract class AbstractWorkspaceCRUDEndpoint<T extends WorkspaceEntity> {
 
     @GET
     @Transactional
+
     @Path("/workspace/{workspace}")
     public PagedResponse<T> listByWorkspace(final @PathParam("workspace") long workspace,
                                             final @QueryParam("page") @DefaultValue("0") @Min(0) int page,

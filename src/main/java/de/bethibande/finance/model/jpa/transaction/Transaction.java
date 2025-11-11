@@ -1,6 +1,5 @@
 package de.bethibande.finance.model.jpa.transaction;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Depot;
 import de.bethibande.finance.model.jpa.WorkspaceEntity;
@@ -18,7 +17,6 @@ public class Transaction extends WorkspaceEntity {
     public String name;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     public BigDecimal amount;
 
     @ManyToOne(optional = false)

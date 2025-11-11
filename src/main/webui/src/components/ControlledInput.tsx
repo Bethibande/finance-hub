@@ -6,13 +6,14 @@ import {Select} from "./select.tsx";
 import {ComboBox} from "./combobox.tsx";
 import {EntityComboBox} from "./entity-combobox.tsx";
 import type {EntityActions, EntityEditForm} from "../views/data/EntityDialog.tsx";
+import type {HTMLInputTypeAttribute} from "react";
 
 export interface ControlledInputProps<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues> {
     name: TName;
     control: Control<TFieldValues, any, TTransformedValues>
     label: string;
     placeholder?: string;
-    type?: string;
+    type?: HTMLInputTypeAttribute;
 }
 
 export interface ControlledSelectProps<TOption, TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues> {
@@ -74,7 +75,7 @@ export function ControlledComboBox<TOption, TFieldValues extends FieldValues = F
     )
 }
 
-export interface ControlledEntityComboBoxProps<TEntity, TForm extends FieldValues, TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>{
+export interface ControlledEntityComboBoxProps<TEntity, TForm extends FieldValues, TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues> {
     name: TName,
     control: Control<TFieldValues, any, TTransformedValues>,
     label: string,
@@ -122,6 +123,75 @@ export function ControlledInput<TFieldValues extends FieldValues = FieldValues, 
                 <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor={name}>{label}</FieldLabel>
                     <Input {...field} id={name} type={type || "text"} aria-invalid={fieldState.invalid}
+                           placeholder={placeholder}/>
+                    {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]}/>
+                    )}
+                </Field>
+            )
+        }}/>
+    )
+}
+
+export function ControlledNumberInput<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>(props: ControlledInputProps<TFieldValues, TName, TTransformedValues>) {
+    const {name, control, label, placeholder} = props;
+
+    function convertToString(value: number | string) {
+        if (typeof value === 'string') {
+            return value;
+        }
+        return value.toLocaleString();
+    }
+
+    function convertToNumber(value: string) {
+        return parseFloat(value);
+    }
+
+    return (
+        <Controller name={name} control={control} render={({field, fieldState}) => {
+            return (
+                <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={name}>{label}</FieldLabel>
+                    <Input {...field} id={name}
+                           value={convertToString(field.value)}
+                           onChange={(event) => field.onChange(convertToNumber(event.target.value))}
+                           type={"number"}
+                           aria-invalid={fieldState.invalid}
+                           placeholder={placeholder}/>
+                    {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]}/>
+                    )}
+                </Field>
+            )
+        }}/>
+    )
+}
+
+export function ControlledDateInput<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>(props: ControlledInputProps<TFieldValues, TName, TTransformedValues>) {
+    const {name, control, label, placeholder} = props;
+
+    function convertToString(value: Date | string) {
+        if (typeof value === 'string') {
+            return value;
+        }
+        return value.toLocaleDateString("sv", {year: "numeric", month: "2-digit", day: "2-digit"});
+    }
+
+    function convertToDate(value: string) {
+        const parts = value.split("-");
+        return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    }
+
+    return (
+        <Controller name={name} control={control} render={({field, fieldState}) => {
+            return (
+                <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={name}>{label}</FieldLabel>
+                    <Input {...field} id={name}
+                           value={convertToString(field.value)}
+                           onChange={(event) => field.onChange(convertToDate(event.target.value))}
+                           type={"date"}
+                           aria-invalid={fieldState.invalid}
                            placeholder={placeholder}/>
                     {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]}/>

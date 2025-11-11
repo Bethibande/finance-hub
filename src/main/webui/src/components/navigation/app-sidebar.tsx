@@ -19,7 +19,7 @@ import WorkspaceSelect from "./workspace-select.tsx";
 import UserItem from "./user-item.tsx";
 import {Separator} from "../ui/separator.tsx";
 import {useAuth} from "../../lib/auth.tsx";
-import type {UserDto} from "../../lib/types.ts";
+import {Role, type UserDto} from "../../lib/types.ts";
 
 export interface NavItem {
     text: string;
@@ -27,7 +27,7 @@ export interface NavItem {
     suffix?: React.ReactNode;
     href?: string;
     children?: NavItem[];
-    requiredRoles?: string[];
+    requiredRoles?: Role[];
 }
 
 function toGroup(item: NavItem, user?: UserDto): ReactNode | undefined {
@@ -137,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {
             icon: <Sliders/>,
             text: "Administration",
-            requiredRoles: ["admin"],
+            requiredRoles: [Role.admin],
             children: [
                 {
                     text: "Users",
