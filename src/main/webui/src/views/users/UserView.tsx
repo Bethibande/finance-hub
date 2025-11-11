@@ -60,7 +60,6 @@ export function useUserForm() {
 
     function fields(props: FieldProps) {
         const {editing} = props;
-        console.log(editing)
 
         return (
             <>
