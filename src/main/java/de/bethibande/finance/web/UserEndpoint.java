@@ -45,6 +45,7 @@ public class UserEndpoint {
     }
 
     @DELETE
+    @Transactional
     @Path("/{id}")
     public void deleteById(@PathParam("id") final long id) {
         User.deleteById(id);

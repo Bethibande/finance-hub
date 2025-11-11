@@ -55,7 +55,7 @@ export function useUserForm() {
     }
 
     function reset(entity?: User) {
-        form.reset(entity ? {...entity, role: entity.roles[0]} : {...defaultValues, password: "", passwordRepeat: ""})
+        form.reset(entity ? {...entity, password: undefined, role: entity.roles[0]} : {...defaultValues, password: "", passwordRepeat: ""})
     }
 
     function fields(props: FieldProps) {
