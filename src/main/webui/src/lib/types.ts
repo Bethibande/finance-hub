@@ -81,9 +81,23 @@ export interface BookedAmount {
     notes?: string;
 }
 
+export const Role = {
+    admin: "admin",
+    user: "user",
+} as const;
+
+export type Role = (typeof Role)[keyof typeof Role];
+
 export interface UserDto {
     name: string,
-    roles: string[]
+    roles: Role[]
+}
+
+export interface User {
+    id?: number;
+    name: string;
+    roles: Role[];
+    password: string | null;
 }
 
 export interface PagedResponse<T> {

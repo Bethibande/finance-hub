@@ -1,5 +1,6 @@
 package de.bethibande.finance.model.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
@@ -21,11 +22,12 @@ public class User extends PanacheEntity {
     public String name;
 
     @Password
+    @JsonIgnore
     @Column(nullable = false)
     public String password;
 
     @Roles
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     public Set<String> roles;
 
     public record UserDto(String name, Set<String> roles) {

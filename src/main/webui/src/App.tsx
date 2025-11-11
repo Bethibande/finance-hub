@@ -8,6 +8,7 @@ import LoginView from "./views/LoginView.tsx";
 import DashboardView from "./views/DashboardView.tsx";
 import PartnerView from "./views/partners/PartnerView.tsx";
 import {DepotView} from "./views/Depots.tsx";
+import {UserView} from "./views/users/UserView.tsx";
 
 function App() {
     const primaryRoutes: RouteObject[] = [
@@ -27,6 +28,10 @@ function App() {
             path: "/depots",
             Component: DepotView,
         },
+        {
+            path: "/users",
+            Component: UserView,
+        }
     ]
 
     const secondaryRoutes: RouteObject[] = [

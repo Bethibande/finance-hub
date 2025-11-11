@@ -16,6 +16,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
 @RunOnVirtualThread
+@RolesAllowed({Roles.USER, Roles.ADMIN})
 public abstract class AbstractWorkspaceCRUDEndpoint<T extends WorkspaceEntity> {
 
     @Inject
@@ -23,7 +24,6 @@ public abstract class AbstractWorkspaceCRUDEndpoint<T extends WorkspaceEntity> {
 
     @POST
     @Transactional
-    @RolesAllowed(Roles.USER)
     public T persist(final T asset) {
         if (asset.id != null) {
             return entityManager.merge(asset);
@@ -38,7 +38,6 @@ public abstract class AbstractWorkspaceCRUDEndpoint<T extends WorkspaceEntity> {
 
     @GET
     @Transactional
-    @RolesAllowed(Roles.USER)
     @Path("/workspace/{workspace}")
     public PagedResponse<T> listByWorkspace(final @PathParam("workspace") long workspace,
                                             final @QueryParam("page") @DefaultValue("0") @Min(0) int page,
@@ -52,7 +51,6 @@ public abstract class AbstractWorkspaceCRUDEndpoint<T extends WorkspaceEntity> {
     @GET
     @Transactional
     @Path("/{id}")
-    @RolesAllowed(Roles.USER)
     public T get(final @PathParam("id") long id) {
         return find("id = ?1", id).firstResult();
     }
@@ -62,7 +60,6 @@ public abstract class AbstractWorkspaceCRUDEndpoint<T extends WorkspaceEntity> {
     @DELETE
     @Path("/{id}")
     @Transactional
-    @RolesAllowed(Roles.USER)
     public Response delete(final @PathParam("id") long id) {
         if (hasDependents(id)) {
             return Response.status(Response.Status.CONFLICT)

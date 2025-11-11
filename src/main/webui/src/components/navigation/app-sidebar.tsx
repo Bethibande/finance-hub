@@ -12,12 +12,14 @@ import {
     SidebarMenuItem
 } from "../ui/sidebar.tsx";
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "../ui/collapsible.tsx";
-import {Cash, ChevronDown, ClipboardData, Database} from "react-bootstrap-icons";
+import {Cash, ChevronDown, ClipboardData, Database, Sliders} from "react-bootstrap-icons";
 import {NavLink} from "react-router";
 import {cn} from "../../lib/utils.ts";
 import WorkspaceSelect from "./workspace-select.tsx";
 import UserItem from "./user-item.tsx";
 import {Separator} from "../ui/separator.tsx";
+import {useAuth} from "../../lib/auth.tsx";
+import type {UserDto} from "../../lib/types.ts";
 
 export interface NavItem {
     text: string;
@@ -25,52 +27,11 @@ export interface NavItem {
     suffix?: React.ReactNode;
     href?: string;
     children?: NavItem[];
+    requiredRoles?: string[];
 }
 
-const primary: NavItem[] = [
-    {
-        icon: <ClipboardData/>,
-        text: "Dashboard",
-        href: "/"
-    },
-];
-const secondary: NavItem[] = [
-    {
-        icon: <Cash/>,
-        text: "Transactions",
-        children: [
-            {
-                text: "Payments",
-                href: "/payments"
-            },
-            {
-                text: "Recurring payments",
-                href: "/recurring-payments"
-            }
-        ]
-    },
-    {
-        icon: <Database/>,
-        text: "Master data",
-        children: [
-            {
-                text: "Depots",
-                href: "/depots"
-            },
-            {
-                text: "Assets",
-                href: "/assets"
-            },
-            {
-                text: "Partners",
-                href: "/partners"
-            },
-        ]
-    }
-];
-
-function toGroup(item: NavItem): ReactNode {
-    const children = item.children?.map((child) => toComponent(child));
+function toGroup(item: NavItem, user?: UserDto): ReactNode | undefined {
+    const children = item.children?.map((child) => toComponent(child, user));
     const [open, setOpen] = useState(true);
 
     return (
@@ -111,9 +72,10 @@ function toUrlItem(item: NavItem): ReactNode {
     )
 }
 
-function toComponent(item: NavItem): ReactNode {
+function toComponent(item: NavItem, user?: UserDto): ReactNode | undefined {
+    if (!checkPermissions(item, user)) return undefined;
     if (item.children) {
-        return toGroup(item);
+        return toGroup(item, user);
     } else if (item.href) {
         return toUrlItem(item);
     } else {
@@ -121,9 +83,74 @@ function toComponent(item: NavItem): ReactNode {
     }
 }
 
+function checkPermissions(item: NavItem, user?: UserDto) {
+    if(!item.requiredRoles) return true;
+    if (item.requiredRoles && user) {
+        for (let role of user.roles) {
+            if (item.requiredRoles.includes(role)) return true;
+        }
+    }
+    return false;
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const primaryItems = primary.map((item) => toComponent(item));
-    const secondaryItems = secondary.map((item) => toComponent(item));
+    const primary: NavItem[] = [
+        {
+            icon: <ClipboardData/>,
+            text: "Dashboard",
+            href: "/"
+        },
+    ];
+    const secondary: NavItem[] = [
+        {
+            icon: <Cash/>,
+            text: "Transactions",
+            children: [
+                {
+                    text: "Payments",
+                    href: "/payments"
+                },
+                {
+                    text: "Recurring payments",
+                    href: "/recurring-payments"
+                }
+            ]
+        },
+        {
+            icon: <Database/>,
+            text: "Master data",
+            children: [
+                {
+                    text: "Depots",
+                    href: "/depots"
+                },
+                {
+                    text: "Assets",
+                    href: "/assets"
+                },
+                {
+                    text: "Partners",
+                    href: "/partners"
+                },
+            ]
+        },
+        {
+            icon: <Sliders/>,
+            text: "Administration",
+            requiredRoles: ["admin"],
+            children: [
+                {
+                    text: "Users",
+                    href: "/users"
+                },
+            ]
+        }
+    ];
+
+    const {user} = useAuth()
+
+    const primaryItems = primary.map((item) => toComponent(item, user));
+    const secondaryItems = secondary.map((item) => toComponent(item, user));
 
     return (
         <Sidebar collapsible="offcanvas" {...props}>

@@ -15,11 +15,15 @@ import {FieldGroup} from "../../components/ui/field.tsx";
 import {Button} from "../../components/ui/button.tsx";
 import {useWorkspace} from "../../lib/workspace.tsx";
 
+export interface FieldProps {
+    editing: boolean
+}
+
 export interface EntityEditForm<TEntity, TForm extends FieldValues> {
     form: UseFormReturn<TForm>,
     toEntity: (data: TForm, workspace: Workspace) => TEntity,
     reset: (entity?: TEntity) => void,
-    fields: FunctionComponent,
+    fields: FunctionComponent<FieldProps>,
 }
 
 export interface EntityActions<TEntity> {
@@ -101,7 +105,7 @@ export function EntityEditForm<TEntity, TForm extends FieldValues>(props: EditFo
                 </DialogHeader>
 
                 <FieldGroup>
-                    {<form.fields/>}
+                    {<form.fields editing={!!entity}/>}
                 </FieldGroup>
 
                 <DialogFooter>

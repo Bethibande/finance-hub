@@ -35,6 +35,19 @@ export async function deleteClient(input: RequestInfo | URL,
     })
 }
 
+export async function patch(input: RequestInfo | URL,
+                            body: any,
+                            init?: RequestInit): Promise<Response> {
+    return fetchClient(input, {
+        body: JSON.stringify(body),
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            ...init?.headers,
+        }
+    })
+}
+
 export async function post(input: RequestInfo | URL,
                            body: any,
                            init?: RequestInit): Promise<Response> {

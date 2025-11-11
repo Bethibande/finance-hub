@@ -16,20 +16,24 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
 @RunOnVirtualThread
+@RolesAllowed({Roles.USER, Roles.ADMIN})
 public abstract class AbstractCRUDEndpoint<T extends PanacheEntity> {
 
     @Inject
     protected EntityManager entityManager;
 
+    protected void persistEntity(final T entity) {
+        entity.persist();
+    }
+
     @POST
     @Transactional
-    @RolesAllowed(Roles.USER)
-    public T persist(final T asset) {
-        if (asset.id != null) {
-            return entityManager.merge(asset);
+    public T persist(final T entity) {
+        if (entity.id != null) {
+            return entityManager.merge(entity);
         }
-        asset.persist();
-        return asset;
+        persistEntity(entity);
+        return entity;
     }
 
     protected abstract PanacheQuery<T> find(final String query, final Object... params);
@@ -40,7 +44,6 @@ public abstract class AbstractCRUDEndpoint<T extends PanacheEntity> {
 
     @GET
     @Transactional
-    @RolesAllowed(Roles.USER)
     public PagedResponse<T> list(final @QueryParam("page") @DefaultValue("0") @Min(0) int page,
                                  final @QueryParam("size") @DefaultValue("50") @Min(1) @Max(500) int size) {
         final PanacheQuery<T> query = list().page(page, size);
@@ -50,7 +53,6 @@ public abstract class AbstractCRUDEndpoint<T extends PanacheEntity> {
     @GET
     @Transactional
     @Path("/{id}")
-    @RolesAllowed(Roles.USER)
     public T get(final @PathParam("id") long id) {
         return find("id = ?1", id).firstResult();
     }
@@ -60,7 +62,6 @@ public abstract class AbstractCRUDEndpoint<T extends PanacheEntity> {
     @DELETE
     @Path("/{id}")
     @Transactional
-    @RolesAllowed(Roles.USER)
     public Response delete(final @PathParam("id") long id) {
         if (hasDependents(id)) {
             return Response.status(Response.Status.CONFLICT)
