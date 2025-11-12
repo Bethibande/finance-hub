@@ -118,7 +118,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
         {
             icon: <Database/>,
-            text: "Master data",
+            text: "Organization",
             children: [
                 {
                     text: "Depots",
