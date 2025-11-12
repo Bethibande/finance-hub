@@ -7,6 +7,7 @@ import {ComboBox} from "./combobox.tsx";
 import {EntityComboBox} from "./entity-combobox.tsx";
 import type {EntityActions, EntityEditForm} from "../views/data/EntityDialog.tsx";
 import type {HTMLInputTypeAttribute} from "react";
+import {NumberField} from "./numberfield.tsx";
 
 export interface ControlledInputProps<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues> {
     name: TName;
@@ -136,28 +137,17 @@ export function ControlledInput<TFieldValues extends FieldValues = FieldValues, 
 export function ControlledNumberInput<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>(props: ControlledInputProps<TFieldValues, TName, TTransformedValues>) {
     const {name, control, label, placeholder} = props;
 
-    function convertToString(value: number | string) {
-        if (typeof value === 'string') {
-            return value;
-        }
-        return value.toLocaleString();
-    }
-
-    function convertToNumber(value: string) {
-        return parseFloat(value);
-    }
-
     return (
         <Controller name={name} control={control} render={({field, fieldState}) => {
             return (
                 <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor={name}>{label}</FieldLabel>
-                    <Input {...field} id={name}
-                           value={convertToString(field.value)}
-                           onChange={(event) => field.onChange(convertToNumber(event.target.value))}
-                           type={"number"}
-                           aria-invalid={fieldState.invalid}
-                           placeholder={placeholder}/>
+                    <NumberField {...field}
+                                 id={name}
+                                 value={field.value}
+                                 setValue={field.onChange}
+                                 aria-invalid={fieldState.invalid}
+                                 placeholder={placeholder}/>
                     {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]}/>
                     )}
