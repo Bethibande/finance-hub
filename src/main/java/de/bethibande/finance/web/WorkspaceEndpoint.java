@@ -1,15 +1,9 @@
 package de.bethibande.finance.web;
 
 import de.bethibande.finance.model.jpa.Asset;
-import de.bethibande.finance.model.jpa.Depot;
 import de.bethibande.finance.model.jpa.Workspace;
-import de.bethibande.finance.security.Roles;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
-
-import java.util.List;
 
 @Path("/api/v1/workspace")
 public class WorkspaceEndpoint extends AbstractCRUDEndpoint<Workspace> {

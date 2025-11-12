@@ -16,7 +16,7 @@ import {
 } from "../../components/ControlledInput.tsx";
 import i18next from "i18next";
 import {AssetActions, useAssetEditForm} from "../assets/AssetView.tsx";
-import {DepotActions, useDepotForm} from "../Depots.tsx";
+import {WalletActions, useWalletForm} from "../WalletView.tsx";
 import {PartnerActions, usePartnerEditForm} from "../partners/PartnerView.tsx";
 import {columnHeader} from "../../components/ui/table.tsx";
 import {renderAmount, renderDate} from "../../components/table/data-table.tsx";
@@ -37,7 +37,7 @@ export function useTransactionForm() {
         asset: z.any().nullable(),
         date: z.date(),
         status: z.enum(TransactionStatus),
-        depot: z.any().nullable(),
+        wallet: z.any().nullable(),
         partner: z.any().nullable(),
         notes: z.string().max(1024).nullable(),
     })
@@ -48,7 +48,7 @@ export function useTransactionForm() {
         asset: null,
         date: new Date(),
         status: TransactionStatus.OPEN,
-        depot: null,
+        wallet: null,
         partner: null,
         notes: "",
     }
@@ -63,7 +63,7 @@ export function useTransactionForm() {
             ...data,
             date: data.date.toISOString(),
             asset: data.asset!,
-            depot: data.depot!,
+            wallet: data.wallet!,
             workspace: workspace,
             type: TransactionType.PAYMENT,
             bookedAmounts: [],
@@ -101,14 +101,14 @@ export function useTransactionForm() {
                                               i18nKey={"asset"}/>
                 </div>
                 <div className={"flex gap-2"}>
-                    <ControlledEntityComboBox name={"depot"}
+                    <ControlledEntityComboBox name={"wallet"}
                                               control={form.control}
-                                              label={i18next.t("transaction.depot")}
-                                              render={DepotActions.format}
-                                              keyGenerator={depot => depot.name}
-                                              actions={DepotActions}
-                                              form={useDepotForm()}
-                                              i18nKey={"depot"}/>
+                                              label={i18next.t("transaction.wallet")}
+                                              render={WalletActions.format}
+                                              keyGenerator={wallet => wallet.name}
+                                              actions={WalletActions}
+                                              form={useWalletForm()}
+                                              i18nKey={"wallet"}/>
                     <ControlledEntityComboBox name={"partner"}
                                               control={form.control}
                                               label={i18next.t("transaction.partner")}
@@ -195,10 +195,10 @@ export function TransactionView() {
             cell: ({row}) => row.original.partner && PartnerActions.format(row.original.partner),
         },
         {
-            id: "depot",
-            header: i18next.t("transaction.depot"),
-            cell: ({row}) => row.original.depot && DepotActions.format(row.original.depot),
-            accessorKey: "depot",
+            id: "wallet",
+            header: i18next.t("transaction.wallet"),
+            cell: ({row}) => row.original.wallet && WalletActions.format(row.original.wallet),
+            accessorKey: "wallet",
         }
     ]
 

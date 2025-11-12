@@ -1,7 +1,7 @@
 package de.bethibande.finance.model.jpa.transaction;
 
 import de.bethibande.finance.model.jpa.Asset;
-import de.bethibande.finance.model.jpa.Depot;
+import de.bethibande.finance.model.jpa.Wallet;
 import de.bethibande.finance.model.jpa.WorkspaceEntity;
 import de.bethibande.finance.model.jpa.partner.Partner;
 import jakarta.persistence.*;
@@ -46,6 +46,6 @@ public class Transaction extends WorkspaceEntity {
     public TransactionType type;
 
     @ManyToOne(optional = false)
-    public Depot depot;
+    public Wallet wallet;
 
 }

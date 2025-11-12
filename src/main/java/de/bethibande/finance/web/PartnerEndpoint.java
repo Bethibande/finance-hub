@@ -1,7 +1,7 @@
 package de.bethibande.finance.web;
 
 import de.bethibande.finance.model.jpa.Asset;
-import de.bethibande.finance.model.jpa.Depot;
+import de.bethibande.finance.model.jpa.Wallet;
 import de.bethibande.finance.model.jpa.partner.Partner;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -24,7 +24,7 @@ public class PartnerEndpoint extends AbstractWorkspaceCRUDEndpoint<Partner> {
     protected boolean hasDependents(final long id) {
         if (Asset.count("provider.id = ?1", id) > 0) return true;
         if (Transaction.count("partner.id = ?1", id) > 0) return true;
-        if (Depot.count("provider.id = ?1", id) > 0) return true;
+        if (Wallet.count("provider.id = ?1", id) > 0) return true;
         return false;
     }
 }

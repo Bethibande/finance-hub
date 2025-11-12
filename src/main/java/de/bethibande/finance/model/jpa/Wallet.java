@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Depot extends WorkspaceEntity {
+public class Wallet extends WorkspaceEntity {
 
     @Column(nullable = false)
     public String name;

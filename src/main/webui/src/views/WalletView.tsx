@@ -1,5 +1,5 @@
 import type {EntityActions} from "./data/EntityDialog.tsx";
-import type {Depot, Workspace} from "../lib/types.ts";
+import type {Wallet, Workspace} from "../lib/types.ts";
 import {deleteClient, fetchClient, post} from "../lib/api.ts";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
@@ -12,15 +12,15 @@ import {AssetActions, useAssetEditForm} from "./assets/AssetView.tsx";
 import {PartnerActions, usePartnerEditForm} from "./partners/PartnerView.tsx";
 import {columnHeader} from "../components/ui/table.tsx";
 
-export const DepotActions: EntityActions<Depot> = {
-    load: (workspace, page, size) => fetchClient("/api/v1/depot/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
-    create: (entity) => post("/api/v1/depot", entity),
-    save: (entity) => post("/api/v1/depot", entity),
-    delete: (entity) => deleteClient("/api/v1/depot/" + entity.id),
+export const WalletActions: EntityActions<Wallet> = {
+    load: (workspace, page, size) => fetchClient("/api/v1/wallet/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
+    create: (entity) => post("/api/v1/wallet", entity),
+    save: (entity) => post("/api/v1/wallet", entity),
+    delete: (entity) => deleteClient("/api/v1/wallet/" + entity.id),
     format: (entity) => entity.name
 }
 
-export function useDepotForm() {
+export function useWalletForm() {
     const formSchema = z.object({
         name: z.string().min(3).max(255),
         notes: z.string().min(3).max(255).nullable(),
@@ -40,14 +40,14 @@ export function useDepotForm() {
         defaultValues,
     })
 
-    function toEntity(data: z.infer<typeof formSchema>, workspace: Workspace): Depot {
+    function toEntity(data: z.infer<typeof formSchema>, workspace: Workspace): Wallet {
         return {
             ...data,
             workspace: workspace
         }
     }
 
-    function reset(entity?: Depot) {
+    function reset(entity?: Wallet) {
         form.reset(entity || defaultValues)
     }
 
@@ -56,34 +56,34 @@ export function useDepotForm() {
             <>
                 <ControlledInput name={"name"}
                                  control={form.control}
-                                 label={i18next.t("depot.name")}
-                                 placeholder={i18next.t("depot.name.placeholder")}/>
+                                 label={i18next.t("wallet.name")}
+                                 placeholder={i18next.t("wallet.name.placeholder")}/>
                 <div className={"flex gap-2"}>
                     <ControlledEntityComboBox name={"asset"}
                                               control={form.control}
-                                              label={i18next.t("depot.asset")}
+                                              label={i18next.t("wallet.asset")}
                                               render={AssetActions.format}
                                               keyGenerator={AssetActions.format}
                                               actions={AssetActions}
                                               form={useAssetEditForm()}
                                               optional={true}
-                                              placeholder={i18next.t("depot.asset.placeholder")}
+                                              placeholder={i18next.t("wallet.asset.placeholder")}
                                               i18nKey={"asset"}/>
                     <ControlledEntityComboBox name={"provider"}
                                               control={form.control}
-                                              label={i18next.t("depot.provider")}
+                                              label={i18next.t("wallet.provider")}
                                               render={PartnerActions.format}
                                               keyGenerator={PartnerActions.format}
                                               actions={PartnerActions}
                                               form={usePartnerEditForm()}
                                               optional={true}
-                                              placeholder={i18next.t("depot.provider.placeholder")}
+                                              placeholder={i18next.t("wallet.provider.placeholder")}
                                               i18nKey={"partner"}/>
                 </div>
                 <ControlledTextArea name={"notes"}
                                     control={form.control}
-                                    label={i18next.t("depot.notes")}
-                                    placeholder={i18next.t("depot.notes.placeholder")}/>
+                                    label={i18next.t("wallet.notes")}
+                                    placeholder={i18next.t("wallet.notes.placeholder")}/>
             </>
         )
     }
@@ -91,39 +91,39 @@ export function useDepotForm() {
     return {form, toEntity, reset, fields}
 }
 
-export function DepotView() {
-    const columns: ColumnDef<Depot>[] = [
+export function WalletView() {
+    const columns: ColumnDef<Wallet>[] = [
         {
             id: "name",
-            header: columnHeader(i18next.t("depot.name")),
+            header: columnHeader(i18next.t("wallet.name")),
             accessorKey: "name",
             enableSorting: true,
         },
         {
             id: "asset",
-            header: columnHeader(i18next.t("depot.asset")),
+            header: columnHeader(i18next.t("wallet.asset")),
             cell: ({row}) => row.original.asset ? AssetActions.format(row.original.asset) : "",
             accessorKey: "asset",
             enableSorting: true,
         },
         {
             id: "provider",
-            header: columnHeader(i18next.t("depot.provider")),
+            header: columnHeader(i18next.t("wallet.provider")),
             cell: ({row}) => row.original.provider ? PartnerActions.format(row.original.provider) : "",
             accessorKey: "provider",
             enableSorting: true,
         },
         {
             id: "notes",
-            header: i18next.t("depot.notes"),
+            header: i18next.t("wallet.notes"),
             accessorKey: "notes",
         }
     ]
 
     return (
-        <EntityView actions={DepotActions}
+        <EntityView actions={WalletActions}
                     columns={columns}
-                    i18nKey={"depot"}
-                    editForm={useDepotForm()}/>
+                    i18nKey={"wallet"}
+                    editForm={useWalletForm()}/>
     )
 }

@@ -121,8 +121,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             text: "Organization",
             children: [
                 {
-                    text: "Depots",
-                    href: "/depots"
+                    text: "Wallets",
+                    href: "/wallets"
                 },
                 {
                     text: "Assets",

@@ -12,7 +12,7 @@
         <createSequence incrementBy="50" sequenceName="Asset_seq" startValue="1"/>
     </changeSet>
     <changeSet id="1762354052443-3" author="bethibande">
-        <createSequence incrementBy="50" sequenceName="Depot_seq" startValue="1"/>
+        <createSequence incrementBy="50" sequenceName="Wallet_seq" startValue="1"/>
     </changeSet>
     <changeSet id="1762354052443-4" author="bethibande">
         <createSequence incrementBy="50" sequenceName="ExchangeRate_seq" startValue="1"/>
@@ -43,7 +43,7 @@
             <column name="date" type="DATE">
                 <constraints nullable="false"/>
             </column>
-            <column name="depot_id" type="BIGINT">
+            <column name="wallet_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="notes" type="VARCHAR(255)"/>
@@ -68,9 +68,9 @@
         </createTable>
     </changeSet>
     <changeSet id="1762354052443-11" author="bethibande">
-        <createTable tableName="Depot">
+        <createTable tableName="Wallet">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_depot"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_wallet"/>
             </column>
             <column name="workspace_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -148,7 +148,7 @@
             <column name="type" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="depot_id" type="BIGINT">
+            <column name="wallet_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -169,9 +169,9 @@
                                  referencedTableName="Asset"/>
     </changeSet>
     <changeSet id="1762354052443-18" author="bethibande">
-        <addForeignKeyConstraint baseColumnNames="depot_id" baseTableName="BookedAmount"
-                                 constraintName="FK_BOOKEDAMOUNT_ON_DEPOT" referencedColumnNames="id"
-                                 referencedTableName="Depot"/>
+        <addForeignKeyConstraint baseColumnNames="wallet_id" baseTableName="BookedAmount"
+                                 constraintName="FK_BOOKEDAMOUNT_ON_WALLET" referencedColumnNames="id"
+                                 referencedTableName="Wallet"/>
     </changeSet>
     <changeSet id="1762354052443-19" author="bethibande">
         <addForeignKeyConstraint baseColumnNames="transaction_id" baseTableName="BookedAmount"
@@ -184,18 +184,18 @@
                                  referencedTableName="Workspace"/>
     </changeSet>
     <changeSet id="1762354052443-21" author="bethibande">
-        <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="Depot"
-                                 constraintName="FK_DEPOT_ON_ASSET" referencedColumnNames="id"
+        <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="Wallet"
+                                 constraintName="FK_WALLET_ON_ASSET" referencedColumnNames="id"
                                  referencedTableName="Asset"/>
     </changeSet>
     <changeSet id="1762354052443-22" author="bethibande">
-        <addForeignKeyConstraint baseColumnNames="provider_id" baseTableName="Depot"
-                                 constraintName="FK_DEPOT_ON_PROVIDER" referencedColumnNames="id"
+        <addForeignKeyConstraint baseColumnNames="provider_id" baseTableName="Wallet"
+                                 constraintName="FK_WALLET_ON_PROVIDER" referencedColumnNames="id"
                                  referencedTableName="Partner"/>
     </changeSet>
     <changeSet id="1762354052443-23" author="bethibande">
-        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="Depot"
-                                 constraintName="FK_DEPOT_ON_WORKSPACE" referencedColumnNames="id"
+        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="Wallet"
+                                 constraintName="FK_WALLET_ON_WORKSPACE" referencedColumnNames="id"
                                  referencedTableName="Workspace"/>
     </changeSet>
     <changeSet id="1762354052443-24" author="bethibande">
@@ -219,9 +219,9 @@
                                  referencedTableName="Asset"/>
     </changeSet>
     <changeSet id="1762354052443-28" author="bethibande">
-        <addForeignKeyConstraint baseColumnNames="depot_id" baseTableName="Transaction"
-                                 constraintName="FK_TRANSACTION_ON_DEPOT" referencedColumnNames="id"
-                                 referencedTableName="Depot"/>
+        <addForeignKeyConstraint baseColumnNames="wallet_id" baseTableName="Transaction"
+                                 constraintName="FK_TRANSACTION_ON_WALLET" referencedColumnNames="id"
+                                 referencedTableName="Wallet"/>
     </changeSet>
     <changeSet id="1762354052443-29" author="bethibande">
         <addForeignKeyConstraint baseColumnNames="internalRef_id" baseTableName="Transaction"

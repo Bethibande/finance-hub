@@ -7,7 +7,7 @@ import {ViewConfigProvider} from "./lib/view-config.tsx";
 import LoginView from "./views/LoginView.tsx";
 import DashboardView from "./views/DashboardView.tsx";
 import PartnerView from "./views/partners/PartnerView.tsx";
-import {DepotView} from "./views/Depots.tsx";
+import {WalletView} from "./views/WalletView.tsx";
 import {UserView} from "./views/users/UserView.tsx";
 import {TransactionView} from "./views/payments/Payments.tsx";
 
@@ -30,8 +30,8 @@ function App() {
             Component: PartnerView,
         },
         {
-            path: "/depots",
-            Component: DepotView,
+            path: "/wallets",
+            Component: WalletView,
         },
         {
             path: "/users",

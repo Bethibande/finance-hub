@@ -32,7 +32,7 @@ export interface Partner {
     notes: string | null;
 }
 
-export interface Depot {
+export interface Wallet {
     id?: number;
     name: string;
     workspace: Workspace;
@@ -66,7 +66,7 @@ export interface Transaction {
     status: TransactionStatus;
     bookedAmounts: BookedAmount[];
     type: TransactionType;
-    depot: Depot;
+    wallet: Wallet;
     partner: Partner | null;
     internalRef: Transaction | null;
     notes: string | null;
@@ -77,7 +77,7 @@ export interface BookedAmount {
     amount: number,
     asset: Asset;
     date: string;
-    depot: Depot;
+    wallet: Wallet;
     notes?: string;
 }
 

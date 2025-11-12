@@ -1,9 +1,8 @@
 package de.bethibande.finance.model.jpa.transaction;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.bethibande.finance.model.jpa.Asset;
-import de.bethibande.finance.model.jpa.Depot;
+import de.bethibande.finance.model.jpa.Wallet;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +28,7 @@ public class BookedAmount extends PanacheEntity {
     public LocalDate date;
 
     @ManyToOne(optional = false)
-    public Depot depot;
+    public Wallet wallet;
 
     @Column
     public String notes;

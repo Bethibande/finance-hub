@@ -23,15 +23,15 @@ This is my personal finance app used for tracking my income and expenses.
 |------------------------------|------------------------------------------|
 | ![Assets](images/assets.png) | ![Create asset](images/create-asset.png) |
 
-| Depots                       | Edit a depot                         |
+| Wallets                       | Edit a wallet                         |
 |------------------------------|--------------------------------------|
-| ![Depots](images/depots.png) | ![Edit depot](images/edit-depot.png) |
+| ![Wallets](images/wallets.png) | ![Edit wallet](images/edit-wallet.png) |
 
 ### Data model
 ![Classes](images/classes.png)
-- Workspaces are used to separate and share all resources such as assets, transactions, exchange rates and depots
+- Workspaces are used to separate and share all resources such as assets, transactions, exchange rates and wallets
 - Assets cam be anything, currencies, stocks, bonds, etc.
-- A depot is a unit that holds actual assets, like a bank account, trading depot, etc.
+- A wallet is a unit that holds actual assets, like a bank account, trading wallet, etc.
 - A Transaction is an expected payment or a balance adjustment
 - A BookedAmount is an actual payment that has been made
 - Exchange rates between assets can be used to convert all amounts to a common currency for a better overview
