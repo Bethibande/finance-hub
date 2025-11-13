@@ -1,7 +1,7 @@
 import {Popover, PopoverContent, PopoverTrigger} from "./ui/popover.tsx";
 import {Button} from "./ui/button.tsx";
 import {Check, ChevronDown, X} from "react-bootstrap-icons";
-import {type KeyboardEvent, type MouseEvent, useEffect, useRef, useState} from "react";
+import {type CSSProperties, type KeyboardEvent, type MouseEvent, useEffect, useRef, useState} from "react";
 import {cn} from "../lib/utils.ts";
 
 export interface SelectProps<T> {
@@ -18,6 +18,8 @@ export function Select<TOption>(props: SelectProps<TOption>) {
     const {value, options, onChange, emptyLabel, optional, render, keyGenerator} = props;
 
     const [open, setOpen] = useState(false);
+
+    const element = useRef<HTMLButtonElement>(null)
 
     const [focused, setFocused] = useState<number>(-1);
     const itemRefs = useRef<(HTMLButtonElement | null)[]>([])
@@ -72,20 +74,28 @@ export function Select<TOption>(props: SelectProps<TOption>) {
         onChange(null);
     }
 
+    const contentStyle: CSSProperties = {
+        width: element.current ? element.current.clientWidth + "px" : undefined,
+    }
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button onKeyDown={onTriggerKeyDown} variant={"outline"}
+                <Button onKeyDown={onTriggerKeyDown}
+                        variant={"outline"}
+                        ref={element}
                         className={"flex justify-between items-center font-normal"}>
                     {value ? render(value) : emptyLabel}
 
                     <div className={"flex items-center gap-1"}>
-                        { (optional && value) && <div onClick={clear} className={"hover:bg-slate-300 transition-colors rounded-md p-1 opacity-50 cursor-pointer"}><X className={"size-4"}/></div> }
+                        {(optional && value) && <div onClick={clear}
+                                                     className={"hover:bg-slate-300 transition-colors rounded-md p-1 opacity-50 cursor-pointer"}>
+                            <X className={"size-4"}/></div>}
                         <ChevronDown className={cn("transition-transform opacity-50", open && "rotate-180")}/>
                     </div>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent onKeyDown={onKeyDown} className={"p-2 rounded-xl flex flex-col"}>
+            <PopoverContent style={contentStyle} onKeyDown={onKeyDown} className={"p-2 rounded-xl flex flex-col"}>
                 {items}
             </PopoverContent>
         </Popover>
