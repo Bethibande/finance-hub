@@ -17,7 +17,7 @@ This is my personal finance app used for tracking my income and expenses.
 ### Preview
 
 > [!WARNING]
-> Most things shown here are not yet implemented and just a mock-up.
+> Most things shown here are still work-in-progress and subject to changes
 
 | Assets                       | Create a new asset                       |
 |------------------------------|------------------------------------------|
