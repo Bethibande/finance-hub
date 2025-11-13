@@ -23,8 +23,8 @@ This is my personal finance app used for tracking my income and expenses.
 |------------------------------|------------------------------------------|
 | ![Assets](images/assets.png) | ![Create asset](images/create-asset.png) |
 
-| Wallets                       | Edit a wallet                         |
-|------------------------------|--------------------------------------|
+| Wallets                        | Edit a wallet                          |
+|--------------------------------|----------------------------------------|
 | ![Wallets](images/wallets.png) | ![Edit wallet](images/edit-wallet.png) |
 
 ### Data model
