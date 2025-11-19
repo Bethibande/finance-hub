@@ -1,15 +1,20 @@
 package de.bethibande.finance.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import de.bethibande.finance.model.jpa.transaction.BookedAmount;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
 import de.bethibande.finance.model.web.ErrorResponse;
 import de.bethibande.finance.model.web.PagedResponse;
+import de.bethibande.finance.web.crud.AbstractWorkspaceCRUDEndpoint;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 import org.hibernate.Hibernate;
+
+import java.util.List;
 
 @Path("/api/v1/transaction")
 public class TransactionEndpoint extends AbstractWorkspaceCRUDEndpoint<Transaction> {
@@ -28,16 +33,16 @@ public class TransactionEndpoint extends AbstractWorkspaceCRUDEndpoint<Transacti
 
     @Override
     @Transactional
-    public PagedResponse<Transaction> listByWorkspace(final long workspace, final int page, final int size) {
-        final PagedResponse<Transaction> response = super.listByWorkspace(workspace, page, size);
+    public PagedResponse<Transaction> listByWorkspace(final long workspace, final List<String> sort, final int page, final int size) throws JsonProcessingException {
+        final PagedResponse<Transaction> response = super.listByWorkspace(workspace, sort, page, size);
         response.data().forEach(this::initialize);
 
         return response;
     }
 
     @Override
-    protected PanacheQuery<Transaction> find(final String query, final Object... params) {
-        return Transaction.find(query, params);
+    protected PanacheQuery<Transaction> find(final String query, final Sort sort, final Object... params) {
+        return Transaction.find(query, sort, params);
     }
 
     @Override

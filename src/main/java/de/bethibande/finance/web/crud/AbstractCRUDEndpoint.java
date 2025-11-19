@@ -1,4 +1,4 @@
-package de.bethibande.finance.web;
+package de.bethibande.finance.web.crud;
 
 import de.bethibande.finance.model.web.ErrorResponse;
 import de.bethibande.finance.model.web.PagedResponse;

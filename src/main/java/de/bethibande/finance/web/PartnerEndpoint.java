@@ -4,15 +4,17 @@ import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Wallet;
 import de.bethibande.finance.model.jpa.partner.Partner;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
+import de.bethibande.finance.web.crud.AbstractWorkspaceCRUDEndpoint;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 import jakarta.ws.rs.Path;
 
 @Path("/api/v1/partner")
 public class PartnerEndpoint extends AbstractWorkspaceCRUDEndpoint<Partner> {
 
     @Override
-    protected PanacheQuery<Partner> find(final String query, final Object... params) {
-        return Partner.find(query, params);
+    protected PanacheQuery<Partner> find(final String query, final Sort sort, final Object... params) {
+        return Partner.find(query, sort, params);
     }
 
     @Override

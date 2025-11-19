@@ -2,6 +2,7 @@ package de.bethibande.finance.web;
 
 import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Workspace;
+import de.bethibande.finance.web.crud.AbstractCRUDEndpoint;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.ws.rs.*;
 

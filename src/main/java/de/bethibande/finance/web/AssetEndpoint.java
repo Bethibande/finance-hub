@@ -1,19 +1,21 @@
 package de.bethibande.finance.web;
 
 import de.bethibande.finance.model.jpa.Asset;
-import de.bethibande.finance.model.jpa.Wallet;
 import de.bethibande.finance.model.jpa.ExchangeRate;
+import de.bethibande.finance.model.jpa.Wallet;
 import de.bethibande.finance.model.jpa.transaction.BookedAmount;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
+import de.bethibande.finance.web.crud.AbstractWorkspaceCRUDEndpoint;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 import jakarta.ws.rs.Path;
 
 @Path("/api/v1/asset")
 public class AssetEndpoint extends AbstractWorkspaceCRUDEndpoint<Asset> {
 
     @Override
-    protected PanacheQuery<Asset> find(final String query, final Object... params) {
-        return Asset.find(query, params);
+    protected PanacheQuery<Asset> find(final String query, final Sort sort, final Object... params) {
+        return Asset.find(query, sort, params);
     }
 
     @Override
