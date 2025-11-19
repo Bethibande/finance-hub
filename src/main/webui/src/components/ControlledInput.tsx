@@ -7,7 +7,7 @@ import {ComboBox} from "./combobox.tsx";
 import {EntityComboBox} from "./entity-combobox.tsx";
 import type {EntityActions, EntityEditForm} from "../views/data/EntityDialog.tsx";
 import type {HTMLInputTypeAttribute} from "react";
-import {NumberField} from "./numberfield.tsx";
+import {type InputMode, NumberField} from "./numberfield.tsx";
 
 export interface ControlledInputProps<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues> {
     name: TName;
@@ -134,8 +134,12 @@ export function ControlledInput<TFieldValues extends FieldValues = FieldValues, 
     )
 }
 
-export function ControlledNumberInput<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>(props: ControlledInputProps<TFieldValues, TName, TTransformedValues>) {
-    const {name, control, label, placeholder} = props;
+export interface NumberInputProps<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues> extends ControlledInputProps<TFieldValues, TName, TTransformedValues> {
+    mode?: InputMode
+}
+
+export function ControlledNumberInput<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>(props: NumberInputProps<TFieldValues, TName, TTransformedValues>) {
+    const {name, control, label, placeholder, mode} = props;
 
     return (
         <Controller name={name} control={control} render={({field, fieldState}) => {
@@ -144,6 +148,7 @@ export function ControlledNumberInput<TFieldValues extends FieldValues = FieldVa
                     <FieldLabel htmlFor={name}>{label}</FieldLabel>
                     <NumberField {...field}
                                  id={name}
+                                 mode={mode}
                                  value={field.value}
                                  setValue={field.onChange}
                                  aria-invalid={fieldState.invalid}

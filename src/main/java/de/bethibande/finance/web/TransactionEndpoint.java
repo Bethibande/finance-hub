@@ -2,10 +2,13 @@ package de.bethibande.finance.web;
 
 import de.bethibande.finance.model.jpa.transaction.BookedAmount;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
+import de.bethibande.finance.model.web.ErrorResponse;
 import de.bethibande.finance.model.web.PagedResponse;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import org.hibernate.Hibernate;
 
 @Path("/api/v1/transaction")
@@ -44,6 +47,59 @@ public class TransactionEndpoint extends AbstractWorkspaceCRUDEndpoint<Transacti
 
     @Override
     protected boolean hasDependents(final long id) {
-        return BookedAmount.count("transaction.id = ?1", id) > 0;
+        if (BookedAmount.count("transaction.id = ?1", id) > 0) return true;
+        if (Transaction.count("internalRef.id = ?1", id) > 0) return true;
+        return false;
     }
+
+    public record TransactionLinkRequest(
+            long firstId,
+            long secondId
+    ) {
+    }
+
+    @PATCH
+    @Transactional
+    @Path("/link")
+    public Response link(final TransactionLinkRequest body) {
+        final Transaction a = Transaction.findById(body.firstId);
+        final Transaction b = Transaction.findById(body.secondId);
+
+        if (a == null || b == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if (a.internalRef != null || b.internalRef != null) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(new ErrorResponse(409, "already linked", "error.transaction.linked"))
+                    .build();
+        }
+
+        a.internalRef = b;
+        b.internalRef = a;
+
+        return Response.ok().build();
+    }
+
+    public record TransactionUnlinkRequest(
+            long id
+    ) {
+    }
+
+    @PATCH
+    @Transactional
+    @Path("/unlink")
+    public Response unlink(final TransactionUnlinkRequest body) {
+        final Transaction a = Transaction.findById(body.id);
+        if (a == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        final Transaction b = a.internalRef;
+        b.internalRef = null;
+        a.internalRef = null;
+
+        return Response.ok().build();
+    }
+
 }

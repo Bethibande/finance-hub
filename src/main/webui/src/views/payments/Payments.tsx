@@ -16,7 +16,7 @@ import {
 } from "../../components/ControlledInput.tsx";
 import i18next from "i18next";
 import {AssetActions, useAssetEditForm} from "../assets/AssetView.tsx";
-import {WalletActions, useWalletForm} from "../WalletView.tsx";
+import {useWalletForm, WalletActions} from "../WalletView.tsx";
 import {PartnerActions, usePartnerEditForm} from "../partners/PartnerView.tsx";
 import {columnHeader} from "../../components/ui/table.tsx";
 import {renderAmount, renderDate} from "../../components/table/data-table.tsx";

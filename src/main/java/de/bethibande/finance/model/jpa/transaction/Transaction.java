@@ -1,5 +1,6 @@
 package de.bethibande.finance.model.jpa.transaction;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Wallet;
 import de.bethibande.finance.model.jpa.WorkspaceEntity;
@@ -39,6 +40,7 @@ public class Transaction extends WorkspaceEntity {
     public Partner partner;
 
     @ManyToOne
+    @JsonIncludeProperties("id")
     public Transaction internalRef;
 
     @Column(nullable = false)

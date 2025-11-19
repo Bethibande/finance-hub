@@ -1,5 +1,5 @@
 import * as React from "react";
-import {type ComponentProps, type KeyboardEvent, useLayoutEffect, useRef, useState} from "react";
+import {type ComponentProps, type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {Input} from "./ui/input.tsx";
 import {cn} from "../lib/utils.ts";
 
@@ -26,6 +26,21 @@ export function NumberField(props: NumberFieldProps) {
     const {mode, decimals} = props;
 
     const [value, setValue] = useState(props.value);
+    useEffect(() => {
+        const newValue = props.value;
+        if (mode) {
+            if (mode === InputMode.NEGATIVE && newValue >= 0) {
+                setValue(newValue * -1)
+                return
+            }
+            if (mode === InputMode.POSITIVE && newValue < 0)  {
+                setValue(newValue * -1)
+                return
+            }
+        }
+
+        setValue(newValue)
+    }, [props.value])
 
     const element = useRef<HTMLInputElement>(null)
     const selection = useRef<number>(0)
@@ -36,7 +51,7 @@ export function NumberField(props: NumberFieldProps) {
         if (e.key === '-') {
             e.preventDefault();
 
-            const canNegate = !mode || ((value >= 0 && mode === InputMode.NEGATIVE) || (value < 0 && mode === InputMode.NEGATIVE))
+            const canNegate = !mode || ((value >= 0 && mode === InputMode.NEGATIVE) || (value < 0 && mode === InputMode.POSITIVE))
             if (canNegate) {
                 setValue(value * -1)
 
@@ -92,12 +107,17 @@ export function NumberField(props: NumberFieldProps) {
         if (!cleanedInput || cleanedInput.length === 0 || isNaN(num)) {
             setValue(0.0)
             return;
-        }
 
+        }
         if (element.current) {
             selection.current = element.current.selectionStart || 0
         }
-        setValue(num)
+        if (mode === "NEGATIVE" && num >= 0) {
+            selection.current = selection.current + 1
+            setValue(num * -1)
+        } else {
+            setValue(num)
+        }
     }
 
     function toNumber(str: string): number {
