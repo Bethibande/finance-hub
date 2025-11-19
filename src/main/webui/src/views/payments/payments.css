@@ -1,0 +1,13 @@
+@reference "tailwindcss";
+
+.booking-closed {
+    @apply bg-green-200 w-fit px-1 rounded-md border-2 border-green-300 select-none cursor-pointer text-green-950 opacity-90;
+}
+
+.booking-open {
+    @apply bg-slate-200 w-fit px-1 rounded-md border-2 border-slate-300 select-none cursor-pointer text-slate-950 opacity-90;
+}
+
+.booking-cancelled {
+    @apply bg-orange-200 w-fit px-1 rounded-md border-2 border-orange-300 select-none cursor-pointer text-orange-950 opacity-90;
+}

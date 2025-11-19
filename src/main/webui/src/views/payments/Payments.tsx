@@ -21,6 +21,40 @@ import {PartnerActions, usePartnerEditForm} from "../partners/PartnerView.tsx";
 import {columnHeader} from "../../components/ui/table.tsx";
 import {renderAmount, renderDate} from "../../components/table/data-table.tsx";
 import type {ClassNameValue} from "tailwind-merge";
+import './payments.css';
+import {useState} from "react";
+import {BookingDialog} from "./Booking.tsx";
+import {Item, ItemContent, ItemDescription, ItemTitle} from "../../components/ui/item.tsx";
+
+export interface TransactionItemProps {
+    transaction: Transaction;
+}
+
+export function TransactionItem(props: TransactionItemProps) {
+    const {transaction} = props;
+
+    return (
+        <Item variant={"outline"}>
+            <ItemContent>
+                <ItemTitle>{transaction.name}</ItemTitle>
+                <ItemDescription>
+                    <span
+                        className={"flex gap-1 text-black"}>{renderAmount(transaction.amount)} {AssetActions.format(transaction.asset)}</span>
+                </ItemDescription>
+            </ItemContent>
+            <ItemContent>
+                <ItemDescription>
+                    <p className={"text-right"}>
+                        {WalletActions.format(transaction.wallet)}
+                    </p>
+                    <p className={"text-right"}>
+                        {new Date(transaction.date).toLocaleDateString(undefined, {month: "short", day: "2-digit", year: "numeric"})}
+                    </p>
+                </ItemDescription>
+            </ItemContent>
+        </Item>
+    )
+}
 
 export const TransactionActions: EntityActions<Transaction> = {
     load: (workspace, page, size) => fetchClient("/api/v1/transaction/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
@@ -135,25 +169,30 @@ export function useTransactionForm() {
     return {form, toEntity, reset, fields}
 }
 
-function renderStatus(status: TransactionStatus) {
-    let color: ClassNameValue = "";
-    switch (status) {
+function renderBookingStatus(transaction: Transaction, edit: (transaction: Transaction) => void) {
+    let style: ClassNameValue = "";
+    switch (transaction.status) {
         case TransactionStatus.OPEN:
-            color = "text-green-600"
+            style = "booking-open"
             break;
         case TransactionStatus.CLOSED:
-            color = "text-gray-600"
+            style = "booking-closed"
             break;
         case TransactionStatus.CANCELLED:
-            color = "text-orange-600"
+            style = "booking-cancelled"
             break;
     }
+
     return (
-        <span className={color}>{i18next.t("TransactionStatus." + status)}</span>
+        <div className={style} onClick={() => edit(transaction)}>
+            {i18next.t("transaction.booked", {amount: transaction.bookedAmounts.length})}
+        </div>
     )
 }
 
 export function TransactionView() {
+    const [editBookings, setEditBookings] = useState<Transaction | null>(null)
+
     const columns: ColumnDef<Transaction>[] = [
         {
             id: "name",
@@ -164,7 +203,7 @@ export function TransactionView() {
         {
             id: "status",
             header: columnHeader(i18next.t("transaction.status")),
-            cell: ({row}) => renderStatus(row.original.status),
+            cell: ({row}) => renderBookingStatus(row.original, setEditBookings),
             accessorKey: "status",
             enableSorting: true,
         },
@@ -203,9 +242,14 @@ export function TransactionView() {
     ]
 
     return (
-        <EntityView actions={TransactionActions}
-                    columns={columns}
-                    i18nKey={"transaction"}
-                    editForm={useTransactionForm()}/>
+        <>
+            {editBookings && <BookingDialog transaction={editBookings} open={true} setOpen={() => setEditBookings(null)}
+                                            onChange={() => {
+                                            }}/>}
+            <EntityView actions={TransactionActions}
+                        columns={columns}
+                        i18nKey={"transaction"}
+                        editForm={useTransactionForm()}/>
+        </>
     )
 }
