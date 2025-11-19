@@ -296,4 +296,32 @@
                                  referencedColumnNames="id"
                                  referencedTableName="Partner"/>
     </changeSet>
+
+    <changeSet id="1763564899292-1"
+               author="bethibande">
+        <createSequence incrementBy="50"
+                        sequenceName="JobSchedule_seq"
+                        startValue="1"/>
+    </changeSet>
+    <changeSet id="1763564899292-2"
+               author="bethibande">
+        <createTable tableName="JobSchedule">
+            <column name="id"
+                    type="BIGINT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_jobschedule"/>
+            </column>
+            <column name="jobId"
+                    type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cron"
+                    type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="config"
+                    type="TEXT"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
