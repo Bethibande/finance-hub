@@ -42,3 +42,9 @@ We can also easily track payments and their status along with other information 
 This way a Transaction can also be used to model simple credits that are yet to be repaid.
 
 Anything else can be built on top of this. For recurring payments, for example, we just run a cron job that creates new transactions for upcoming payments.
+
+### Building
+In order to build a docker image of the application run the following command (on windows):
+```shell
+./gradlew.bat build "-Dquarkus.native.container-build=true" "-Dquarkus.container-image.builder=docker" "-Dquarkus.native.enabled=true" "-Dquarkus.package.jar.enabled=false" "-Dquarkus.container-image.build=true"
+```
