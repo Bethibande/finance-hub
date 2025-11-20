@@ -17,6 +17,7 @@ import i18next from "i18next";
 import {deleteClient, fetchClient, post} from "../../lib/api.ts";
 import {showHttpErrorAndContinue} from "../../lib/errors.tsx";
 import {
+    defaultLoadFunction,
     type EntityActions,
     EntityDialog,
     type EntityDialogControls,
@@ -43,7 +44,8 @@ export const WorkspaceActions: EntityActions<Workspace> = {
     create: (entity) => post("/api/v1/workspace", entity),
     save: (entity) => post("/api/v1/workspace", entity),
     delete: (entity) => deleteClient("/api/v1/workspace/" + entity.id),
-    load: (_workspace, page, size) => fetchClient("/api/v1/workspace?page=" + page + "&size=" + size),
+    load: defaultLoadFunction("workspace"),
+    i18nKey: "workspace",
 }
 
 export function useWorkspaceForm() {
@@ -102,7 +104,7 @@ export default function WorkspaceSelect() {
         }
     }, [workspaces]);
 
-    const dialogControls = useRef<EntityDialogControls<Workspace> | undefined>(undefined)
+    const dialogControls = useRef<EntityDialogControls<Workspace> | null>(null)
     const actions: EntityActions<Workspace> = {
         ...WorkspaceActions,
         create: (workspace) => WorkspaceActions.create(workspace).then(response => {

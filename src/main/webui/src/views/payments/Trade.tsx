@@ -13,7 +13,9 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {
     ControlledDateInput,
     ControlledEntityComboBox,
-    ControlledInput, ControlledNumberInput, ControlledSelect,
+    ControlledInput,
+    ControlledNumberInput,
+    ControlledSelect,
     ControlledTextArea
 } from "../../components/ControlledInput.tsx";
 import {Button} from "../../components/ui/button.tsx";
@@ -133,11 +135,9 @@ function SideForm(props: SideFormProps) {
                     <ControlledEntityComboBox name={"wallet"}
                                               control={form.control}
                                               label={"Wallet"}
-                                              render={WalletActions.format}
                                               keyGenerator={w => w.name}
                                               actions={WalletActions}
-                                              form={useWalletForm()}
-                                              i18nKey={"Wallet"}/>
+                                              form={useWalletForm()}/>
                 </div>
                 <div className={"flex gap-2"}>
                     <ControlledNumberInput name={"amount"}
@@ -147,22 +147,18 @@ function SideForm(props: SideFormProps) {
                     <ControlledEntityComboBox name={"asset"}
                                               control={form.control}
                                               label={"Asset"}
-                                              render={AssetActions.format}
                                               keyGenerator={a => a.name}
                                               actions={AssetActions}
-                                              form={useAssetEditForm()}
-                                              i18nKey={"Asset"}/>
+                                              form={useAssetEditForm()}/>
                 </div>
                 <div className={"flex gap-2"}>
                     <ControlledEntityComboBox name={"partner"}
                                               control={form.control}
                                               label={"Partner"}
-                                              render={PartnerActions.format}
                                               keyGenerator={p => p.name}
                                               actions={PartnerActions}
                                               form={usePartnerEditForm()}
-                                              optional={true}
-                                              i18nKey={"Partner"}/>
+                                              optional={true}/>
                     <ControlledSelect name={"status"}
                                       control={form.control}
                                       label={"Status"}

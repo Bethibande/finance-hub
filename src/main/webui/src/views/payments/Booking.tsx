@@ -42,7 +42,7 @@ export function BookingDialog(props: BookingDialogProps) {
                 <div className={"flex flex-col gap-3"}>
                     <TransactionItem transaction={transaction}/>
                     <Button>+ Create</Button>
-                    <DataTable columns={columns} page={data} changePage={() => {}}/>
+                    <DataTable columns={columns} pageSize={15} page={data} changePage={() => {}}/>
                 </div>
             </DialogContent>
         </Dialog>
