@@ -4,12 +4,24 @@ import {SidebarProvider, SidebarTrigger} from "../components/ui/sidebar.tsx";
 import {useViewConfig} from "../lib/view-config.tsx";
 import {useAuth} from "../lib/auth.tsx";
 
-export default function MainLayout() {
+function MainLayoutToolbar() {
     const {viewConfig} = useViewConfig();
 
+    console.log(viewConfig);
+
+    return (
+        <div className={"w-full p-3 bg-white border-b flex gap-2 items-center h-16"}>
+            <SidebarTrigger className={"size-10"}/>
+            {viewConfig.toolbar}
+        </div>
+    )
+}
+
+export default function MainLayout() {
     const {user, pending} = useAuth();
+    const navigate = useNavigate();
+
     if (!user && !pending) {
-        const navigate = useNavigate();
         navigate("/login");
     }
 
@@ -17,10 +29,7 @@ export default function MainLayout() {
         <SidebarProvider>
             <AppSidebar/>
             <main className={"w-full h-full"}>
-                <div className={"w-full p-3 bg-white border-b flex gap-2 items-center h-16"}>
-                    <SidebarTrigger className={"size-10"}/>
-                    { viewConfig.toolbar }
-                </div>
+                <MainLayoutToolbar/>
                 <div className={"w-full h-full p-5 overflow-y-auto"}>
                     <Outlet/>
                 </div>

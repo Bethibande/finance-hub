@@ -11,56 +11,56 @@ import {WalletView} from "./views/WalletView.tsx";
 import {UserView} from "./views/users/UserView.tsx";
 import {TransactionView} from "./views/payments/Payments.tsx";
 
+const primaryRoutes: RouteObject[] = [
+    {
+        path: "/",
+        Component: DashboardView
+    },
+    {
+        path: "/payments",
+        Component: TransactionView
+    },
+    {
+        path: "/assets",
+        Component: AssetView,
+    },
+    {
+        path: "/partners",
+        Component: PartnerView,
+    },
+    {
+        path: "/wallets",
+        Component: WalletView,
+    },
+    {
+        path: "/users",
+        Component: UserView,
+    }
+]
+
+const secondaryRoutes: RouteObject[] = [
+    {
+        path: "/setup",
+        Component: Setup,
+    },
+    {
+        path: "/login",
+        Component: LoginView
+    }
+]
+
+const router = createBrowserRouter([{
+    children: [
+        {
+            children: primaryRoutes,
+            Component: MainLayout
+        },
+        ...secondaryRoutes,
+    ],
+    ErrorBoundary: ErrorLayout
+}])
+
 function App() {
-    const primaryRoutes: RouteObject[] = [
-        {
-            path: "/",
-            Component: DashboardView
-        },
-        {
-            path: "/payments",
-            Component: TransactionView
-        },
-        {
-            path: "/assets",
-            Component: AssetView,
-        },
-        {
-            path: "/partners",
-            Component: PartnerView,
-        },
-        {
-            path: "/wallets",
-            Component: WalletView,
-        },
-        {
-            path: "/users",
-            Component: UserView,
-        }
-    ]
-
-    const secondaryRoutes: RouteObject[] = [
-        {
-            path: "/setup",
-            Component: Setup,
-        },
-        {
-            path: "/login",
-            Component: LoginView
-        }
-    ]
-
-    const router = createBrowserRouter([{
-        children: [
-            {
-                children: primaryRoutes,
-                Component: MainLayout
-            },
-            ...secondaryRoutes,
-        ],
-        ErrorBoundary: ErrorLayout
-    }])
-
     return (
         <div className={"bg-muted w-full h-full"}>
             <ViewConfigProvider>
