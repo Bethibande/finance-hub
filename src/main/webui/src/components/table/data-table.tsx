@@ -10,16 +10,24 @@ import {
 import {type Table as TTable} from "@tanstack/table-core"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "./../ui/table.tsx";
 import {type CSSProperties, type RefObject, useEffect, useState} from "react";
-import type {PagedResponse} from "../../lib/types.ts";
+import {type CRUDSortOrder, Direction, type PagedResponse} from "../../lib/types.ts";
 import {Button} from "../ui/button.tsx";
 import i18next from "i18next";
 import {cn} from "../../lib/utils.ts";
 
+export interface PageQueryParams {
+    page: number;
+    size: number;
+    sort: CRUDSortOrder[];
+}
+
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     page: PagedResponse<TData>,
-    changePage: (page: number) => void,
+    pageSize: number,
+    changePage: (query: PageQueryParams) => void,
     ref?: RefObject<TTable<TData> | null>,
+    defaultSorting?: SortingState,
     pinned?: string[],
 }
 
@@ -50,14 +58,29 @@ const getCommonPinningStyles = (column: Column<any>): CSSProperties => {
     }
 }
 
+function toPageQuery(page: number, size: number, sorting: SortingState): PageQueryParams {
+    return {
+        page: page,
+        size: size,
+        sort: sorting.map(sort => {
+            return {
+                field: sort.id,
+                direction: sort.desc ? Direction.Descending : Direction.Ascending
+            } satisfies CRUDSortOrder
+        })
+    }
+}
+
 export function DataTable<TData, TValue>({
                                              columns,
                                              page,
+                                             pageSize,
                                              changePage,
                                              ref,
+                                             defaultSorting,
                                              pinned,
                                          }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([])
+    const [sorting, setSorting] = useState<SortingState>(defaultSorting || [])
     const [rowSelection, setRowSelection] = useState({})
 
     const data = page.data
@@ -65,15 +88,16 @@ export function DataTable<TData, TValue>({
     const table = useReactTable({
         data,
         columns,
+        manualSorting: true,
         getCoreRowModel: getCoreRowModel(),
         onRowSelectionChange: setRowSelection,
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         state: {
+            sorting,
             columnPinning: {
                 right: pinned
             },
-            sorting,
             rowSelection: rowSelection,
         }
     })
@@ -83,6 +107,10 @@ export function DataTable<TData, TValue>({
             ref.current = table
         }
     }, [])
+
+    useEffect(() => {
+        changePage(toPageQuery(page.page, pageSize, sorting))
+    }, [sorting]);
 
     return (
         <div className={"flex flex-col gap-2"}>
@@ -116,7 +144,8 @@ export function DataTable<TData, TValue>({
                                     {row.getVisibleCells().map((cell) => {
                                         const column = cell.column
                                         return (
-                                            <TableCell key={cell.id} style={{...getCommonPinningStyles(column)}} className={cn(column.getIsPinned() && "bg-white")}>
+                                            <TableCell key={cell.id} style={{...getCommonPinningStyles(column)}}
+                                                       className={cn(column.getIsPinned() && "bg-white")}>
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
                                         )
@@ -139,12 +168,12 @@ export function DataTable<TData, TValue>({
                     {page.totalElements.toLocaleString()} {i18next.t("table.rows")}
                 </div>
                 <div className={"flex gap-1"}>
-                    <Button onClick={() => changePage(page.page - 1)}
+                    <Button onClick={() => changePage(toPageQuery(page.page - 1, pageSize, sorting))}
                             variant={"outline"}
                             disabled={page.page <= 0}>
                         {i18next.t("table.previous")}
                     </Button>
-                    <Button onClick={() => changePage(page.page + 1)}
+                    <Button onClick={() => changePage(toPageQuery(page.page + 1, pageSize, sorting))}
                             variant={"outline"}
                             disabled={page.page + 1 >= page.totalPages}>
                         {i18next.t("table.next")}

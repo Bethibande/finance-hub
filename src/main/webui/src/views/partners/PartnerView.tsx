@@ -1,8 +1,8 @@
 import {EntityView} from "../data/EntityView.tsx";
-import type {EntityActions} from "../data/EntityDialog.tsx";
+import {defaultNamespacedLoadFunction, type EntityActions} from "../data/EntityDialog.tsx";
 import {type Partner, PartnerType, type Workspace} from "../../lib/types.ts";
 import type {ColumnDef} from "@tanstack/react-table";
-import {deleteClient, fetchClient, post} from "../../lib/api.ts";
+import {deleteClient, post} from "../../lib/api.ts";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -11,11 +11,12 @@ import i18next from "i18next";
 import {columnHeader} from "../../components/ui/table.tsx";
 
 export const PartnerActions: EntityActions<Partner> = {
-    load: (workspace, page, size) => fetchClient("/api/v1/partner/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
+    load: defaultNamespacedLoadFunction("partner"),
     create: (partner) => post("/api/v1/partner", partner),
     delete: (partner) => deleteClient("/api/v1/partner/" + partner.id),
     save: (partner) => post("/api/v1/partner", partner),
-    format: (partner) => partner.name
+    format: (partner) => partner.name,
+    i18nKey: "partner",
 }
 
 export function usePartnerEditForm() {
@@ -98,7 +99,6 @@ export default function PartnerView() {
     return (
         <EntityView actions={PartnerActions}
                     columns={columns}
-                    i18nKey={"partner"}
                     editForm={usePartnerEditForm()}/>
     )
 }

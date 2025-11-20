@@ -1,18 +1,27 @@
 package de.bethibande.finance.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bethibande.finance.model.jpa.User;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.model.web.UserWithPassword;
 import de.bethibande.finance.security.Roles;
+import de.bethibande.finance.web.crud.AbstractCRUDEndpoint;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
+
+import java.util.List;
 
 @Path("/api/v1/user")
 @RolesAllowed(Roles.ADMIN)
 public class UserEndpoint {
+
+    @Inject
+    protected ObjectMapper objectMapper;
 
     @POST
     @Transactional
@@ -38,9 +47,10 @@ public class UserEndpoint {
     }
 
     @GET
-    public PagedResponse<User> find(final @QueryParam("page") @DefaultValue("0") int page,
-                                    final @QueryParam("size") @DefaultValue("50") int size) {
-        final PanacheQuery<User> query = User.findAll().page(page, size);
+    public PagedResponse<User> find(final @QueryParam("sort[]") List<String> sortJson,
+                                    final @QueryParam("page") @DefaultValue("0") int page,
+                                    final @QueryParam("size") @DefaultValue("50") int size) throws JsonProcessingException {
+        final PanacheQuery<User> query = User.findAll(AbstractCRUDEndpoint.toSort(sortJson, objectMapper)).page(page, size);
         return PagedResponse.of(page, size, query);
     }
 

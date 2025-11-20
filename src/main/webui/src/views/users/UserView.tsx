@@ -1,6 +1,6 @@
-import type {EntityActions, FieldProps} from "../data/EntityDialog.tsx";
+import {defaultLoadFunction, type EntityActions, type FieldProps} from "../data/EntityDialog.tsx";
 import {Role, type User} from "../../lib/types.ts";
-import {deleteClient, fetchClient, patch, post} from "../../lib/api.ts";
+import {deleteClient, patch, post} from "../../lib/api.ts";
 import type {ColumnDef} from "@tanstack/react-table";
 import {EntityView} from "../data/EntityView.tsx";
 import {z} from "zod";
@@ -11,11 +11,12 @@ import i18next from "i18next";
 import {ControlledInput, ControlledSelect} from "../../components/ControlledInput.tsx";
 
 export const UserActions: EntityActions<User> = {
-    load: (_workspace, page, size) => fetchClient("/api/v1/user?page=" + page + "&size=" + size),
+    load: defaultLoadFunction("user"),
     create: (user) => post("/api/v1/user", user),
     save: (user) => patch("/api/v1/user", user),
     delete: (user) => deleteClient("/api/v1/user/" + user.id),
     format: (user) => user.name,
+    i18nKey: "user",
 }
 
 export function useUserForm() {
@@ -55,7 +56,11 @@ export function useUserForm() {
     }
 
     function reset(entity?: User) {
-        form.reset(entity ? {...entity, password: undefined, role: entity.roles[0]} : {...defaultValues, password: "", passwordRepeat: ""})
+        form.reset(entity ? {...entity, password: undefined, role: entity.roles[0]} : {
+            ...defaultValues,
+            password: "",
+            passwordRepeat: ""
+        })
     }
 
     function fields(props: FieldProps) {
@@ -112,7 +117,6 @@ export function UserView() {
     return (
         <EntityView actions={UserActions}
                     columns={columns}
-                    i18nKey={"user"}
                     editForm={useUserForm()}/>
     )
 }

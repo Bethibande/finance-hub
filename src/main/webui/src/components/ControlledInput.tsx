@@ -82,15 +82,13 @@ export interface ControlledEntityComboBoxProps<TEntity, TForm extends FieldValue
     label: string,
     placeholder?: string,
     optional?: boolean,
-    render: (value: TEntity) => string,
     keyGenerator: (value: TEntity) => string,
     actions: EntityActions<TEntity>,
     form: EntityEditForm<TEntity, TForm>,
-    i18nKey: string,
 }
 
 export function ControlledEntityComboBox<TOption, TForm extends FieldValues, TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, TTransformedValues = TFieldValues>(props: ControlledEntityComboBoxProps<TOption, TForm, TFieldValues, TName, TTransformedValues>) {
-    const {name, control, label, placeholder, optional, render, keyGenerator, actions, form, i18nKey} = props;
+    const {name, control, label, placeholder, optional, keyGenerator, actions, form} = props;
 
     return (
         <Controller name={name} control={control} render={({field, fieldState}) => {
@@ -101,10 +99,8 @@ export function ControlledEntityComboBox<TOption, TForm extends FieldValues, TFi
                                     onChange={field.onChange}
                                     value={field.value}
                                     optional={optional}
-                                    render={render}
                                     actions={actions}
                                     form={form}
-                                    i18nKey={i18nKey}
                                     keyGenerator={keyGenerator}/>
                     {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]}/>

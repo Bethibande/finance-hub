@@ -7,8 +7,6 @@ import {useAuth} from "../lib/auth.tsx";
 function MainLayoutToolbar() {
     const {viewConfig} = useViewConfig();
 
-    console.log(viewConfig);
-
     return (
         <div className={"w-full p-3 bg-white border-b flex gap-2 items-center h-16"}>
             <SidebarTrigger className={"size-10"}/>

@@ -1,6 +1,6 @@
-import type {EntityActions} from "./data/EntityDialog.tsx";
-import type {Wallet, Workspace} from "../lib/types.ts";
-import {deleteClient, fetchClient, post} from "../lib/api.ts";
+import {defaultNamespacedLoadFunction, type EntityActions} from "./data/EntityDialog.tsx";
+import {type Wallet, type Workspace} from "../lib/types.ts";
+import {deleteClient, post} from "../lib/api.ts";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -13,11 +13,12 @@ import {PartnerActions, usePartnerEditForm} from "./partners/PartnerView.tsx";
 import {columnHeader} from "../components/ui/table.tsx";
 
 export const WalletActions: EntityActions<Wallet> = {
-    load: (workspace, page, size) => fetchClient("/api/v1/wallet/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
+    load: defaultNamespacedLoadFunction("wallet"),
     create: (entity) => post("/api/v1/wallet", entity),
     save: (entity) => post("/api/v1/wallet", entity),
     delete: (entity) => deleteClient("/api/v1/wallet/" + entity.id),
-    format: (entity) => entity.name
+    format: (entity) => entity.name,
+    i18nKey: "wallet",
 }
 
 export function useWalletForm() {
@@ -62,23 +63,19 @@ export function useWalletForm() {
                     <ControlledEntityComboBox name={"asset"}
                                               control={form.control}
                                               label={i18next.t("wallet.asset")}
-                                              render={AssetActions.format}
                                               keyGenerator={AssetActions.format}
                                               actions={AssetActions}
                                               form={useAssetEditForm()}
                                               optional={true}
-                                              placeholder={i18next.t("wallet.asset.placeholder")}
-                                              i18nKey={"asset"}/>
+                                              placeholder={i18next.t("wallet.asset.placeholder")}/>
                     <ControlledEntityComboBox name={"provider"}
                                               control={form.control}
                                               label={i18next.t("wallet.provider")}
-                                              render={PartnerActions.format}
                                               keyGenerator={PartnerActions.format}
                                               actions={PartnerActions}
                                               form={usePartnerEditForm()}
                                               optional={true}
-                                              placeholder={i18next.t("wallet.provider.placeholder")}
-                                              i18nKey={"partner"}/>
+                                              placeholder={i18next.t("wallet.provider.placeholder")}/>
                 </div>
                 <ControlledTextArea name={"notes"}
                                     control={form.control}
@@ -97,21 +94,18 @@ export function WalletView() {
             id: "name",
             header: columnHeader(i18next.t("wallet.name")),
             accessorKey: "name",
-            enableSorting: true,
         },
         {
             id: "asset",
             header: columnHeader(i18next.t("wallet.asset")),
             cell: ({row}) => row.original.asset ? AssetActions.format(row.original.asset) : "",
             accessorKey: "asset",
-            enableSorting: true,
         },
         {
             id: "provider",
             header: columnHeader(i18next.t("wallet.provider")),
             cell: ({row}) => row.original.provider ? PartnerActions.format(row.original.provider) : "",
             accessorKey: "provider",
-            enableSorting: true,
         },
         {
             id: "notes",
@@ -123,7 +117,6 @@ export function WalletView() {
     return (
         <EntityView actions={WalletActions}
                     columns={columns}
-                    i18nKey={"wallet"}
                     editForm={useWalletForm()}/>
     )
 }

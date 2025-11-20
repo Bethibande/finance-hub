@@ -14,6 +14,8 @@ import i18next from "i18next";
 import {FieldGroup} from "../../components/ui/field.tsx";
 import {Button} from "../../components/ui/button.tsx";
 import {useWorkspace} from "../../lib/workspace.tsx";
+import type {PageQueryParams} from "../../components/table/data-table.tsx";
+import {fetchClient} from "../../lib/api.ts";
 
 export interface FieldProps {
     editing: boolean
@@ -26,12 +28,35 @@ export interface EntityEditForm<TEntity, TForm extends FieldValues> {
     fields: FunctionComponent<FieldProps>,
 }
 
+export function defaultNamespacedLoadFunction(entity: string): (workspace: Workspace, query: PageQueryParams) => Promise<Response> {
+    return (workspace, query) => {
+        let uri = "/api/v1/" + entity + "/workspace/" + workspace.id + "?page=" + query.page
+        query.sort.forEach(sort => {
+            uri = uri + "&sort[]=" + encodeURI(JSON.stringify(sort))
+        })
+
+        return fetchClient(uri)
+    }
+}
+
+export function defaultLoadFunction(entity: string): (workspace: Workspace, query: PageQueryParams) => Promise<Response> {
+    return (_workspace, query) => {
+        let uri = "/api/v1/" + entity + "?page=" + query.page
+        query.sort.forEach(sort => {
+            uri = uri + "&sort[]=" + encodeURI(JSON.stringify(sort))
+        })
+
+        return fetchClient(uri)
+    }
+}
+
 export interface EntityActions<TEntity> {
-    load: (workspace: Workspace, page: number, size: number) => Promise<Response>,
+    load: (workspace: Workspace, query: PageQueryParams) => Promise<Response>,
     create: (entity: TEntity) => Promise<Response>,
     save: (entity: TEntity) => Promise<Response>,
     delete: (entity: TEntity) => Promise<Response>,
     format: (entity: TEntity) => string,
+    i18nKey: string,
 }
 
 export const EntityDialogState = {

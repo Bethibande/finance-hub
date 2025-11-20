@@ -4,6 +4,7 @@ import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Workspace;
 import de.bethibande.finance.web.crud.AbstractCRUDEndpoint;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 import jakarta.ws.rs.*;
 
 @Path("/api/v1/workspace")
@@ -15,8 +16,8 @@ public class WorkspaceEndpoint extends AbstractCRUDEndpoint<Workspace> {
     }
 
     @Override
-    protected PanacheQuery<Workspace> list() {
-        return Workspace.findAll();
+    protected PanacheQuery<Workspace> list(final Sort sort) {
+        return Workspace.findAll(sort);
     }
 
     @Override

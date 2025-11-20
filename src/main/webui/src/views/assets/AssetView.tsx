@@ -3,16 +3,16 @@ import type {Asset, Workspace} from "../../lib/types.ts";
 import i18next from "i18next";
 import {columnHeader} from "../../components/ui/table.tsx";
 import {EntityView} from "../data/EntityView.tsx";
-import {deleteClient, fetchClient, post} from "../../lib/api.ts";
+import {deleteClient, post} from "../../lib/api.ts";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {type EntityActions} from "../data/EntityDialog.tsx";
+import {defaultNamespacedLoadFunction, type EntityActions} from "../data/EntityDialog.tsx";
 import {ControlledEntityComboBox, ControlledInput, ControlledTextArea} from "../../components/ControlledInput.tsx";
 import {PartnerActions, usePartnerEditForm} from "../partners/PartnerView.tsx";
 
 export const AssetActions: EntityActions<Asset> = {
-    load: (workspace, page, size) => fetchClient("/api/v1/asset/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
+    load: defaultNamespacedLoadFunction("asset"),
     create: (asset) => post("/api/v1/asset", asset),
     delete: (asset) => deleteClient("/api/v1/asset/" + asset.id),
     save: (asset) => post("/api/v1/asset", asset),
@@ -21,7 +21,8 @@ export const AssetActions: EntityActions<Asset> = {
             return asset.name + " @ " + asset.provider.name
         }
         return asset.name
-    }
+    },
+    i18nKey: "asset"
 }
 
 export function useAssetEditForm() {
@@ -67,8 +68,6 @@ export function useAssetEditForm() {
                                               optional={true}
                                               actions={PartnerActions}
                                               form={usePartnerEditForm()}
-                                              i18nKey={"partner"}
-                                              render={option => option.name}
                                               keyGenerator={option => option.name}
                                               label={i18next.t("asset.provider")}/>
                 </div>
@@ -135,8 +134,7 @@ export default function AssetView() {
     ]
 
     return (
-        <EntityView i18nKey={"asset"}
-                    actions={AssetActions}
+        <EntityView actions={AssetActions}
                     columns={columns}
                     editForm={useAssetEditForm()}/>
     )

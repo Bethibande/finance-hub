@@ -1,3 +1,15 @@
+export const Direction = {
+    Ascending: "Ascending",
+    Descending: "Descending",
+} as const;
+
+export type Direction = typeof Direction[keyof typeof Direction];
+
+export interface CRUDSortOrder {
+    field: string;
+    direction: Direction;
+}
+
 export interface Workspace {
     id?: number;
     name: string;

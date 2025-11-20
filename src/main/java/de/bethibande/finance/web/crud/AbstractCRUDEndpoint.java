@@ -1,10 +1,13 @@
 package de.bethibande.finance.web.crud;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bethibande.finance.model.web.ErrorResponse;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.security.Roles;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -15,12 +18,41 @@ import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @RunOnVirtualThread
 @RolesAllowed({Roles.USER, Roles.ADMIN})
 public abstract class AbstractCRUDEndpoint<T extends PanacheEntity> {
 
+    public static Sort toSort(final List<String> sortJson, final ObjectMapper objectMapper) throws JsonProcessingException {
+        final List<CRUDSortOrder> sortOrders = sortJson.isEmpty() ? Collections.emptyList() : new ArrayList<>();
+        if (!sortJson.isEmpty()) {
+            for (final String json : sortJson) {
+                sortOrders.add(objectMapper.readValue(json, CRUDSortOrder.class));
+            }
+        }
+
+        final Sort sort = Sort.empty();
+        for (final CRUDSortOrder order : sortOrders) {
+            sort.and(
+                    order.field(),
+                    order.direction(),
+                    order.direction() == Sort.Direction.Descending
+                            ? Sort.NullPrecedence.NULLS_LAST
+                            : Sort.NullPrecedence.NULLS_FIRST
+            );
+        }
+
+        return sort;
+    }
+
     @Inject
     protected EntityManager entityManager;
+
+    @Inject
+    protected ObjectMapper objectMapper;
 
     protected void persistEntity(final T entity) {
         entity.persist();
@@ -38,15 +70,18 @@ public abstract class AbstractCRUDEndpoint<T extends PanacheEntity> {
 
     protected abstract PanacheQuery<T> find(final String query, final Object... params);
 
-    protected abstract PanacheQuery<T> list();
+    protected abstract PanacheQuery<T> list(final Sort sort);
 
     protected abstract void deleteById(final long id);
 
     @GET
     @Transactional
-    public PagedResponse<T> list(final @QueryParam("page") @DefaultValue("0") @Min(0) int page,
-                                 final @QueryParam("size") @DefaultValue("50") @Min(1) @Max(500) int size) {
-        final PanacheQuery<T> query = list().page(page, size);
+    public PagedResponse<T> list(final @QueryParam("sort[]") List<String> sortJson,
+                                 final @QueryParam("page") @DefaultValue("0") @Min(0) int page,
+                                 final @QueryParam("size") @DefaultValue("50") @Min(1) @Max(500) int size) throws JsonProcessingException {
+        final Sort sort = toSort(sortJson, objectMapper);
+
+        final PanacheQuery<T> query = list(sort).page(page, size);
         return PagedResponse.of(page, size, query);
     }
 

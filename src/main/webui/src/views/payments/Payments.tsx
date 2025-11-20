@@ -1,6 +1,6 @@
-import type {EntityActions} from "../data/EntityDialog.tsx";
+import {defaultNamespacedLoadFunction, type EntityActions} from "../data/EntityDialog.tsx";
 import {type Transaction, TransactionStatus, TransactionType, type Workspace} from "../../lib/types.ts";
-import {deleteClient, fetchClient, post} from "../../lib/api.ts";
+import {deleteClient, post} from "../../lib/api.ts";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -57,11 +57,12 @@ export function TransactionItem(props: TransactionItemProps) {
 }
 
 export const TransactionActions: EntityActions<Transaction> = {
-    load: (workspace, page, size) => fetchClient("/api/v1/transaction/workspace/" + workspace.id + "?page=" + page + "&size=" + size),
+    load: defaultNamespacedLoadFunction("transaction"),
     create: (entity) => post("/api/v1/transaction", entity),
     save: (entity) => post("/api/v1/transaction", entity),
     delete: (entity) => deleteClient("/api/v1/transaction/" + entity.id),
     format: (entity) => entity.name,
+    i18nKey: "transaction"
 }
 
 export function useTransactionForm() {
@@ -128,30 +129,24 @@ export function useTransactionForm() {
                     <ControlledEntityComboBox name={"asset"}
                                               control={form.control}
                                               label={i18next.t("transaction.asset")}
-                                              render={AssetActions.format}
                                               keyGenerator={asset => asset.name}
                                               actions={AssetActions}
-                                              form={useAssetEditForm()}
-                                              i18nKey={"asset"}/>
+                                              form={useAssetEditForm()}/>
                 </div>
                 <div className={"flex gap-2"}>
                     <ControlledEntityComboBox name={"wallet"}
                                               control={form.control}
                                               label={i18next.t("transaction.wallet")}
-                                              render={WalletActions.format}
                                               keyGenerator={wallet => wallet.name}
                                               actions={WalletActions}
-                                              form={useWalletForm()}
-                                              i18nKey={"wallet"}/>
+                                              form={useWalletForm()}/>
                     <ControlledEntityComboBox name={"partner"}
                                               control={form.control}
                                               label={i18next.t("transaction.partner")}
-                                              render={PartnerActions.format}
                                               keyGenerator={partner => partner.name}
                                               actions={PartnerActions}
                                               optional={true}
-                                              form={usePartnerEditForm()}
-                                              i18nKey={"partner"}/>
+                                              form={usePartnerEditForm()}/>
                 </div>
                 <ControlledSelect name={"status"}
                                   control={form.control}
@@ -248,7 +243,6 @@ export function TransactionView() {
                                             }}/>}
             <EntityView actions={TransactionActions}
                         columns={columns}
-                        i18nKey={"transaction"}
                         editForm={useTransactionForm()}/>
         </>
     )

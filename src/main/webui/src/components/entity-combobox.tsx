@@ -16,14 +16,13 @@ export interface EntityComboBoxProps<TEntity, TForm extends FieldValues> {
     onChange: (value: TEntity | null) => void,
     optional?: boolean,
     keyGenerator: (option: TEntity) => string,
-    render: (option: TEntity) => string,
     actions: EntityActions<TEntity>,
     form: EntityEditForm<TEntity, TForm>,
-    i18nKey: string,
 }
 
 export function EntityComboBox<TEntity, TForm extends FieldValues>(props: EntityComboBoxProps<TEntity, TForm>) {
-    const {actions, form, i18nKey, onChange} = props;
+    const {actions, form, onChange} = props;
+    const {i18nKey} = actions;
 
     const translations = namespacedTranslations(i18nKey)
     const controls = useRef<EntityDialogControls<TEntity>>(null)
@@ -35,7 +34,7 @@ export function EntityComboBox<TEntity, TForm extends FieldValues>(props: Entity
     const {workspace} = useWorkspace()
     const [options, setOptions] = useState<TEntity[]>([])
     useEffect(() => {
-        actions.load(workspace, 0, 500).then(response => {
+        actions.load(workspace, {page: 0, size: 500, sort: []}).then(response => {
             if (response.ok) {
                 response.json().then((page) => setOptions(page.data))
             }
@@ -55,7 +54,7 @@ export function EntityComboBox<TEntity, TForm extends FieldValues>(props: Entity
     return (
         <>
             <EntityDialog translations={translations} actions={dialogActions} form={form} ref={controls}/>
-            <ComboBox {...props} options={options} createAction={create}/>
+            <ComboBox {...props} render={actions.format} options={options} createAction={create}/>
         </>
     )
 }

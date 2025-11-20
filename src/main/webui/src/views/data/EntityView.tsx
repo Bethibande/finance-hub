@@ -2,7 +2,7 @@ import type {ColumnDef} from "@tanstack/react-table";
 import {useEffect, useRef, useState} from "react";
 import i18next from "i18next";
 import {Button} from "../../components/ui/button.tsx";
-import {showError, showHttpError} from "../../lib/errors.tsx";
+import {showHttpErrorAndContinue} from "../../lib/errors.tsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger
 } from "../../components/ui/dropdown-menu.tsx";
 import {MoreHorizontal} from "lucide-react";
-import {DataTable} from "../../components/table/data-table.tsx";
+import {DataTable, type PageQueryParams} from "../../components/table/data-table.tsx";
 import {useViewConfig} from "../../lib/view-config.tsx";
 import type {PagedResponse} from "../../lib/types.ts";
 import {useWorkspace} from "../../lib/workspace.tsx";
@@ -28,12 +28,12 @@ import type {FieldValues} from "react-hook-form";
 export interface EntityViewProps<TEntity, TForm extends FieldValues> {
     actions: EntityActions<TEntity>,
     columns: ColumnDef<TEntity>[],
-    i18nKey: string,
     editForm: EntityEditForm<TEntity, TForm>
 }
 
 export function EntityView<TEntity, TForm extends FieldValues>(props: EntityViewProps<TEntity, TForm>) {
-    const {actions, i18nKey, editForm} = props
+    const {actions, editForm} = props
+    const {i18nKey} = actions;
 
     const dialogControls = useRef<EntityDialogControls<TEntity>>(null)
 
@@ -55,7 +55,8 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>{i18next.t("menu.actions")}</DropdownMenuLabel>
                             <DropdownMenuSeparator/>
-                            <DropdownMenuItem onClick={() => dialogControls.current?.edit(row.original)}>{i18next.t("edit")}</DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => dialogControls.current?.edit(row.original)}>{i18next.t("edit")}</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => dialogControls.current?.delete(row.original)}
                                               variant={"destructive"}>{i18next.t("delete")}</DropdownMenuItem>
                         </DropdownMenuContent>
@@ -67,20 +68,29 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
 
     const {workspace} = useWorkspace()
 
-    const [page, setPage] = useState(0)
     const [version, setVersion] = useState(0)
-    const [data, setData] = useState<PagedResponse<TEntity>>({page: 0, size: 0, totalPages: 0, totalElements: 0, data: []})
+    const [lastQuery, setLastQuery] = useState<PageQueryParams | null>(null)
+    const [data, setData] = useState<PagedResponse<TEntity>>({
+        page: 0,
+        size: 0,
+        totalPages: 0,
+        totalElements: 0,
+        data: []
+    })
     useEffect(() => {
-        actions.load(workspace, page, 25)
-            .then(response => {
-                if (!response.ok) {
-                    showHttpError(response)
-                    return;
-                }
-                response.json().then(setData)
-            })
-            .catch(showError)
-    }, [version, workspace, page])
+        if (lastQuery) {
+            loadPage(lastQuery)
+        }
+    }, [version, workspace])
+
+    function loadPage(query: PageQueryParams) {
+        actions.load(workspace, query).then(showHttpErrorAndContinue).then(res => {
+            if (res.ok) {
+                res.json().then(setData)
+                setLastQuery(query)
+            }
+        })
+    }
 
     const {setViewConfig} = useViewConfig()
     useEffect(() => {
@@ -105,7 +115,12 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
                         dialogControls.current?.edit(undefined)
                     }}>+ {i18next.t("create")}</Button>
                 </div>
-                <DataTable columns={columns} pinned={["actions"]} page={data} changePage={setPage}/>
+                <DataTable columns={columns}
+                           defaultSorting={[{id: columns[0].id!, desc: false}]}
+                           pinned={["actions"]}
+                           page={data}
+                           pageSize={15}
+                           changePage={loadPage}/>
             </div>
         </div>
     )
