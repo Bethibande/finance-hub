@@ -24,6 +24,7 @@ import {
     namespacedTranslations
 } from "./EntityDialog.tsx";
 import type {FieldValues} from "react-hook-form";
+import {ArrowClockwise} from "react-bootstrap-icons";
 
 export interface EntityViewProps<TEntity, TForm extends FieldValues> {
     actions: EntityActions<TEntity>,
@@ -77,11 +78,13 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
         totalElements: 0,
         data: []
     })
-    useEffect(() => {
+    useEffect(reload, [version, workspace])
+
+    function reload() {
         if (lastQuery) {
             loadPage(lastQuery)
         }
-    }, [version, workspace])
+    }
 
     function loadPage(query: PageQueryParams) {
         actions.load(workspace, query).then(showHttpErrorAndContinue).then(res => {
@@ -114,6 +117,7 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
                     <Button onClick={() => {
                         dialogControls.current?.edit(undefined)
                     }}>+ {i18next.t("create")}</Button>
+                    <Button variant={"outline"} onClick={reload}><ArrowClockwise/></Button>
                 </div>
                 <DataTable columns={columns}
                            defaultSorting={[{id: columns[0].id!, desc: false}]}
