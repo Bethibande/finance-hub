@@ -24,10 +24,18 @@ import type {ClassNameValue} from "tailwind-merge";
 import './payments.css';
 import {useState} from "react";
 import {BookingDialog} from "./Booking.tsx";
-import {Item, ItemContent, ItemDescription, ItemTitle} from "../../components/ui/item.tsx";
+import {Item, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "../../components/ui/item.tsx";
+import {Archive, Clipboard, ClipboardCheck} from "react-bootstrap-icons";
+import {cn} from "@/lib/utils.ts";
 
 export interface TransactionItemProps {
     transaction: Transaction;
+}
+
+export const StatusToIcon = {
+    OPEN: <Clipboard/>,
+    CANCELLED: <Archive/>,
+    CLOSED: <ClipboardCheck/>,
 }
 
 export function TransactionItem(props: TransactionItemProps) {
@@ -35,6 +43,9 @@ export function TransactionItem(props: TransactionItemProps) {
 
     return (
         <Item variant={"outline"}>
+            <ItemMedia className={"border rounded-md p-1"}>
+                <span className={"text-xl"}>{StatusToIcon[transaction.status]}</span>
+            </ItemMedia>
             <ItemContent>
                 <ItemTitle>{transaction.name}</ItemTitle>
                 <ItemDescription>
@@ -48,7 +59,11 @@ export function TransactionItem(props: TransactionItemProps) {
                         {WalletActions.format(transaction.wallet)}
                     </p>
                     <p className={"text-right"}>
-                        {new Date(transaction.date).toLocaleDateString(undefined, {month: "short", day: "2-digit", year: "numeric"})}
+                        {new Date(transaction.date).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric"
+                        })}
                     </p>
                 </ItemDescription>
             </ItemContent>
@@ -185,6 +200,25 @@ function renderBookingStatus(transaction: Transaction, edit: (transaction: Trans
     )
 }
 
+function renderStatus(transaction: Transaction) {
+    let color: ClassNameValue = "";
+    switch (transaction.status) {
+        case TransactionStatus.OPEN:
+            color = "text-green-500"
+            break;
+        case TransactionStatus.CLOSED:
+            color = "text-gray-500"
+            break;
+        case TransactionStatus.CANCELLED:
+            color = "text-orange-500"
+            break;
+    }
+
+    return (
+        <span className={cn(color, "flex gap-1 items-center")}>{StatusToIcon[transaction.status]} {i18next.t("TransactionStatus." + transaction.status)}</span>
+    )
+}
+
 export function TransactionView() {
     const [editBookings, setEditBookings] = useState<Transaction | null>(null)
 
@@ -198,9 +232,15 @@ export function TransactionView() {
         {
             id: "status",
             header: columnHeader(i18next.t("transaction.status")),
-            cell: ({row}) => renderBookingStatus(row.original, setEditBookings),
+            cell: ({row}) => renderStatus(row.original),
             accessorKey: "status",
             enableSorting: true,
+        },
+        {
+            id: "booked",
+            header: i18next.t("transaction.bookedAmounts"),
+            cell: ({row}) => renderBookingStatus(row.original, setEditBookings),
+            accessorKey: "status",
         },
         {
             id: "amount",

@@ -1,10 +1,11 @@
-import type {BookedAmount, PagedResponse, Transaction} from "../../lib/types.ts";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from "../../components/ui/dialog.tsx";
-import {DialogDescription} from "@radix-ui/react-dialog";
+import {type BookedAmount, type PagedResponse, type Transaction, TransactionStatus} from "@/lib/types.ts";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "../../components/ui/dialog.tsx";
 import {Button} from "../../components/ui/button.tsx";
 import {DataTable} from "../../components/table/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
-import {TransactionItem} from "./Payments.tsx";
+import {StatusToIcon, TransactionItem} from "./Payments.tsx";
+import {columnHeader} from "@/components/ui/table.tsx";
+import i18next from "i18next";
 
 export interface BookingDialogProps {
     transaction: Transaction,
@@ -17,7 +18,26 @@ export function BookingDialog(props: BookingDialogProps) {
     const {transaction, open, setOpen} = props;
 
     const columns: ColumnDef<BookedAmount>[] = [
-
+        {
+            id: "date",
+            header: columnHeader(i18next.t("bookedAmount.date")),
+            accessorKey: "date",
+        },
+        {
+            id: "amount",
+            header: columnHeader(i18next.t("bookedAmount.amount")),
+            accessorKey: "amount",
+        },
+        {
+            id: "asset",
+            header: columnHeader(i18next.t("bookedAmount.asset")),
+            accessorKey: "asset",
+        },
+        {
+            id: "wallet",
+            header: columnHeader(i18next.t("bookedAmount.wallet")),
+            accessorKey: "wallet",
+        }
     ]
 
     const data: PagedResponse<BookedAmount> = {
@@ -33,17 +53,30 @@ export function BookingDialog(props: BookingDialogProps) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Edit Bookings
+                        Edit booked amounts
                     </DialogTitle>
-                    <DialogDescription>
-                        Edit bookings for transaction '{transaction.name}'
-                    </DialogDescription>
                 </DialogHeader>
-                <div className={"flex flex-col gap-3"}>
+                <div
+                    className={"flex flex-col gap-3 w-full overflow-hidden"}> { /* overflow-hidden somehow enforces a max width */}
                     <TransactionItem transaction={transaction}/>
-                    <Button>+ Create</Button>
-                    <DataTable columns={columns} pageSize={15} page={data} changePage={() => {}}/>
+                    <div className={"flex gap-3"}>
+                        {transaction.status === TransactionStatus.OPEN && (
+                            <>
+                                <Button className={"grow"}>+ Book amount</Button>
+                                <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.CANCELLED]} Cancel</Button>
+                                <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.CLOSED]} Complete</Button>
+                            </>
+                        )}
+                        {transaction.status !== TransactionStatus.OPEN && (
+                            <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.OPEN]} Reopen transaction</Button>
+                        )}
+                    </div>
+                    <DataTable columns={columns} pageSize={15} page={data} changePage={() => {
+                    }}/>
                 </div>
+                <DialogFooter>
+                    <Button onClick={() => setOpen(false)} variant={"ghost"}>Close</Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

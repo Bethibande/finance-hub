@@ -112,7 +112,7 @@ export function EntityView<TEntity, TForm extends FieldValues>(props: EntityView
                            onChange={() => setVersion(version + 1)}
                            ref={dialogControls}/>}
 
-            <div className={"w-full lg:w-1/2 px-4"}>
+            <div className={"w-full lg:w-2/3 px-4"}>
                 <div className={"pb-2 flex items-center justify-between gap-2"}>
                     <Button onClick={() => {
                         dialogControls.current?.edit(undefined)
