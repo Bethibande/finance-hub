@@ -19,13 +19,13 @@ This is my personal finance app used for tracking my income and expenses.
 > [!WARNING]
 > Most things shown here are still work-in-progress and subject to changes
 
-| Assets                       | Create a new asset                       |
-|------------------------------|------------------------------------------|
-| ![Assets](images/assets.png) | ![Create asset](images/create-asset.png) |
-
-| Wallets                        | Edit a wallet                          |
-|--------------------------------|----------------------------------------|
-| ![Wallets](images/wallets.png) | ![Edit wallet](images/edit-wallet.png) |
+| Assets                           | Create a new asset                          |
+|----------------------------------|---------------------------------------------|
+| ![Assets](images/assets.png)     | ![Create asset](images/create-asset.png)    |
+| Wallets                          | Edit a wallet                               |
+| ![Wallets](images/wallets.png)   | ![Edit wallet](images/edit-wallet.png)      |
+| View payments (WIP)              | Manage booked amounts (Mockup, WIP)         |
+| ![Payments](images/payments.png) | ![Edit booked amounts](images/bookings.png) |
 
 ### Data model
 ![Classes](images/classes.png)
