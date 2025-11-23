@@ -1,6 +1,6 @@
 import {defaultNamespacedLoadFunction, type EntityActions} from "../data/EntityDialog.tsx";
-import {type Transaction, TransactionStatus, TransactionType, type Workspace} from "../../lib/types.ts";
-import {deleteClient, post} from "../../lib/api.ts";
+import {type Transaction, TransactionStatus, TransactionType, type Workspace} from "@/lib/types.ts";
+import {deleteClient, post} from "@/lib/api.ts";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -21,12 +21,12 @@ import {PartnerActions, usePartnerEditForm} from "../partners/PartnerView.tsx";
 import {columnHeader} from "../../components/ui/table.tsx";
 import {renderAmount, renderDate} from "../../components/table/data-table.tsx";
 import type {ClassNameValue} from "tailwind-merge";
-import './payments.css';
 import {useState} from "react";
 import {BookingDialog} from "./Booking.tsx";
 import {Item, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "../../components/ui/item.tsx";
 import {Archive, Clipboard, ClipboardCheck} from "react-bootstrap-icons";
 import {cn} from "@/lib/utils.ts";
+import {Button} from "@/components/ui/button.tsx";
 
 export interface TransactionItemProps {
     transaction: Transaction;
@@ -180,23 +180,10 @@ export function useTransactionForm() {
 }
 
 function renderBookingStatus(transaction: Transaction, edit: (transaction: Transaction) => void) {
-    let style: ClassNameValue = "";
-    switch (transaction.status) {
-        case TransactionStatus.OPEN:
-            style = "booking-open"
-            break;
-        case TransactionStatus.CLOSED:
-            style = "booking-closed"
-            break;
-        case TransactionStatus.CANCELLED:
-            style = "booking-cancelled"
-            break;
-    }
-
     return (
-        <div className={style} onClick={() => edit(transaction)}>
+        <Button variant={"ghost"} onClick={() => edit(transaction)}>
             {i18next.t("transaction.booked", {amount: transaction.bookedAmounts.length})}
-        </div>
+        </Button>
     )
 }
 

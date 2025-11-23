@@ -23,6 +23,7 @@ export interface PageQueryParams {
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
+    pagination?: boolean,
     page: PagedResponse<TData>,
     pageSize: number,
     changePage: (query: PageQueryParams) => void,
@@ -73,6 +74,7 @@ function toPageQuery(page: number, size: number, sorting: SortingState): PageQue
 
 export function DataTable<TData, TValue>({
                                              columns,
+                                             pagination,
                                              page,
                                              pageSize,
                                              changePage,
@@ -163,23 +165,25 @@ export function DataTable<TData, TValue>({
                 </Table>
 
             </div>
-            <div className={"flex justify-between items-center"}>
-                <div className={"font-medium p-2 w-fit"}>
-                    {page.totalElements.toLocaleString()} {i18next.t("table.rows")}
+            {(pagination === undefined || pagination) && (
+                <div className={"flex justify-between items-center"}>
+                    <div className={"font-medium p-2 w-fit"}>
+                        {page.totalElements.toLocaleString()} {i18next.t("table.rows")}
+                    </div>
+                    <div className={"flex gap-1"}>
+                        <Button onClick={() => changePage(toPageQuery(page.page - 1, pageSize, sorting))}
+                                variant={"outline"}
+                                disabled={page.page <= 0}>
+                            {i18next.t("table.previous")}
+                        </Button>
+                        <Button onClick={() => changePage(toPageQuery(page.page + 1, pageSize, sorting))}
+                                variant={"outline"}
+                                disabled={page.page + 1 >= page.totalPages}>
+                            {i18next.t("table.next")}
+                        </Button>
+                    </div>
                 </div>
-                <div className={"flex gap-1"}>
-                    <Button onClick={() => changePage(toPageQuery(page.page - 1, pageSize, sorting))}
-                            variant={"outline"}
-                            disabled={page.page <= 0}>
-                        {i18next.t("table.previous")}
-                    </Button>
-                    <Button onClick={() => changePage(toPageQuery(page.page + 1, pageSize, sorting))}
-                            variant={"outline"}
-                            disabled={page.page + 1 >= page.totalPages}>
-                        {i18next.t("table.next")}
-                    </Button>
-                </div>
-            </div>
+            )}
         </div>
     )
 }

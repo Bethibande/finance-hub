@@ -15,9 +15,13 @@ public record PagedResponse<T>(
     public static <T> PagedResponse<T> of(final int page,
                                           final int size,
                                           final PanacheQuery<T> query) {
-        final long count = query.count();
-        final List<T> data = query.list();
+        return of(page, size, query.count(), query.list());
+    }
 
+    public static <T> PagedResponse<T> of(final int page,
+                                          final int size,
+                                          final long count,
+                                          final List<T> data) {
         return new PagedResponse<>(
                 page,
                 size,

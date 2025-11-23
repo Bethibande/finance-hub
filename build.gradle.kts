@@ -6,6 +6,11 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+
+    maven {
+        url = uri("https://pckg.bethibande.com/repository/maven-releases/")
+        name = "bethibande-releases"
+    }
 }
 
 val quarkusPlatformGroupId: String by project
@@ -31,14 +36,17 @@ dependencies {
     implementation("io.quarkus:quarkus-smallrye-openapi")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+
+    implementation("com.bethibande.process:annotations:1.0")
+    annotationProcessor("com.bethibande.process:processor:1.0")
 }
 
 group = "de.bethibande.finance"
 version = "1.0-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 tasks.withType<Test> {

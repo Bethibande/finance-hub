@@ -6,6 +6,7 @@ import type {ColumnDef} from "@tanstack/react-table";
 import {StatusToIcon, TransactionItem} from "./Payments.tsx";
 import {columnHeader} from "@/components/ui/table.tsx";
 import i18next from "i18next";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 export interface BookingDialogProps {
     transaction: Transaction,
@@ -21,21 +22,24 @@ export function BookingDialog(props: BookingDialogProps) {
         {
             id: "date",
             header: columnHeader(i18next.t("bookedAmount.date")),
+            enableSorting: true,
             accessorKey: "date",
         },
         {
             id: "amount",
             header: columnHeader(i18next.t("bookedAmount.amount")),
+            enableSorting: true,
             accessorKey: "amount",
         },
         {
             id: "asset",
-            header: columnHeader(i18next.t("bookedAmount.asset")),
+            header: i18next.t("bookedAmount.asset"),
             accessorKey: "asset",
         },
         {
             id: "wallet",
             header: columnHeader(i18next.t("bookedAmount.wallet")),
+            enableSorting: true,
             accessorKey: "wallet",
         }
     ]
@@ -53,7 +57,7 @@ export function BookingDialog(props: BookingDialogProps) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Edit booked amounts
+                        Edit booked amounts {/* TODO: i18n */}
                     </DialogTitle>
                 </DialogHeader>
                 <div
@@ -62,20 +66,38 @@ export function BookingDialog(props: BookingDialogProps) {
                     <div className={"flex gap-3"}>
                         {transaction.status === TransactionStatus.OPEN && (
                             <>
-                                <Button className={"grow"}>+ Book amount</Button>
-                                <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.CANCELLED]} Cancel</Button>
-                                <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.CLOSED]} Complete</Button>
+                                <Button className={"grow"}>+ Book amount</Button> {/* TODO: i18n */}
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.CANCELLED]} Cancel {/* TODO: i18n */}</Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent> {/* TODO: i18n */}
+                                        Mark the transaction as cancelled
+                                    </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.CLOSED]} Complete {/* TODO: i18n */}</Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent> {/* TODO: i18n */}
+                                        Mark the transaction as completed
+                                    </TooltipContent>
+                                </Tooltip>
                             </>
                         )}
                         {transaction.status !== TransactionStatus.OPEN && (
-                            <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.OPEN]} Reopen transaction</Button>
+                            <Button className={"grow"} variant={"secondary"}>{StatusToIcon[TransactionStatus.OPEN]} Reopen transaction {/* TODO: i18n */}</Button>
                         )}
                     </div>
-                    <DataTable columns={columns} pageSize={15} page={data} changePage={() => {
-                    }}/>
+                    <DataTable columns={columns}
+                               pagination={false}
+                               pageSize={15}
+                               page={data}
+                               changePage={() => {
+                               }}/>
                 </div>
                 <DialogFooter>
-                    <Button onClick={() => setOpen(false)} variant={"ghost"}>Close</Button>
+                    <Button onClick={() => setOpen(false)} variant={"ghost"}>Close {/* TODO: i18n */}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

@@ -107,7 +107,7 @@ i18next.init({
                 "transaction.wallet": "Wallet",
                 "transaction.status": "Status",
                 "transaction.bookedAmounts": "Booked amounts",
-                "transaction.booked": "{{amount}} Booked",
+                "transaction.booked": "{{amount, number}} Booked",
                 "transaction.notes": "Notes",
                 "transaction.dialog.title.create": "Create Transaction",
                 "transaction.dialog.desc.create": "Create a new Transaction",
