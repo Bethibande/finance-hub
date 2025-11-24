@@ -1,4 +1,4 @@
-package de.bethibande.finance.web.crud;
+package de.bethibande.finance.web.api.v1.crud;
 
 import io.quarkus.panache.common.Sort;
 import io.quarkus.runtime.annotations.RegisterForReflection;

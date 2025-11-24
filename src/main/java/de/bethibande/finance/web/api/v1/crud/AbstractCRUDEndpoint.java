@@ -1,4 +1,4 @@
-package de.bethibande.finance.web.crud;
+package de.bethibande.finance.web.api.v1.crud;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

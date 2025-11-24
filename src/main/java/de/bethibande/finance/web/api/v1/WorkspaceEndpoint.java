@@ -1,8 +1,8 @@
-package de.bethibande.finance.web;
+package de.bethibande.finance.web.api.v1;
 
 import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Workspace;
-import de.bethibande.finance.web.crud.AbstractCRUDEndpoint;
+import de.bethibande.finance.web.api.v1.crud.AbstractCRUDEndpoint;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 import jakarta.ws.rs.*;

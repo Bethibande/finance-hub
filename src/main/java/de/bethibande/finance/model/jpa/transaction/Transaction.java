@@ -1,5 +1,6 @@
 package de.bethibande.finance.model.jpa.transaction;
 
+import com.bethibande.process.annotation.EntityDTO;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Wallet;
@@ -12,6 +13,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@EntityDTO(excludeProperties = "bookedAmounts")
+@EntityDTO(excludeProperties = {"id", "bookedAmounts"})
+@EntityDTO(excludeProperties = {"workspace", "bookedAmounts"})
+@EntityDTO(excludeProperties = {"bookedAmounts"}, expandProperties = {"asset", "partner", "wallet"}, name = "TransactionDTOExpanded")
 public class Transaction extends WorkspaceEntity {
 
     @Column(nullable = false)

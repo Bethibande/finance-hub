@@ -1,8 +1,7 @@
-package de.bethibande.finance.web.setup;
+package de.bethibande.finance.web.api.v1.setup;
 
 import de.bethibande.finance.model.jpa.User;
 import de.bethibande.finance.model.jpa.Workspace;
-import de.bethibande.finance.security.AuthEndpoint;
 import de.bethibande.finance.security.Roles;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.smallrye.common.annotation.RunOnVirtualThread;

@@ -12,9 +12,9 @@ import {ControlledInput, ControlledSelect} from "../../components/ControlledInpu
 
 export const UserActions: EntityActions<User> = {
     load: defaultLoadFunction("user"),
-    create: (user) => post("/api/v1/user", user),
-    save: (user) => patch("/api/v1/user", user),
-    delete: (user) => deleteClient("/api/v1/user/" + user.id),
+    create: (user) => post("/api/v2/user", user),
+    save: (user) => patch("/api/v2/user", user),
+    delete: (user) => deleteClient("/api/v2/user/" + user.id),
     format: (user) => user.name,
     i18nKey: "user",
 }

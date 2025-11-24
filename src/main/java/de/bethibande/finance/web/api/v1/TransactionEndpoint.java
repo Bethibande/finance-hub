@@ -1,11 +1,11 @@
-package de.bethibande.finance.web;
+package de.bethibande.finance.web.api.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.bethibande.finance.model.jpa.transaction.BookedAmount;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
 import de.bethibande.finance.model.web.ErrorResponse;
 import de.bethibande.finance.model.web.PagedResponse;
-import de.bethibande.finance.web.crud.AbstractWorkspaceCRUDEndpoint;
+import de.bethibande.finance.web.api.v1.crud.AbstractWorkspaceCRUDEndpoint;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 import jakarta.transaction.Transactional;

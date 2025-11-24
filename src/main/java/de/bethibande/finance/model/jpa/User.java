@@ -1,5 +1,6 @@
 package de.bethibande.finance.model.jpa;
 
+import com.bethibande.process.annotation.EntityDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.security.jpa.Password;
@@ -12,8 +13,11 @@ import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
-@Table(name = "Users")
 @UserDefinition
+@Table(name = "Users")
+@EntityDTO
+@EntityDTO(excludeProperties = {"password"})
+@EntityDTO(excludeProperties = {"id"})
 public class User extends PanacheEntity {
 
     @Username

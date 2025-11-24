@@ -41,9 +41,9 @@ export const WorkspaceDialogTranslations: EntityDialogTranslations = {
 
 export const WorkspaceActions: EntityActions<Workspace> = {
     format: (entity) => entity.name,
-    create: (entity) => post("/api/v1/workspace", entity),
-    save: (entity) => post("/api/v1/workspace", entity),
-    delete: (entity) => deleteClient("/api/v1/workspace/" + entity.id),
+    create: (entity) => post("/api/v2/workspace", entity),
+    save: (entity) => post("/api/v2/workspace", entity),
+    delete: (entity) => deleteClient("/api/v2/workspace/" + entity.id),
     load: defaultLoadFunction("workspace"),
     i18nKey: "workspace",
 }

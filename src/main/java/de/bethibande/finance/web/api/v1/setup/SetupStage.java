@@ -1,4 +1,4 @@
-package de.bethibande.finance.web.setup;
+package de.bethibande.finance.web.api.v1.setup;
 
 public enum SetupStage {
 

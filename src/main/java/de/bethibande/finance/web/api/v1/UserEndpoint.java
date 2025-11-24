@@ -1,4 +1,4 @@
-package de.bethibande.finance.web;
+package de.bethibande.finance.web.api.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import de.bethibande.finance.model.jpa.User;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.model.web.UserWithPassword;
 import de.bethibande.finance.security.Roles;
-import de.bethibande.finance.web.crud.AbstractCRUDEndpoint;
+import de.bethibande.finance.web.api.v1.crud.AbstractCRUDEndpoint;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.annotation.security.RolesAllowed;
