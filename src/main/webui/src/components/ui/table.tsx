@@ -1,36 +1,5 @@
-import type {ReactNode} from "react";
 import * as React from "react"
 import {cn} from "../../lib/utils.ts";
-import {Checkbox} from "./checkbox.tsx";
-import type {ColumnDef, HeaderContext} from "@tanstack/react-table";
-import ColumnHeader from "../table/ColumnHeader.tsx";
-
-export function columnHeader<TData>(header: ReactNode): ((props: HeaderContext<TData, unknown>) => any) {
-    return ({column}) => <ColumnHeader column={column} header={header}/>
-}
-
-export function multiSelectColumn<TData>(): ColumnDef<TData> {
-    return {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        )
-    }
-}
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (

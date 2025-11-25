@@ -14,12 +14,12 @@ import {
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "../ui/collapsible.tsx";
 import {Cash, ChevronDown, ClipboardData, Database, Sliders} from "react-bootstrap-icons";
 import {NavLink} from "react-router";
-import {cn} from "../../lib/utils.ts";
+import {cn} from "@/lib/utils.ts";
 import WorkspaceSelect from "./workspace-select.tsx";
 import UserItem from "./user-item.tsx";
 import {Separator} from "../ui/separator.tsx";
 import {useAuth} from "../../lib/auth.tsx";
-import {Role, type UserDto} from "../../lib/types.ts";
+import {Role, type UserDto} from "@/lib/types.ts";
 
 export interface NavItem {
     text: string;

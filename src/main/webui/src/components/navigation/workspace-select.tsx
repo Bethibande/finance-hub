@@ -1,5 +1,5 @@
 import {useWorkspace} from "../../lib/workspace.tsx";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,80 +11,15 @@ import {
 import {SidebarMenuButton, useSidebar} from "../ui/sidebar.tsx";
 import {ChevronExpand, Plus, Trash} from "react-bootstrap-icons";
 import Logo from "../Logo.tsx";
-import type {Workspace} from "../../lib/types.ts";
+import type {Workspace} from "@/lib/types.ts";
 import {Button} from "../ui/button.tsx";
 import i18next from "i18next";
-import {deleteClient, fetchClient, post} from "../../lib/api.ts";
+import {fetchClient} from "@/lib/api.ts";
 import {showHttpErrorAndContinue} from "../../lib/errors.tsx";
-import {
-    defaultLoadFunction,
-    type EntityActions,
-    EntityDialog,
-    type EntityDialogControls,
-    type EntityDialogTranslations
-} from "../../views/data/EntityDialog.tsx";
-import {z} from "zod";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {ControlledInput} from "../ControlledInput.tsx";
-
-export const WorkspaceDialogTranslations: EntityDialogTranslations = {
-    create: {
-        title: "workspace.dialog.create.title",
-        description: "workspace.dialog.create.desc"
-    },
-    edit: {
-        title: "workspace.dialog.edit.title",
-        description: "workspace.dialog.edit.desc"
-    }
-}
-
-export const WorkspaceActions: EntityActions<Workspace> = {
-    format: (entity) => entity.name,
-    create: (entity) => post("/api/v2/workspace", entity),
-    save: (entity) => post("/api/v2/workspace", entity),
-    delete: (entity) => deleteClient("/api/v2/workspace/" + entity.id),
-    load: defaultLoadFunction("workspace"),
-    i18nKey: "workspace",
-}
-
-export function useWorkspaceForm() {
-    const formSchema = z.object({
-        name: z.string().min(3).max(255),
-    })
-
-    const defaults: z.infer<typeof formSchema> = {
-        name: ""
-    }
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: defaults
-    })
-
-    function toEntity(data: z.infer<typeof formSchema>): Workspace {
-        return data
-    }
-
-    function fields() {
-        return (
-            <>
-                <ControlledInput name={"name"} control={form.control} label={i18next.t("workspace.name")}/>
-            </>
-        )
-    }
-
-    function reset(entity?: Workspace) {
-        form.reset(entity || defaults)
-    }
-
-    return {form, toEntity, reset, fields}
-}
 
 export default function WorkspaceSelect() {
     const {isMobile} = useSidebar();
 
-    const [version, setVersion] = useState(0)
     const {workspace, setWorkspace} = useWorkspace();
     const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
     useEffect(() => {
@@ -93,7 +28,7 @@ export default function WorkspaceSelect() {
                 res.json().then(page => setWorkspaces(page.data))
             }
         })
-    }, [version])
+    }, [])
 
     useEffect(() => {
         if (workspaces.length === 0) {
@@ -104,25 +39,8 @@ export default function WorkspaceSelect() {
         }
     }, [workspaces]);
 
-    const dialogControls = useRef<EntityDialogControls<Workspace> | null>(null)
-    const actions: EntityActions<Workspace> = {
-        ...WorkspaceActions,
-        create: (workspace) => WorkspaceActions.create(workspace).then(response => {
-            if (response.ok) {
-                response.json().then(setWorkspace)
-            }
-
-            return response
-        })
-    }
-
     return (
         <>
-            <EntityDialog translations={WorkspaceDialogTranslations}
-                          actions={actions}
-                          form={useWorkspaceForm()}
-                          onChange={() => setVersion(version + 1)}
-                          ref={dialogControls}/>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <SidebarMenuButton
@@ -153,10 +71,6 @@ export default function WorkspaceSelect() {
                             {workspace.name}
                             <Button className={"group ml-auto hover:bg-red-600"}
                                     size={"icon-sm"}
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-                                        dialogControls.current?.delete(workspace)
-                                    }}
                                     variant={"ghost"}
                                     disabled={workspaces.length <= 1}>
                                 <Trash className={"text-red-600 size-4 group-hover:text-white"}/>
@@ -164,7 +78,7 @@ export default function WorkspaceSelect() {
                         </DropdownMenuItem>
                     ))}
                     <DropdownMenuSeparator/>
-                    <DropdownMenuItem onClick={() => dialogControls.current?.edit()} className="gap-2 p-2">
+                    <DropdownMenuItem className="gap-2 p-2">
                         <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                             <Plus className="size-4"/>
                         </div>

@@ -5,7 +5,7 @@ import {Field, FieldError, FieldGroup, FieldLabel} from "../../components/ui/fie
 import {z} from "zod";
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {post} from "../../lib/api.ts";
+import {post} from "@/lib/api.ts";
 import {useState} from "react";
 import {useWorkspace} from "../../lib/workspace.tsx";
 

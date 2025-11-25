@@ -1,5 +1,5 @@
 import CreateWorkspaceCard from "./CreateWorkspaceCard.tsx";
-import {buildClient} from "../../lib/api.ts";
+import {buildClient} from "@/lib/api.ts";
 import {useEffect, useState} from "react";
 import CreateUserCard from "./CreateUserCard.tsx";
 import {useNavigate} from "react-router";

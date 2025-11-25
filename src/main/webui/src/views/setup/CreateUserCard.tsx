@@ -5,7 +5,7 @@ import {Input} from "../../components/ui/input.tsx";
 import {z} from "zod";
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {post} from "../../lib/api.ts";
+import {post} from "@/lib/api.ts";
 import {useState} from "react";
 import {useAuth} from "../../lib/auth.tsx";
 
