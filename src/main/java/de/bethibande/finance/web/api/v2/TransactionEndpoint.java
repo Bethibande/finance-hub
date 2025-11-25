@@ -4,12 +4,11 @@ import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Wallet;
 import de.bethibande.finance.model.jpa.Workspace;
 import de.bethibande.finance.model.jpa.partner.Partner;
-import de.bethibande.finance.model.jpa.partner.PartnerDTO;
 import de.bethibande.finance.model.jpa.transaction.*;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.web.api.v2.crud.AbstractCRUDEndpoint;
+import de.bethibande.finance.web.api.v2.crud.WorkspacedParams;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.panache.common.Sort;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 

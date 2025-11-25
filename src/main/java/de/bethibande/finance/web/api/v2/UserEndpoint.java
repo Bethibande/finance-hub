@@ -6,6 +6,7 @@ import de.bethibande.finance.model.jpa.UserDTOWithoutId;
 import de.bethibande.finance.model.jpa.UserDTOWithoutPassword;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.security.Roles;
+import de.bethibande.finance.web.api.v2.crud.PaginationParams;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.annotation.security.RolesAllowed;

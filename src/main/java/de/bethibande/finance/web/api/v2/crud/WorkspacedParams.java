@@ -1,4 +1,4 @@
-package de.bethibande.finance.web.api.v2;
+package de.bethibande.finance.web.api.v2.crud;
 
 import jakarta.ws.rs.PathParam;
 

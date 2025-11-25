@@ -6,6 +6,7 @@ import de.bethibande.finance.model.jpa.transaction.BookedAmount;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.web.api.v2.crud.AbstractCRUDEndpoint;
+import de.bethibande.finance.web.api.v2.crud.WorkspacedParams;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;

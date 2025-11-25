@@ -1,5 +1,6 @@
 package de.bethibande.finance.model.jpa.transaction;
 
+import com.bethibande.process.annotation.EntityDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Wallet;
@@ -12,6 +13,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@EntityDTO
+@EntityDTO(excludeProperties = {"id", "transaction"})
+@EntityDTO(excludeProperties = {"transaction"})
 public class BookedAmount extends PanacheEntity {
 
     @JsonIgnore
