@@ -10,6 +10,7 @@ bin/
 
 # NPM
 src/main/webui/node_modules
+src/main/webui/src/generated
 
 # IntelliJ
 .idea

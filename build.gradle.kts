@@ -1,6 +1,13 @@
+import org.gradle.kotlin.dsl.register
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+import kotlin.io.path.readText
+import kotlin.io.path.walk
+import kotlin.io.path.writeText
+
 plugins {
     java
     id("io.quarkus")
+    id("org.openapi.generator") version "7.17.0"
 }
 
 repositories {
@@ -49,11 +56,34 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
+openApiGenerate {
+    generatorName.set("typescript-fetch")
+    inputSpec.set("${layout.buildDirectory.get()}/openapi/openapi.yaml")
+    outputDir.set("${layout.buildDirectory.get()}/generated/openapi")
+}
+
+tasks.withType<GenerateTask> {
+    finalizedBy("copyOpenAPITypes")
+}
+
+tasks.register<Sync>("copyOpenAPITypes") {
+    from("${layout.buildDirectory.get()}/generated/openapi")
+    into("${layout.projectDirectory}/src/main/webui/src/generated")
+
+    doLast {
+        kotlin.io.path.Path("${layout.projectDirectory}/src/main/webui/src/generated")
+            .walk()
+            .forEach { path -> path.writeText("// @ts-nocheck\n" + path.readText()) }
+    }
+}
+
 tasks.withType<Test> {
     systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
     jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
 }
 tasks.withType<JavaCompile> {
+    dependsOn("openApiGenerate")
+
     options.encoding = "UTF-8"
     options.compilerArgs.add("-parameters")
 }
