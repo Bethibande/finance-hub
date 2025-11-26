@@ -1,15 +1,16 @@
 package de.bethibande.finance.model.web;
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public record PagedResponse<T>(
-        int page,
-        int pageSize,
-        int totalPages,
-        int totalElements,
-        List<T> data
+        @NotNull int page,
+        @NotNull int pageSize,
+        @NotNull int totalPages,
+        @NotNull int totalElements,
+        @NotNull List<@NotNull T> data
 ) {
 
     public static <T> PagedResponse<T> of(final int page,

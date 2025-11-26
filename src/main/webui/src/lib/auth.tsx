@@ -1,34 +1,39 @@
-import type {UserDto} from "./types.ts";
 import {createContext, type ReactNode, useContext, useEffect, useState} from "react";
-import {fetchClient, post} from "./api.ts";
+import {fetchClient} from "./api.ts";
 import {showError, showErrorMessage} from "./errors.tsx";
 import i18next from "i18next";
+import {AuthEndpointApi, type UserDTOWithoutPassword} from "@/generated";
 
 export interface LoginResult {
-    user?: UserDto;
+    user?: UserDTOWithoutPassword;
     error?: Response;
 }
 
 async function login(username: string, password: string): Promise<LoginResult> {
-    const response = await post("/auth/login", {username, password});
+    const response = await new AuthEndpointApi().authLoginPostRaw({
+        credentials: {
+            username: username,
+            password: password
+        }
+    });
 
-    if (!response.ok) {
+    if (!response.raw.ok) {
         // Handle HTTP error (e.g. 401)
-        console.error('Login failed:', response.status);
-        return {user: undefined, error: response};
+        console.error('Login failed:', response.raw.status);
+        return {user: undefined, error: response.raw};
     }
 
-    const user = (await response.json()) as UserDto;
+    const user = (await response.raw.json()) as UserDTOWithoutPassword;
     console.log("Logged in as " + user.name)
     return {user};
 }
 
 async function logout() {
-    await fetch('/auth/logout')
+    await new AuthEndpointApi().authLogoutPost()
 }
 
 export interface AuthStatus {
-    user?: UserDto;
+    user?: UserDTOWithoutPassword;
     pending: boolean;
     login: (username: string, password: string) => Promise<LoginResult>;
     logout: () => Promise<void>;
@@ -37,7 +42,7 @@ export interface AuthStatus {
 export const AuthContext = createContext<AuthStatus | undefined>(undefined);
 
 export const AuthProvider = ({children}: { children: ReactNode }) => {
-    const [auth, setAuth] = useState<UserDto | undefined>(undefined);
+    const [auth, setAuth] = useState<UserDTOWithoutPassword | undefined>(undefined);
     const [pending, setPending] = useState<boolean>(true);
 
     useEffect(() => {

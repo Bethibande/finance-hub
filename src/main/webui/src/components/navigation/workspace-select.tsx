@@ -11,17 +11,17 @@ import {
 import {SidebarMenuButton, useSidebar} from "../ui/sidebar.tsx";
 import {ChevronExpand, Plus, Trash} from "react-bootstrap-icons";
 import Logo from "../Logo.tsx";
-import type {Workspace} from "@/lib/types.ts";
 import {Button} from "../ui/button.tsx";
 import i18next from "i18next";
 import {fetchClient} from "@/lib/api.ts";
 import {showHttpErrorAndContinue} from "../../lib/errors.tsx";
+import type {WorkspaceDTO} from "@/generated";
 
 export default function WorkspaceSelect() {
     const {isMobile} = useSidebar();
 
     const {workspace, setWorkspace} = useWorkspace();
-    const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+    const [workspaces, setWorkspaces] = useState<WorkspaceDTO[]>([]);
     useEffect(() => {
         fetchClient("/api/v1/workspace").then(showHttpErrorAndContinue).then(res => {
             if (res.ok) {

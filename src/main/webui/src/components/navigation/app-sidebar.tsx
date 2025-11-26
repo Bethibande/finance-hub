@@ -19,7 +19,8 @@ import WorkspaceSelect from "./workspace-select.tsx";
 import UserItem from "./user-item.tsx";
 import {Separator} from "../ui/separator.tsx";
 import {useAuth} from "../../lib/auth.tsx";
-import {Role, type UserDto} from "@/lib/types.ts";
+import type {UserDTOWithoutPassword} from "@/generated";
+import {Role} from "@/lib/types.ts";
 
 export interface NavItem {
     text: string;
@@ -30,7 +31,7 @@ export interface NavItem {
     requiredRoles?: Role[];
 }
 
-function toGroup(item: NavItem, user?: UserDto): ReactNode | undefined {
+function toGroup(item: NavItem, user?: UserDTOWithoutPassword): ReactNode | undefined {
     const children = item.children?.map((child) => toComponent(child, user));
     const [open, setOpen] = useState(true);
 
@@ -72,7 +73,7 @@ function toUrlItem(item: NavItem): ReactNode {
     )
 }
 
-function toComponent(item: NavItem, user?: UserDto): ReactNode | undefined {
+function toComponent(item: NavItem, user?: UserDTOWithoutPassword): ReactNode | undefined {
     if (!checkPermissions(item, user)) return undefined;
     if (item.children) {
         return toGroup(item, user);
@@ -83,11 +84,11 @@ function toComponent(item: NavItem, user?: UserDto): ReactNode | undefined {
     }
 }
 
-function checkPermissions(item: NavItem, user?: UserDto) {
+function checkPermissions(item: NavItem, user?: UserDTOWithoutPassword) {
     if(!item.requiredRoles) return true;
-    if (item.requiredRoles && user) {
+    if (item.requiredRoles && user && user.roles) {
         for (let role of user.roles) {
-            if (item.requiredRoles.includes(role)) return true;
+            if (item.requiredRoles.includes(role as Role)) return true;
         }
     }
     return false;
