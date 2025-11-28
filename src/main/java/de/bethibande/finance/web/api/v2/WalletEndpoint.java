@@ -5,13 +5,16 @@ import de.bethibande.finance.model.jpa.partner.Partner;
 import de.bethibande.finance.model.jpa.transaction.BookedAmount;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
 import de.bethibande.finance.model.web.PagedResponse;
+import de.bethibande.finance.security.Roles;
 import de.bethibande.finance.web.api.v2.crud.AbstractCRUDEndpoint;
 import de.bethibande.finance.web.api.v2.crud.WorkspacedParams;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 
 @Path("/api/v2/wallet")
+@RolesAllowed({Roles.ADMIN, Roles.USER})
 public class WalletEndpoint extends AbstractCRUDEndpoint {
 
     @POST

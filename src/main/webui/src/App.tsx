@@ -5,7 +5,7 @@ import MainLayout from "./views/MainLayout.tsx";
 import {ViewConfigProvider} from "./lib/view-config.tsx";
 import LoginView from "./views/LoginView.tsx";
 import {DashboardView} from "@/views/DashboardView.tsx";
-import {AssetView} from "@/views/AssetView.tsx";
+import {AssetView} from "@/views/asset/AssetView.tsx";
 
 const primaryRoutes: RouteObject[] = [
     {
