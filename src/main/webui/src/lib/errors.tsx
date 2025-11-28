@@ -1,6 +1,6 @@
 import {toast} from "sonner";
-import type {ErrorResponse} from "./types.ts";
 import i18next from "i18next";
+import type {ErrorResponse} from "@/generated";
 
 export async function showHttpErrorAndContinue(response: Response): Promise<Response> {
     if (!response.ok) {
@@ -32,8 +32,12 @@ export function showErrorResponse(response: ErrorResponse) {
     showErrorMessage(i18next.t(response.translationKey))
 }
 
-export function showError(error: Error) {
-    showErrorMessage(error.message)
+export function showError(error: any) {
+    if (error.response) {
+        showHttpError(error.response)
+    } else {
+        showErrorMessage(error.message)
+    }
 }
 
 export function showErrorMessage(message: string) {

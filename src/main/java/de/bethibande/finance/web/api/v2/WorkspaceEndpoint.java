@@ -5,13 +5,16 @@ import de.bethibande.finance.model.jpa.Workspace;
 import de.bethibande.finance.model.jpa.WorkspaceDTO;
 import de.bethibande.finance.model.jpa.WorkspaceDTOWithoutId;
 import de.bethibande.finance.model.web.PagedResponse;
+import de.bethibande.finance.security.Roles;
 import de.bethibande.finance.web.api.v2.crud.AbstractCRUDEndpoint;
 import de.bethibande.finance.web.api.v2.crud.PaginationParams;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 
 @Path("/api/v2/workspace")
+@RolesAllowed({Roles.ADMIN, Roles.USER})
 public class WorkspaceEndpoint extends AbstractCRUDEndpoint {
 
     @POST

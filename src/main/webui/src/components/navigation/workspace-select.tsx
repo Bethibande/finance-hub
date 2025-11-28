@@ -13,9 +13,8 @@ import {ChevronExpand, Plus, Trash} from "react-bootstrap-icons";
 import Logo from "../Logo.tsx";
 import {Button} from "../ui/button.tsx";
 import i18next from "i18next";
-import {fetchClient} from "@/lib/api.ts";
-import {showHttpErrorAndContinue} from "../../lib/errors.tsx";
-import type {WorkspaceDTO} from "@/generated";
+import {type WorkspaceDTO, WorkspaceEndpointApi} from "@/generated";
+import {showError} from "@/lib/errors.tsx";
 
 export default function WorkspaceSelect() {
     const {isMobile} = useSidebar();
@@ -23,11 +22,9 @@ export default function WorkspaceSelect() {
     const {workspace, setWorkspace} = useWorkspace();
     const [workspaces, setWorkspaces] = useState<WorkspaceDTO[]>([]);
     useEffect(() => {
-        fetchClient("/api/v1/workspace").then(showHttpErrorAndContinue).then(res => {
-            if (res.ok) {
-                res.json().then(page => setWorkspaces(page.data))
-            }
-        })
+        new WorkspaceEndpointApi().apiV2WorkspaceGet().then(dto => {
+            setWorkspaces(dto.data)
+        }).catch(showError)
     }, [])
 
     useEffect(() => {

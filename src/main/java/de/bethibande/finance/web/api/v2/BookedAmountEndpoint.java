@@ -5,12 +5,15 @@ import de.bethibande.finance.model.jpa.Asset;
 import de.bethibande.finance.model.jpa.Wallet;
 import de.bethibande.finance.model.jpa.transaction.*;
 import de.bethibande.finance.model.web.PagedResponse;
+import de.bethibande.finance.security.Roles;
 import de.bethibande.finance.web.api.v2.crud.BookedAmountParams;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 
 @Path("/api/v2")
+@RolesAllowed({Roles.ADMIN, Roles.USER})
 public class BookedAmountEndpoint {
 
     @POST

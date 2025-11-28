@@ -1,6 +1,8 @@
 package de.bethibande.finance.web.api.v2.crud;
 
 import de.bethibande.finance.model.web.ErrorResponse;
+import de.bethibande.finance.security.Roles;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.Path;
@@ -10,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
+@RolesAllowed({Roles.ADMIN, Roles.USER})
 public abstract class AbstractCRUDEndpoint {
 
     protected abstract boolean hasDependents(final long id);

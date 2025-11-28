@@ -1,8 +1,10 @@
 package de.bethibande.finance.model.web;
 
+import jakarta.validation.constraints.NotNull;
+
 public record ErrorResponse(
-        int status,
-        String message,
-        String translationKey
+        @NotNull int status,
+        @NotNull String message,
+        @NotNull String translationKey
 ) {
 }
