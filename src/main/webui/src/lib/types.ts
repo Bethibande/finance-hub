@@ -16,3 +16,11 @@ export const Direction = {
 } as const;
 
 export type Direction = typeof Direction[keyof typeof Direction];
+
+export interface PagedResponse<T> {
+    data: T[];
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    totalElements: number;
+}

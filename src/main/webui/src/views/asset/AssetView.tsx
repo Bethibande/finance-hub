@@ -1,10 +1,10 @@
-import {type DataQuery, DataTable, type TableData} from "@/components/data-table.tsx";
+import {type DataQuery} from "@/components/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
 import {type AssetDTOExpanded, AssetEndpointApi} from "@/generated";
-import {useState} from "react";
-import {useWorkspace} from "@/lib/workspace.tsx";
-import {showError} from "@/lib/errors.tsx";
 import i18next from "i18next";
+import {Button} from "@/components/ui/button.tsx";
+import {ThreeDots} from "react-bootstrap-icons";
+import {EntityList} from "@/components/entity/entity-list.tsx";
 
 export function AssetView() {
     const columns: ColumnDef<AssetDTOExpanded>[] = [
@@ -36,34 +36,29 @@ export function AssetView() {
             id: "notes",
             header: i18next.t("asset.notes"),
             accessorKey: "notes",
+        },
+        {
+            id: "actions",
+            cell: () => (<Button variant={"secondary"} size={"icon"}><ThreeDots/></Button>),
+            maxSize: 36,
         }
     ]
-    const [data, setData] = useState<TableData<AssetDTOExpanded>>({
-        data: [],
-        page: 0,
-        total: 0
-    })
-
-    const {workspace} = useWorkspace();
 
     function load(query: DataQuery) {
-        new AssetEndpointApi().apiV2AssetWorkspaceIdGet({
+        return new AssetEndpointApi().apiV2AssetWorkspaceIdGet({
             page: query.page,
             sort: query.sort.map(o => JSON.stringify(o)),
-            workspaceId: workspace.id!
-        }).then((result) => {
-            setData({
-                data: result.data,
-                total: result.totalElements,
-                page: query.page,
-            })
-        }).catch(showError)
+            workspaceId: query.workspace.id!
+        }).then((result) => ({
+            data: result.data,
+            total: result.totalElements,
+            page: query.page,
+        }))
     }
 
     return (
-        <DataTable pagination={true}
-                   data={data}
-                   columns={columns}
-                   update={load}/>
+        <EntityList columns={columns}
+                    load={load}
+                    i18nKey={"asset"}/>
     )
 }

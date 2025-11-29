@@ -16,10 +16,13 @@ import {cn} from "@/lib/utils.ts";
 import {Button} from "@/components/ui/button.tsx";
 import i18next from "i18next";
 import {ArrowsVertical, SortDown, SortUp} from "react-bootstrap-icons";
+import {useWorkspace} from "@/lib/workspace.tsx";
+import type {Workspace} from "@/generated";
 
 export interface DataQuery {
     sort: SortOrder[],
     page: number,
+    workspace: Workspace,
 }
 
 export interface TableData<TData> {
@@ -119,9 +122,11 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
         desc: false
     }]);
 
+    const {workspace} = useWorkspace();
+
     useEffect(() => {
         changePage(data.page, sorting)
-    }, [sorting, update]);
+    }, [sorting, workspace]);
 
     const table = useReactTable({
         data: data.data,
@@ -141,12 +146,13 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
     function changePage(page: number, sorting: SortingState) {
         update({
             sort: toSortOrder(sorting),
-            page
+            page,
+            workspace,
         })
     }
 
     return (
-        <div className={"flex flex-col gap-2"}>
+        <div className={"flex flex-col gap-2 grow"}>
             <div className="overflow-hidden rounded-md border bg-white">
                 <Table>
                     <TableHeader>
@@ -174,8 +180,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                                     {row.getVisibleCells().map((cell) => {
                                         const column = cell.column
                                         return (
-                                            <TableCell key={cell.id} style={{...getCommonPinningStyles(column)}}
-                                                       className={cn(column.getIsPinned() && "bg-white")}>
+                                            <TableCell key={cell.id} style={{...getCommonPinningStyles(column)}}>
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
                                         )
