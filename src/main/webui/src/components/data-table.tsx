@@ -121,7 +121,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
 
     useEffect(() => {
         changePage(data.page, sorting)
-    }, [sorting]);
+    }, [sorting, update]);
 
     const table = useReactTable({
         data: data.data,

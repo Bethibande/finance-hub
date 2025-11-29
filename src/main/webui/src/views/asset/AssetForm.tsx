@@ -35,9 +35,12 @@ export function AssetForm() {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <FormField fieldName={"name"} control={form.control} label={"Name"} Input={(props) => (
-                    <Input {...props} type={"text"} placeholder={"Name"}/>
-                )}/>
+                <FormField fieldName={"name"}
+                           control={form.control}
+                           label={"Name"}
+                           Input={(props) => (
+                               <Input {...props} type={"text"} placeholder={"Name"}/>
+                           )}/>
             </FieldGroup>
             <Button type={"submit"}>Test</Button>
         </form>

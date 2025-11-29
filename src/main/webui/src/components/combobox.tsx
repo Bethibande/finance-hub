@@ -1,25 +1,33 @@
-import type {SelectProps} from "./select.tsx";
 import {Popover, PopoverContent, PopoverTrigger} from "./ui/popover.tsx";
+import type {MouseEvent, ReactNode} from "react";
 import {type CSSProperties, useRef, useState} from "react";
 import {Button} from "./ui/button.tsx";
-import {Check, X, ChevronExpand} from "react-bootstrap-icons";
+import {Check, ChevronExpand, X} from "react-bootstrap-icons";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "./ui/command.tsx";
 import {cn} from "../lib/utils.ts";
-import type {MouseEvent} from "react";
 import i18next from "i18next";
 
-export interface ComboBoxProps<TOption> extends SelectProps<TOption> {
-    createAction?: () => void
+export interface ComboBoxProps<TOption, TValue> {
+    value: TValue | null,
+    options: TOption[],
+    toValue: (option: TOption) => TValue,
+    toStringValue: (option: TOption) => string,
+    render?: (option: TOption) => ReactNode
+    emptyLabel?: string,
+    onChange: (value: TValue | null) => void,
+    createAction?: () => void,
+    optional?: boolean,
+    keyGenerator?: (option: TValue) => string,
 }
 
-export function ComboBox<TOption>(props: ComboBoxProps<TOption>) {
-    const {options, value, onChange, optional, render, keyGenerator, emptyLabel, createAction} = props;
+export function ComboBox<TOption, TValue>(props: ComboBoxProps<TOption, TValue>) {
+    const {options, value, toValue, toStringValue, onChange, optional, render, keyGenerator, emptyLabel, createAction} = props;
 
     const element = useRef<HTMLButtonElement>(null)
     const [open, setOpen] = useState(false)
 
     function change(option: TOption) {
-        onChange(option);
+        onChange(toValue(option));
         setOpen(false);
     }
 
@@ -34,6 +42,8 @@ export function ComboBox<TOption>(props: ComboBoxProps<TOption>) {
         width: element.current ? element.current.clientWidth + "px" : undefined,
     }
 
+    const selectedOption = options.find(opt => toValue(opt) === value)
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -43,9 +53,9 @@ export function ComboBox<TOption>(props: ComboBoxProps<TOption>) {
                     role="combobox"
                     aria-expanded={open}
                     className="justify-between font-normal">
-                    {value
-                        ? render(value)
-                        : <span className={"opacity-50"}>{emptyLabel}</span>}
+                    {selectedOption
+                        ? (render && render(selectedOption) || toStringValue(selectedOption))
+                        : <span className={"opacity-50"}>{emptyLabel || i18next.t("combobox.select")}</span>}
                     <div className={"flex items-center gap-1"}>
                         { (optional && value) && <div onClick={clear} className={"hover:bg-slate-300 transition-colors rounded-md p-1 opacity-50 cursor-pointer"}><X className={"size-4"}/></div> }
                         <ChevronExpand className="opacity-50"/>
@@ -58,12 +68,15 @@ export function ComboBox<TOption>(props: ComboBoxProps<TOption>) {
                     <CommandList>
                         <CommandEmpty>{i18next.t("combobox.empty")}</CommandEmpty>
                         <CommandGroup>
-                            {options.map((option) => (
-                                <CommandItem key={keyGenerator(option)} value={render(option)} onSelect={() => change(option)}>
-                                    {render(option)}
-                                    <Check className={cn("ml-auto", (value && keyGenerator(value) === keyGenerator(option)) ? "opacity-100" : "opacity-0")}/>
-                                </CommandItem>
-                            ))}
+                            {options.map((option) => {
+                                const val = toValue(option)
+                                return (
+                                    <CommandItem key={keyGenerator && keyGenerator(val) || val + ""} value={toStringValue(option)} onSelect={() => change(option)}>
+                                        {render && render(option) || toStringValue(option)}
+                                        <Check className={cn("ml-auto", (value && keyGenerator && keyGenerator(val) === keyGenerator(value)) ? "opacity-100" : "opacity-0")}/>
+                                    </CommandItem>
+                                )
+                            })}
                         </CommandGroup>
 
                         {createAction && (

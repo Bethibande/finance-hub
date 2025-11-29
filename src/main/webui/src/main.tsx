@@ -47,6 +47,7 @@ i18next.init({
                 "workspace.create": "Create Workspace",
                 "combobox.search": "Search...",
                 "combobox.empty": "Nothing found",
+                "combobox.select": "Nothing selected",
                 "combobox.create": "Create",
                 "error.delete.dependents": "Cannot delete entry because it is referenced by other entities"
             }
