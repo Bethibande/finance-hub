@@ -117,7 +117,7 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
                             }}>+ {i18next.t("add")}</Button>
                         </div>
                         <div>
-                            <Button variant={"outline"} size={"icon"}><ArrowClockwise/></Button>
+                            <Button variant={"outline"} size={"icon"} onClick={() => setVersion(version + 1)}><ArrowClockwise/></Button>
                         </div>
                     </div>
                     <DataTable pagination={true}

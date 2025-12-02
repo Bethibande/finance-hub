@@ -12,10 +12,12 @@ import {type AssetDTO, type AssetDTOExpanded, AssetEndpointApi} from "@/generate
 import {useEffect} from "react";
 import {useWorkspace} from "@/lib/workspace.tsx";
 import {showError} from "@/lib/errors.tsx";
+import i18next from "i18next";
 
 export function AssetFormExpanded(props: EntityFormProps<AssetDTOExpanded>) {
     return (
-        <AssetForm {...props} entity={props.entity ? ({...props.entity, providerId: props.entity?.provider?.id}) : null}/>
+        <AssetForm {...props}
+                   entity={props.entity ? ({...props.entity, providerId: props.entity?.provider?.id}) : null}/>
     )
 }
 
@@ -44,6 +46,7 @@ export function AssetForm(props: EntityFormProps<AssetDTO>) {
     })
 
     const {workspace} = useWorkspace()
+
     function submit(data: z.infer<typeof formSchema>) {
         if (!entity?.id) {
             new AssetEndpointApi().apiV2AssetPost({
@@ -67,38 +70,40 @@ export function AssetForm(props: EntityFormProps<AssetDTO>) {
                 <div className={"flex gap-2"}>
                     <FormField fieldName={"name"}
                                control={form.control}
-                               label={"Name"}
+                               label={i18next.t("asset.name")}
                                Input={(props) => (
-                                   <Input {...props} type={"text"} placeholder={"Name"}/>
+                                   <Input {...props} type={"text"} placeholder={i18next.t("asset.name.placeholder")}/>
                                )}/>
                     <FormField fieldName={"code"}
                                control={form.control}
-                               label={"Code"}
+                               label={i18next.t("asset.code")}
                                Input={(props) => (
-                                   <Input {...props} type={"text"} placeholder={"Name"}/>
+                                   <Input {...props} type={"text"} placeholder={i18next.t("asset.code.placeholder")}/>
                                )}/>
                 </div>
                 <div className={"flex gap-2"}>
                     <FormField fieldName={"symbol"}
                                control={form.control}
-                               label={"Symbol"}
+                               label={i18next.t("asset.symbol")}
                                Input={(props) => (
-                                   <Input {...props} value={props.value || ""} type={"text"} placeholder={"Name"}/>
+                                   <Input {...props} value={props.value || ""} type={"text"}
+                                          placeholder={i18next.t("asset.symbol.placeholder")}/>
                                )}/>
                     <FormField fieldName={"providerId"}
                                control={form.control}
-                               label={"Symbol"}
+                               label={i18next.t("asset.provider")}
                                Input={(props) => (
                                    <EntityComboBox {...props}
+                                                   emptyLabel={i18next.t("asset.provider.placeholder")}
                                                    functions={PartnerListFunctions}
                                                    optional={true}/>
                                )}/>
                 </div>
                 <FormField fieldName={"notes"}
                            control={form.control}
-                           label={"Notes"}
+                           label={i18next.t("asset.notes")}
                            Input={(props) => (
-                               <Textarea {...props} value={props.value || ""} placeholder={"Name"}/>
+                               <Textarea {...props} value={props.value || ""} placeholder={i18next.t("asset.notes.placeholder")}/>
                            )}/>
             </FieldGroup>
             {footer}
