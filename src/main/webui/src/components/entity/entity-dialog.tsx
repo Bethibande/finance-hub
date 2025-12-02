@@ -1,0 +1,69 @@
+import type {FunctionComponent, ReactNode} from "react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from "@/components/ui/dialog.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import i18next from "i18next";
+
+export interface EntityFormProps<TEntity> {
+    header?: ReactNode,
+    footer?: ReactNode,
+    onSubmit?: (entity: TEntity) => void,
+    entity: TEntity | null,
+}
+
+export const EntityDialogState = {
+    Editing: "Editing",
+    Creating: "Creating",
+    Closed: "Closed",
+} as const;
+
+export type EntityDialogState = typeof EntityDialogState[keyof typeof EntityDialogState];
+
+export interface EntityDialogProps<TEntity> {
+    Form: FunctionComponent<EntityFormProps<TEntity>>,
+    state: EntityDialogState,
+    setState: (newState: EntityDialogState) => void,
+    entity: TEntity | null,
+    i18nKey: string,
+    onSubmit?: (entity: TEntity) => void,
+}
+
+export function EntityDialog<TEntity>(props: EntityDialogProps<TEntity>) {
+    const {Form, state, setState, entity, i18nKey, onSubmit} = props;
+
+    function close() {
+        setState(EntityDialogState.Closed)
+    }
+
+    const editing = state === EntityDialogState.Editing;
+    const keyHeader = i18nKey + "." + (editing ? "editing.title" : "creating.title");
+    const keyDescription = i18nKey + "." + (editing ? "editing.desc" : "creating.desc");
+
+    return (
+        <Dialog open={state !== EntityDialogState.Closed} onOpenChange={close}>
+            <DialogContent>
+                <Form entity={entity}
+                      onSubmit={onSubmit}
+                      header={(
+                          <DialogHeader className={"mb-4"}>
+                              <DialogTitle>{i18next.t(keyHeader)}</DialogTitle>
+                              <DialogDescription>{i18next.t(keyDescription)}</DialogDescription>
+                          </DialogHeader>
+                      )}
+                      footer={(
+                          <DialogFooter className={"mt-4"}>
+                              <Button variant={"secondary"} type={"reset"}
+                                      onClick={close}>{i18next.t("cancel")}</Button>
+                              <Button>{editing ? i18next.t("save") : i18next.t("create")}</Button>
+                          </DialogFooter>
+                      )}/>
+            </DialogContent>
+        </Dialog>
+    )
+}

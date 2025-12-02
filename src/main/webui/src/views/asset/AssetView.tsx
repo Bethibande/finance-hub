@@ -2,9 +2,8 @@ import {type DataQuery} from "@/components/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
 import {type AssetDTOExpanded, AssetEndpointApi} from "@/generated";
 import i18next from "i18next";
-import {Button} from "@/components/ui/button.tsx";
-import {ThreeDots} from "react-bootstrap-icons";
 import {EntityList} from "@/components/entity/entity-list.tsx";
+import {AssetFormExpanded} from "@/views/asset/AssetForm.tsx";
 
 export function AssetView() {
     const columns: ColumnDef<AssetDTOExpanded>[] = [
@@ -36,11 +35,6 @@ export function AssetView() {
             id: "notes",
             header: i18next.t("asset.notes"),
             accessorKey: "notes",
-        },
-        {
-            id: "actions",
-            cell: () => (<Button variant={"secondary"} size={"icon"}><ThreeDots/></Button>),
-            maxSize: 36,
         }
     ]
 
@@ -59,6 +53,7 @@ export function AssetView() {
     return (
         <EntityList columns={columns}
                     load={load}
+                    Form={AssetFormExpanded}
                     i18nKey={"asset"}/>
     )
 }

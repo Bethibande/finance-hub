@@ -7,30 +7,35 @@ import {Input} from "@/components/ui/input.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {EntityComboBox} from "@/components/entity/entity-combobox.tsx";
 import {PartnerListFunctions} from "@/views/partner/PartnerFunctions.ts";
-import type {ReactNode} from "react";
+import type {EntityFormProps} from "@/components/entity/entity-dialog.tsx";
+import {type AssetDTO, type AssetDTOExpanded, AssetEndpointApi} from "@/generated";
+import {useEffect} from "react";
+import {useWorkspace} from "@/lib/workspace.tsx";
+import {showError} from "@/lib/errors.tsx";
 
-export interface AssetFormProps {
-    header?: ReactNode,
-    footer?: ReactNode,
+export function AssetFormExpanded(props: EntityFormProps<AssetDTOExpanded>) {
+    return (
+        <AssetForm {...props} entity={props.entity ? ({...props.entity, providerId: props.entity?.provider?.id}) : null}/>
+    )
 }
 
-export function AssetForm(props: AssetFormProps) {
-    const {header, footer} = props;
+export function AssetForm(props: EntityFormProps<AssetDTO>) {
+    const {header, footer, entity, onSubmit} = props;
 
     const formSchema = z.object({
         name: z.string().min(2).max(255),
         code: z.string().min(3).max(12),
-        symbol: z.string().min(1).max(10).nullable(),
+        symbol: z.string().max(10),
         providerId: z.number().nullable(),
-        notes: z.string().min(1).max(1024).nullable(),
+        notes: z.string().max(1024),
     })
 
     const defaultValues: z.infer<typeof formSchema> = {
         name: "",
         code: "",
-        symbol: null,
+        symbol: "",
         providerId: null,
-        notes: null,
+        notes: "",
     }
 
     const form = useForm({
@@ -38,12 +43,25 @@ export function AssetForm(props: AssetFormProps) {
         defaultValues
     })
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
-        console.log(data)
+    const {workspace} = useWorkspace()
+    function submit(data: z.infer<typeof formSchema>) {
+        if (!entity?.id) {
+            new AssetEndpointApi().apiV2AssetPost({
+                assetDTOWithoutId: {...data, providerId: data.providerId || undefined, workspaceId: workspace.id!}
+            }).then(onSubmit).catch(showError)
+        } else {
+            new AssetEndpointApi().apiV2AssetPatch({
+                assetDTOWithoutWorkspace: {...data, providerId: data.providerId || undefined, id: entity.id}
+            }).then(onSubmit).catch(showError)
+        }
     }
 
+    useEffect(() => {
+        form.reset(entity || defaultValues)
+    }, [entity])
+
     return (
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(submit)}>
             {header}
             <FieldGroup>
                 <div className={"flex gap-2"}>
