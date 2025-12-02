@@ -49,7 +49,10 @@ export function EntityDialog<TEntity>(props: EntityDialogProps<TEntity>) {
         <Dialog open={state !== EntityDialogState.Closed} onOpenChange={close}>
             <DialogContent>
                 <Form entity={entity}
-                      onSubmit={onSubmit}
+                      onSubmit={(entity) => {
+                          setState(EntityDialogState.Closed);
+                          if (onSubmit) onSubmit(entity);
+                      }}
                       header={(
                           <DialogHeader className={"mb-4"}>
                               <DialogTitle>{i18next.t(keyHeader)}</DialogTitle>

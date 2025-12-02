@@ -24,9 +24,9 @@ public class BookedAmountEndpoint {
         final BookedAmount amount = new BookedAmount();
         amount.transaction = Transaction.findById(transactionId);
         amount.amount = dto.amount();
-        amount.asset = Asset.findById(dto.assetId());
+        amount.asset = dto.assetId() != null ? Asset.findById(dto.assetId()) : null;
         amount.date = dto.date();
-        amount.wallet = Wallet.findById(dto.walletId());
+        amount.wallet = dto.walletId() != null ? Wallet.findById(dto.walletId()) : null;
         amount.notes = dto.notes();
 
         if (amount.transaction == null
@@ -48,9 +48,9 @@ public class BookedAmountEndpoint {
         if (amount == null) throw new NotFoundException();
 
         amount.amount = dto.amount();
-        amount.asset = Asset.findById(dto.assetId());
+        amount.asset = dto.assetId() != null ? Asset.findById(dto.assetId()) : null;
         amount.date = dto.date();
-        amount.wallet = Wallet.findById(dto.walletId());
+        amount.wallet = dto.walletId() != null ? Wallet.findById(dto.walletId()) : null;
         amount.notes = dto.notes();
 
         if (amount.asset == null

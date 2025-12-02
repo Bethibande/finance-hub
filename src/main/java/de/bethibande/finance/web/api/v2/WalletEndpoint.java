@@ -22,8 +22,8 @@ public class WalletEndpoint extends AbstractCRUDEndpoint {
     public WalletDTO createWallet(final WalletDTOWithoutId dto) {
         final Wallet wallet = new Wallet();
         wallet.name = dto.name();
-        wallet.asset = Asset.findById(dto.assetId());
-        wallet.provider = Partner.findById(dto.providerId());
+        wallet.asset = dto.assetId() != null ? Asset.findById(dto.assetId()) : null;
+        wallet.provider = dto.providerId() != null ? Partner.findById(dto.providerId()) : null;
         wallet.workspace = Workspace.findById(dto.workspaceId());
         wallet.notes = dto.notes();
 
@@ -43,8 +43,8 @@ public class WalletEndpoint extends AbstractCRUDEndpoint {
         if (wallet == null) throw new NotFoundException();
 
         wallet.name = dto.name();
-        wallet.asset = Asset.findById(dto.assetId());
-        wallet.provider = Partner.findById(dto.providerId());
+        wallet.asset = dto.assetId() != null ? Asset.findById(dto.assetId()) : null;
+        wallet.provider = dto.providerId() != null ? Partner.findById(dto.providerId()) : null;
         wallet.notes = dto.notes();
 
         if (wallet.asset == null && dto.assetId() != null) throw new NotFoundException();

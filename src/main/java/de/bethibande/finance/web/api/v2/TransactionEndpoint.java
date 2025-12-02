@@ -25,12 +25,12 @@ public class TransactionEndpoint extends AbstractCRUDEndpoint {
         transaction.name = dto.name();
         transaction.amount = dto.amount();
         transaction.date = dto.date();
-        transaction.asset = Asset.findById(dto.assetId());
-        transaction.wallet = Wallet.findById(dto.walletId());
-        transaction.partner = Partner.findById(dto.partnerId());
+        transaction.asset = dto.assetId() != null ? Asset.findById(dto.assetId()) : null;
+        transaction.wallet = dto.walletId() != null ? Wallet.findById(dto.walletId()) : null;
+        transaction.partner = dto.partnerId() != null ? Partner.findById(dto.partnerId()) : null;
         transaction.status = dto.status();
         transaction.type = dto.type();
-        transaction.internalRef = Transaction.findById(dto.internalRefId());
+        transaction.internalRef = dto.internalRefId() != null ? Transaction.findById(dto.internalRefId()) : null;
         transaction.workspace = Workspace.findById(dto.workspaceId());
         transaction.notes = dto.notes();
 
@@ -56,12 +56,12 @@ public class TransactionEndpoint extends AbstractCRUDEndpoint {
         transaction.name = dto.name();
         transaction.amount = dto.amount();
         transaction.date = dto.date();
-        transaction.asset = Asset.findById(dto.assetId());
-        transaction.wallet = Wallet.findById(dto.walletId());
-        transaction.partner = Partner.findById(dto.partnerId());
+        transaction.asset = dto.assetId() != null ? Asset.findById(dto.assetId()) : null;
+        transaction.wallet = dto.walletId() != null ? Wallet.findById(dto.walletId()) : null;
+        transaction.partner = dto.partnerId() != null ? Partner.findById(dto.partnerId()) : null;
         transaction.status = dto.status();
         transaction.type = dto.type();
-        transaction.internalRef = Transaction.findById(dto.internalRefId());
+        transaction.internalRef = dto.internalRefId() != null ? Transaction.findById(dto.internalRefId()) : null;
         transaction.notes = dto.notes();
 
         if (transaction.asset == null

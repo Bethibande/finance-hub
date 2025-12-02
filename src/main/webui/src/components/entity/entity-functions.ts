@@ -1,8 +1,9 @@
 import type {DataQuery} from "@/components/data-table.tsx";
 import type {PagedResponse} from "@/lib/types.ts";
 
-export interface EntityListFunctions<TEntity, TID> {
+export interface EntityFunctions<TEntity, TID> {
     list: (query: DataQuery) => Promise<PagedResponse<TEntity>>;
+    delete: (id: TID) => Promise<void>;
     toId: (entity: TEntity) => TID;
     format: (entity: TEntity) => string;
 }

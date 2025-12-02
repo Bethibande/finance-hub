@@ -1,10 +1,11 @@
-import {type EntityListFunctions, listV2} from "@/components/entity/entity-functions.ts";
+import {type EntityFunctions, listV2} from "@/components/entity/entity-functions.ts";
 import {type PartnerDTO, PartnerEndpointApi} from "@/generated";
 
 export const PartnerAPI = new PartnerEndpointApi();
 
-export const PartnerListFunctions: EntityListFunctions<PartnerDTO, number> = {
+export const PartnerListFunctions: EntityFunctions<PartnerDTO, number> = {
     list: listV2(PartnerAPI.apiV2PartnerWorkspaceIdGet.bind(PartnerAPI)),
+    delete: id => PartnerAPI.apiV2PartnerIdDelete({id}),
     format: p => p.name,
     toId: p => p.id!,
 }

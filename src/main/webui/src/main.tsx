@@ -49,6 +49,8 @@ i18next.init({
                 "combobox.empty": "Nothing found",
                 "combobox.select": "Nothing selected",
                 "combobox.create": "Create",
+                "entity.delete.title": "Delete {{name}}",
+                "entity.delete.message": "Are you sure you want to delete this entry?",
                 "error.delete.dependents": "Cannot delete entry because it is referenced by other entities"
             }
         }

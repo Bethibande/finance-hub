@@ -33,6 +33,7 @@ export interface TableData<TData> {
 
 export interface DataTableProps<TData> {
     pagination: boolean,
+    version?: number,
     data: TableData<TData>,
     columns: ColumnDef<TData>[],
     update: (query: DataQuery) => void,
@@ -115,7 +116,7 @@ function renderHeader<TData>(header: Header<TData, any>) {
 }
 
 export function DataTable<TData>(props: DataTableProps<TData>) {
-    const {columns, data, pagination, update, pinned} = props
+    const {columns, version, data, pagination, update, pinned} = props
 
     const [sorting, setSorting] = useState<SortingState>(props.defaultSortOrder ? toSortState(props.defaultSortOrder) : [{
         id: columns[0].id!,
@@ -126,7 +127,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
 
     useEffect(() => {
         changePage(data.page, sorting)
-    }, [sorting, workspace]);
+    }, [sorting, version, workspace]);
 
     const table = useReactTable({
         data: data.data,

@@ -3,13 +3,13 @@ import {ComboBox} from "@/components/combobox.tsx";
 import {type FunctionComponent, useEffect, useState} from "react";
 import {useWorkspace} from "@/lib/workspace.tsx";
 import {showError} from "@/lib/errors.tsx";
-import type {EntityListFunctions} from "@/components/entity/entity-functions.ts";
+import type {EntityFunctions} from "@/components/entity/entity-functions.ts";
 import {EntityDialog, EntityDialogState, type EntityFormProps} from "@/components/entity/entity-dialog.tsx";
 
 export interface EntityComboBoxProps<TEntity, TID> {
     value: TID | null,
     onChange: (value: TID | null) => void,
-    functions: EntityListFunctions<TEntity, TID>
+    functions: EntityFunctions<TEntity, TID>
     optional: boolean,
     emptyLabel?: string,
     Form?: FunctionComponent<EntityFormProps<TEntity>>,

@@ -1,9 +1,18 @@
-import {type DataQuery} from "@/components/data-table.tsx";
 import type {ColumnDef} from "@tanstack/react-table";
 import {type AssetDTOExpanded, AssetEndpointApi} from "@/generated";
 import i18next from "i18next";
 import {EntityList} from "@/components/entity/entity-list.tsx";
 import {AssetFormExpanded} from "@/views/asset/AssetForm.tsx";
+import {type EntityFunctions, listV2} from "@/components/entity/entity-functions.ts";
+
+export const AssetAPI = new AssetEndpointApi()
+
+export const AssetFunctions: EntityFunctions<AssetDTOExpanded, number> = {
+    list: listV2(AssetAPI.apiV2AssetWorkspaceIdGet.bind(AssetAPI)),
+    delete: id => AssetAPI.apiV2AssetIdDelete({id}),
+    format: a => a.name,
+    toId: a => a.id!,
+}
 
 export function AssetView() {
     const columns: ColumnDef<AssetDTOExpanded>[] = [
@@ -38,21 +47,9 @@ export function AssetView() {
         }
     ]
 
-    function load(query: DataQuery) {
-        return new AssetEndpointApi().apiV2AssetWorkspaceIdGet({
-            page: query.page,
-            sort: query.sort.map(o => JSON.stringify(o)),
-            workspaceId: query.workspace.id!
-        }).then((result) => ({
-            data: result.data,
-            total: result.totalElements,
-            page: query.page,
-        }))
-    }
-
     return (
         <EntityList columns={columns}
-                    load={load}
+                    functions={AssetFunctions}
                     Form={AssetFormExpanded}
                     i18nKey={"asset"}/>
     )

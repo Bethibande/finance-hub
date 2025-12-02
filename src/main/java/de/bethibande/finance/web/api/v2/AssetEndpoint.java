@@ -25,7 +25,8 @@ public class AssetEndpoint extends AbstractCRUDEndpoint {
         asset.code = dto.code();
         asset.symbol = dto.symbol();
         asset.workspace = Workspace.findById(dto.workspaceId());
-        asset.provider = Partner.findById(dto.providerId());
+        asset.provider = dto.providerId() != null ? Partner.findById(dto.providerId()) : null;
+        asset.notes = dto.notes();
 
         if (asset.workspace == null) {
             throw new NotFoundException();
@@ -45,7 +46,8 @@ public class AssetEndpoint extends AbstractCRUDEndpoint {
         asset.name = dto.name();
         asset.code = dto.code();
         asset.symbol = dto.symbol();
-        asset.provider = Partner.findById(dto.providerId());
+        asset.provider = dto.providerId() != null ? Partner.findById(dto.providerId()) : null;
+        asset.notes = dto.notes();
 
         if (asset.workspace == null) throw new NotFoundException();
         if (asset.provider == null && dto.providerId() != null) throw new NotFoundException();

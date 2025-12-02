@@ -13,18 +13,21 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
+import type {EntityFunctions} from "@/components/entity/entity-functions.ts";
+import {EntityDeleteDialog} from "@/components/entity/entity-delete-dialog.tsx";
 
-export interface EntityListProps<TEntity> {
-    load: (query: DataQuery) => Promise<TableData<TEntity>>,
+export interface EntityListProps<TEntity, TID> {
+    functions: EntityFunctions<TEntity, TID>,
     columns: ColumnDef<TEntity>[],
     i18nKey: string,
     updateViewConfig?: boolean,
     Form: FunctionComponent<EntityFormProps<TEntity>>,
 }
 
-export function EntityList<TEntity>(props: EntityListProps<TEntity>) {
-    const {load, columns, i18nKey, Form, updateViewConfig} = props;
-    
+export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
+    const {functions, columns, i18nKey, Form, updateViewConfig} = props;
+
+    const [version, setVersion] = useState<number>(0)
     const [data, setData] = useState<TableData<TEntity>>({
         data: [],
         page: 0,
@@ -41,8 +44,12 @@ export function EntityList<TEntity>(props: EntityListProps<TEntity>) {
     }
 
     function update(query: DataQuery) {
-        load(query)
-            .then(setData)
+        functions.list(query)
+            .then(page => setData({
+                page: page.page,
+                total: page.totalElements,
+                data: page.data,
+            }))
             .catch(showError)
     }
 
@@ -63,7 +70,11 @@ export function EntityList<TEntity>(props: EntityListProps<TEntity>) {
                             setEditingEntity(row.original)
                             setDialogState(EntityDialogState.Editing)
                         }}>{i18next.t("edit")}</DropdownMenuItem>
-                        <DropdownMenuItem variant={"destructive"}>{i18next.t("delete")}</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                            setEditingEntity(row.original)
+                            setDialogState(EntityDialogState.Closed)
+                            setDeleteDialogOpen(true)
+                        }} variant={"destructive"}>{i18next.t("delete")}</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             ),
@@ -71,13 +82,30 @@ export function EntityList<TEntity>(props: EntityListProps<TEntity>) {
         }
     ]
 
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
+    function onDelete() {
+        if (editingEntity) {
+            functions.delete(functions.toId(editingEntity)).then(() => {
+                setEditingEntity(null)
+                setDeleteDialogOpen(false)
+                setVersion(version + 1)
+            }).catch(showError)
+        }
+    }
+
     return (
         <>
+            <EntityDeleteDialog open={deleteDialogOpen}
+                                close={() => setDeleteDialogOpen(false)}
+                                display={editingEntity ? functions.format(editingEntity) : ""}
+                                onDelete={onDelete}/>
             <EntityDialog Form={Form}
                           state={dialogState}
                           setState={setDialogState}
                           entity={editingEntity}
-                          i18nKey={i18nKey}/>
+                          i18nKey={i18nKey}
+                          onSubmit={() => setVersion(version + 1)}/>
 
             <div className={"flex justify-center w-full"}>
                 <div className={"flex flex-col gap-2 lg:w-2/3 w-full"}>
@@ -93,6 +121,7 @@ export function EntityList<TEntity>(props: EntityListProps<TEntity>) {
                         </div>
                     </div>
                     <DataTable pagination={true}
+                               version={version}
                                data={data}
                                columns={actualColumns}
                                update={update}
