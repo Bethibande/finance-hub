@@ -6,11 +6,16 @@ import {ViewConfigProvider} from "./lib/view-config.tsx";
 import LoginView from "./views/LoginView.tsx";
 import {DashboardView} from "@/views/DashboardView.tsx";
 import {AssetView} from "@/views/asset/AssetView.tsx";
+import {PartnerView} from "@/views/partner/PartnerView.tsx";
 
 const primaryRoutes: RouteObject[] = [
     {
         path: "/",
         Component: DashboardView,
+    },
+    {
+        path: "/partners",
+        Component: PartnerView,
     },
     {
         path: "/assets",

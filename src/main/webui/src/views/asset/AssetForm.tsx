@@ -6,13 +6,14 @@ import {FormField} from "@/components/form-field.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {EntityComboBox} from "@/components/entity/entity-combobox.tsx";
-import {PartnerListFunctions} from "@/views/partner/PartnerFunctions.ts";
-import type {EntityFormProps} from "@/components/entity/entity-dialog.tsx";
+import {PartnerFunctions} from "@/views/partner/PartnerFunctions.ts";
+import {type EntityFormProps, handleSubmit} from "@/components/entity/entity-dialog.tsx";
 import {type AssetDTO, type AssetDTOExpanded, AssetEndpointApi} from "@/generated";
 import {useEffect} from "react";
 import {useWorkspace} from "@/lib/workspace.tsx";
 import {showError} from "@/lib/errors.tsx";
 import i18next from "i18next";
+import {PartnerForm} from "@/views/partner/PartnerForm.tsx";
 
 export function AssetFormExpanded(props: EntityFormProps<AssetDTOExpanded>) {
     return (
@@ -64,7 +65,7 @@ export function AssetForm(props: EntityFormProps<AssetDTO>) {
     }, [entity])
 
     return (
-        <form onSubmit={form.handleSubmit(submit)}>
+        <form onSubmit={handleSubmit(form, submit)}>
             {header}
             <FieldGroup>
                 <div className={"flex gap-2"}>
@@ -95,7 +96,9 @@ export function AssetForm(props: EntityFormProps<AssetDTO>) {
                                Input={(props) => (
                                    <EntityComboBox {...props}
                                                    emptyLabel={i18next.t("asset.provider.placeholder")}
-                                                   functions={PartnerListFunctions}
+                                                   functions={PartnerFunctions}
+                                                   Form={PartnerForm}
+                                                   i18nKey={"partner"}
                                                    optional={true}/>
                                )}/>
                 </div>

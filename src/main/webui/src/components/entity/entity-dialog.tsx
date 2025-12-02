@@ -1,4 +1,4 @@
-import type {FunctionComponent, ReactNode} from "react";
+import type {FormEventHandler, FunctionComponent, ReactNode} from "react";
 import {
     Dialog,
     DialogContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import i18next from "i18next";
+import type {FieldValues, UseFormReturn} from "react-hook-form";
 
 export interface EntityFormProps<TEntity> {
     header?: ReactNode,
@@ -24,6 +25,13 @@ export const EntityDialogState = {
 } as const;
 
 export type EntityDialogState = typeof EntityDialogState[keyof typeof EntityDialogState];
+
+export function handleSubmit<T1 extends FieldValues, T2, T3>(form: UseFormReturn<T1, T2, T3>, onSubmit: (data: T3) => void): FormEventHandler<HTMLFormElement> {
+    return (e) => {
+        e.stopPropagation();
+        form.handleSubmit(onSubmit)(e);
+    }
+}
 
 export interface EntityDialogProps<TEntity> {
     Form: FunctionComponent<EntityFormProps<TEntity>>,

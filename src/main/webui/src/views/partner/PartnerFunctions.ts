@@ -3,7 +3,7 @@ import {type PartnerDTO, PartnerEndpointApi} from "@/generated";
 
 export const PartnerAPI = new PartnerEndpointApi();
 
-export const PartnerListFunctions: EntityFunctions<PartnerDTO, number> = {
+export const PartnerFunctions: EntityFunctions<PartnerDTO, number> = {
     list: listV2(PartnerAPI.apiV2PartnerWorkspaceIdGet.bind(PartnerAPI)),
     delete: id => PartnerAPI.apiV2PartnerIdDelete({id}),
     format: p => p.name,
