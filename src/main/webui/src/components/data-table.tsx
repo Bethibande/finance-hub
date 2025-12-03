@@ -154,7 +154,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
 
     return (
         <div className={"flex flex-col gap-2 grow"}>
-            <div className="overflow-hidden rounded-md border bg-white">
+            <div className="overflow-hidden rounded-md border bg-primary-foreground">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (

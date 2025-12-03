@@ -6,6 +6,9 @@ import i18next from "i18next";
 import {WorkspaceProvider} from "./lib/workspace.tsx";
 import {Toaster} from "./components/ui/sonner.tsx";
 import {AuthProvider} from "./lib/auth.tsx";
+import {restoreTheme} from "@/lib/theme.tsx";
+
+restoreTheme();
 
 i18next.init({
     lng: 'en',
@@ -78,6 +81,9 @@ i18next.init({
                 "wallet.editing.desc": "Edit and save the wallet",
                 "username": "Username",
                 "password": "Password",
+                "logout": "Logout",
+                "theme.light": "Light mode",
+                "theme.dark": "Dark mode",
                 "password.repeat": "Repeat password",
                 "table.rows": "Rows",
                 "table.previous": "Previous",
