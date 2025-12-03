@@ -50,8 +50,7 @@ export function renderAmount(amount: number) {
     )
 }
 
-export function renderDate(value: string) {
-    const date = new Date(value);
+export function renderDate(date: Date) {
     return (
         <p>{date.toLocaleDateString()}</p>
     )

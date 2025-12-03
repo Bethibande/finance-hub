@@ -10,9 +10,9 @@ export const InputMode = {
 
 export type InputMode = typeof InputMode[keyof typeof InputMode];
 
-export interface NumberFieldProps extends ComponentProps<"input"> {
+export interface NumberFieldProps extends Omit<ComponentProps<"input">, "onChange"> {
     value: number;
-    setValue: (value: number) => void;
+    onChange: (value: number) => void;
     mode?: InputMode;
     decimals?: number
 }
@@ -149,7 +149,7 @@ export function NumberField(props: NumberFieldProps) {
                autoComplete={"off"}
                onKeyDown={onKeyDown}
                onChange={onChange}
-               onBlur={() => props.setValue(value)}
+               onBlur={() => props.onChange(value)}
                value={stringValue}
                className={cn("text-right", isNegative && "text-red-600")}/>
     )

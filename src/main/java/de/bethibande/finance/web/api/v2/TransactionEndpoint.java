@@ -36,7 +36,6 @@ public class TransactionEndpoint extends AbstractCRUDEndpoint {
 
         if (transaction.asset == null
                 || transaction.wallet == null
-                || transaction.partner == null
                 || transaction.workspace == null
                 || (transaction.internalRef == null && dto.internalRefId() != null)) {
             throw new NotFoundException();
@@ -66,7 +65,6 @@ public class TransactionEndpoint extends AbstractCRUDEndpoint {
 
         if (transaction.asset == null
                 || transaction.wallet == null
-                || transaction.partner == null
                 || (transaction.internalRef == null && dto.internalRefId() != null)) {
             throw new NotFoundException();
         }
