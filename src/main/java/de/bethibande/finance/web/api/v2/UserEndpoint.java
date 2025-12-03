@@ -1,8 +1,8 @@
 package de.bethibande.finance.web.api.v2;
 
 import de.bethibande.finance.model.jpa.User;
-import de.bethibande.finance.model.jpa.UserDTO;
 import de.bethibande.finance.model.jpa.UserDTOWithoutId;
+import de.bethibande.finance.model.jpa.UserDTOWithoutNameAndRoles;
 import de.bethibande.finance.model.jpa.UserDTOWithoutPassword;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.security.Roles;
@@ -32,13 +32,24 @@ public class UserEndpoint {
 
     @PATCH
     @Transactional
-    public UserDTOWithoutPassword updateUser(final UserDTO userDTO) {
+    public UserDTOWithoutPassword updateUser(final UserDTOWithoutPassword userDTO) {
         final User user = User.findById(userDTO.id());
         if (user == null) throw new NotFoundException();
 
         user.name = userDTO.name();
-        user.password = BcryptUtil.bcryptHash(userDTO.password());
         user.roles = userDTO.roles();
+
+        return UserDTOWithoutPassword.from(user);
+    }
+
+    @PATCH
+    @Path("/password")
+    @Transactional
+    public UserDTOWithoutPassword updateUserPassword(final UserDTOWithoutNameAndRoles userDTO) {
+        final User user = User.findById(userDTO.id());
+        if (user == null) throw new NotFoundException();
+
+        user.password = BcryptUtil.bcryptHash(userDTO.password());
 
         return UserDTOWithoutPassword.from(user);
     }
@@ -46,7 +57,7 @@ public class UserEndpoint {
     @DELETE
     @Transactional
     @Path("/{id}")
-    public void deleteUser(@PathParam("id") final String id) {
+    public void deleteUser(@PathParam("id") final long id) {
         User.deleteById(id);
     }
 

@@ -1,6 +1,6 @@
 import {type DataQuery, DataTable, type TableData} from "@/components/data-table.tsx";
-import type {ColumnDef} from "@tanstack/react-table";
-import {type FunctionComponent, useEffect, useState} from "react";
+import type {CellContext, ColumnDef} from "@tanstack/react-table";
+import {type FunctionComponent, type ReactNode, useEffect, useState} from "react";
 import {useViewConfig} from "@/lib/view-config.tsx";
 import i18next from "i18next";
 import {Button} from "@/components/ui/button.tsx";
@@ -22,10 +22,11 @@ export interface EntityListProps<TEntity, TID> {
     i18nKey: string,
     updateViewConfig?: boolean,
     Form: FunctionComponent<EntityFormProps<TEntity>>,
+    additionalActions?: (ctx: CellContext<TEntity, any>) => ReactNode,
 }
 
 export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
-    const {functions, columns, i18nKey, Form, updateViewConfig} = props;
+    const {functions, columns, i18nKey, Form, additionalActions, updateViewConfig} = props;
 
     const [version, setVersion] = useState<number>(0)
     const [data, setData] = useState<TableData<TEntity>>({
@@ -60,23 +61,30 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
         ...columns,
         {
             id: "actions",
-            cell: ({row}) => (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant={"secondary"} size={"icon"}><ThreeDots/></Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => {
-                            setEditingEntity(row.original)
-                            setDialogState(EntityDialogState.Editing)
-                        }}>{i18next.t("edit")}</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {
-                            setEditingEntity(row.original)
-                            setDialogState(EntityDialogState.Closed)
-                            setDeleteDialogOpen(true)
-                        }} variant={"destructive"}>{i18next.t("delete")}</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+            cell: (ctx) => (
+                <div className={"w-full flex justify-end"}>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant={"secondary"} size={"icon"}><ThreeDots/></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem onClick={() => {
+                                setEditingEntity(ctx.row.original)
+                                setDialogState(EntityDialogState.Editing)
+                            }}>{i18next.t("edit")}
+                            </DropdownMenuItem>
+
+                            {additionalActions && additionalActions(ctx)}
+
+                            <DropdownMenuItem onClick={() => {
+                                setEditingEntity(ctx.row.original)
+                                setDialogState(EntityDialogState.Closed)
+                                setDeleteDialogOpen(true)
+                            }} variant={"destructive"}>{i18next.t("delete")}
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             ),
             maxSize: 36,
         }

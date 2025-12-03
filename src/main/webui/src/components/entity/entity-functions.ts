@@ -8,12 +8,19 @@ export interface EntityFunctions<TEntity, TID> {
     format: (entity: TEntity) => string;
 }
 
-interface WorkspacedListProps {
+interface PagedListProps {
     sort: string[];
     page: number;
+}
+
+interface WorkspacedListProps extends PagedListProps {
     workspaceId: number;
 }
 
 export function listV2<TEntity>(fn: (query: WorkspacedListProps) => Promise<PagedResponse<TEntity>>): (query: DataQuery) => Promise<PagedResponse<TEntity>> {
     return (query) => fn({page: query.page, sort: query.sort.map(s => JSON.stringify(s)), workspaceId: query.workspace.id!})
+}
+
+export function listV2Simple<TEntity>(fn: (query: PagedListProps) => Promise<PagedResponse<TEntity>>): (query: DataQuery) => Promise<PagedResponse<TEntity>> {
+    return (query) => fn({page: query.page, sort: query.sort.map(s => JSON.stringify(s))})
 }

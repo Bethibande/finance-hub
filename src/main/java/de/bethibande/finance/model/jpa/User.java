@@ -18,6 +18,7 @@ import java.util.Set;
 @Table(name = "Users")
 @EntityDTO
 @EntityDTO(excludeProperties = {"password"})
+@EntityDTO(excludeProperties = {"name", "roles"})
 @EntityDTO(excludeProperties = {"id"})
 public class User extends PanacheEntity {
 
