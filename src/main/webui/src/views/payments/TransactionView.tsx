@@ -9,6 +9,8 @@ import {useState} from "react";
 import {BookedAmountsDialog} from "@/views/payments/BookedAmountsDialog.tsx";
 import {DropdownMenuItem} from "@/components/ui/dropdown-menu.tsx";
 import {showError} from "@/lib/errors.tsx";
+import {StatusToIcon} from "@/views/payments/TransactionItem.tsx";
+import {PartnerFunctions} from "@/views/partner/PartnerFunctions.ts";
 
 export function TransactionView() {
     const columns: ColumnDef<TransactionDTOExpanded>[] = [
@@ -22,7 +24,7 @@ export function TransactionView() {
             id: "status",
             accessorKey: "status",
             header: i18next.t("transaction.status"),
-            cell: ({row}) => i18next.t("TransactionStatus." + row.original.status),
+            cell: ({row}) => (<span className={"flex gap-1.5 items-center"}>{StatusToIcon[row.original.status]} {i18next.t("TransactionStatus." + row.original.status)}</span>),
             enableSorting: true,
         },
         {
@@ -44,6 +46,13 @@ export function TransactionView() {
             accessorKey: "date",
             header: i18next.t("transaction.date"),
             cell: ({row}) => renderDate(row.original.date),
+            enableSorting: true,
+        },
+        {
+            id: "partner",
+            accessorKey: "partner",
+            header: i18next.t("transaction.partner"),
+            cell: ({row}) => row.original.partner && PartnerFunctions.format(row.original.partner),
             enableSorting: true,
         },
         {
