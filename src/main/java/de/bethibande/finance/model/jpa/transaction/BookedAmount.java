@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@EntityDTO
+@EntityDTO(excludeProperties = {"asset.notes", "wallet.notes"}, expandProperties = {"asset", "wallet"}, name = "BookedAmountDTO")
 @EntityDTO(excludeProperties = {"id", "transaction"})
 @EntityDTO(excludeProperties = {"transaction"})
 public class BookedAmount extends PanacheEntity {

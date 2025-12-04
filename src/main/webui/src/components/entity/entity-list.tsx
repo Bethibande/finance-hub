@@ -1,6 +1,6 @@
 import {type DataQuery, DataTable, type TableData} from "@/components/data-table.tsx";
 import type {CellContext, ColumnDef} from "@tanstack/react-table";
-import {type FunctionComponent, type ReactNode, useEffect, useState} from "react";
+import {type FunctionComponent, type ReactNode, useEffect, useRef, useState} from "react";
 import {useViewConfig} from "@/lib/view-config.tsx";
 import i18next from "i18next";
 import {Button} from "@/components/ui/button.tsx";
@@ -23,6 +23,7 @@ export interface EntityListProps<TEntity, TID> {
     updateViewConfig?: boolean,
     Form: FunctionComponent<EntityFormProps<TEntity>>,
     additionalActions?: (ctx: CellContext<TEntity, any>) => ReactNode,
+    version?: number,
 }
 
 export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
@@ -44,7 +45,15 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
         }, [])
     }
 
+    useEffect(() => {
+        if (props.version && props.version !== 0 && prevQueryRef.current) {
+            update(prevQueryRef.current)
+        }
+    }, [props.version]);
+
+    const prevQueryRef = useRef<DataQuery>(null)
     function update(query: DataQuery) {
+        prevQueryRef.current = query;
         functions.list(query)
             .then(page => setData({
                 page: page.page,

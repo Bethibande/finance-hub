@@ -10,7 +10,7 @@ export const AssetAPI = new AssetEndpointApi()
 export const AssetFunctions: EntityFunctions<AssetDTOExpanded, number> = {
     list: listV2(AssetAPI.apiV2AssetWorkspaceIdGet.bind(AssetAPI)),
     delete: id => AssetAPI.apiV2AssetIdDelete({id}),
-    format: a => a.name,
+    format: a => a.code,
     toId: a => a.id!,
 }
 

@@ -18,7 +18,7 @@ public class BookedAmountEndpoint {
 
     @POST
     @Transactional
-    @Path("/transaction/{transaction_id}/book")
+    @Path("/bookedamount/transaction/{transaction_id}")
     public BookedAmountDTO createBookedAmount(final @PathParam("transaction_id") long transactionId,
                                               final BookedAmountDTOWithoutIdAndTransaction dto) {
         final BookedAmount amount = new BookedAmount();
@@ -63,7 +63,7 @@ public class BookedAmountEndpoint {
 
     @GET
     @Transactional
-    @Path("/transaction/{transaction_id}/book")
+    @Path("/bookedamount/transaction/{transaction_id}")
     public PagedResponse<BookedAmountDTO> listBookedAmount(final @BeanParam BookedAmountParams params) {
         final PanacheQuery<BookedAmount> query = BookedAmount.find("transaction.id = ?1", params.getSort(), params.transactionId)
                 .page(params.getPage());

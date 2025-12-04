@@ -74,6 +74,16 @@ public class TransactionEndpoint extends AbstractCRUDEndpoint {
 
     @GET
     @Transactional
+    @Path("/{id}/expand")
+    public TransactionDTOExpanded expandTransaction(final @PathParam("id") long id) {
+        final Transaction transaction = Transaction.findById(id);
+        if (transaction == null) throw new NotFoundException();
+
+        return TransactionDTOExpanded.from(transaction);
+    }
+
+    @GET
+    @Transactional
     @Path("/{workspace_id}")
     public PagedResponse<TransactionDTOExpanded> listTransactions(final @BeanParam WorkspacedParams params) {
         final PanacheQuery<Transaction> query = Transaction.find("workspace.id = ?1", params.getSort(), params.workspaceId)

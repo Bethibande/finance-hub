@@ -43,7 +43,7 @@ export interface DataTableProps<TData> {
 
 export function renderAmount(amount: number) {
     return (
-        <p className={cn("text-right", amount < 0.0 && "text-red-600")}>{amount.toLocaleString(undefined, {
+        <p className={cn("text-right max-w-24", amount < 0.0 && "text-red-600")}>{amount.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         })}</p>
