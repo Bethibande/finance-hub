@@ -5,7 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Entity
 public class ExchangeRate extends PanacheEntity {
@@ -20,6 +20,6 @@ public class ExchangeRate extends PanacheEntity {
     public Double rate;
 
     @Column(nullable = false)
-    public LocalDate date;
+    public Instant date;
 
 }

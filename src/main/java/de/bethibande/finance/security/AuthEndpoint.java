@@ -50,7 +50,7 @@ public class AuthEndpoint {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        final Duration duration = Duration.ofHours(2);
+        final Duration duration = Duration.ofHours(24);
         final String token = Jwt.issuer(issuer)
                 .upn(credentials.username)
                 .groups(new HashSet<>(user.roles))

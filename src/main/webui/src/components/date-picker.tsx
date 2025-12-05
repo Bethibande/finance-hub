@@ -4,7 +4,6 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.t
 import {Button} from "@/components/ui/button.tsx";
 import {Calendar} from "@/components/ui/calendar.tsx";
 import {Calendar as CalendarIcon} from "react-bootstrap-icons";
-import {convertDateToUTC} from "@/lib/utils.ts";
 
 export interface DatePickerProps {
     value: Date | null;
@@ -46,7 +45,7 @@ export function DatePicker(props: DatePickerProps) {
                        setValue(e.target.value);
 
                        if (isValidDate(date)) {
-                           props.onChange(convertDateToUTC(date));
+                           props.onChange(date);
                        }
                    }}/>
             <Popover open={open} onOpenChange={setOpen}>
@@ -70,7 +69,8 @@ export function DatePicker(props: DatePickerProps) {
                         month={month}
                         onMonthChange={setMonth}
                         onSelect={(date) => {
-                            props.onChange(date ? convertDateToUTC(date) : null)
+                            console.log(JSON.stringify(date))
+                            props.onChange(date ? date : null)
                             setValue(toString(date))
                             setOpen(false)
                         }}

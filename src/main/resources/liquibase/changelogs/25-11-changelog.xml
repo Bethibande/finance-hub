@@ -34,13 +34,13 @@
             <column name="transaction_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="amount" type="DECIMAL">
+            <column name="amount" type="numeric(38,2)">
                 <constraints nullable="false"/>
             </column>
             <column name="asset_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="DATE">
+            <column name="date" type="TIMESTAMPTZ">
                 <constraints nullable="false"/>
             </column>
             <column name="wallet_id" type="BIGINT">
@@ -97,7 +97,7 @@
             <column name="rate" type="DOUBLE">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="DATE">
+            <column name="date" type="TIMESTAMPTZ">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -130,13 +130,13 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="amount" type="DECIMAL">
+            <column name="amount" type="numeric(38,2)">
                 <constraints nullable="false"/>
             </column>
             <column name="asset_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="DATE">
+            <column name="date" type="TIMESTAMPTZ">
                 <constraints nullable="false"/>
             </column>
             <column name="notes" type="VARCHAR(255)"/>
