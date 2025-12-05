@@ -9,7 +9,7 @@ import de.bethibande.finance.model.jpa.partner.Partner;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -29,7 +29,7 @@ public class Transaction extends WorkspaceEntity {
     public Asset asset;
 
     @Column(nullable = false)
-    public LocalDate date;
+    public OffsetDateTime date;
 
     @Column
     public String notes;

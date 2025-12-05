@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 @Entity
 @EntityDTO(excludeProperties = {"asset.notes", "wallet.notes"}, expandProperties = {"asset", "wallet"}, name = "BookedAmountDTO")
@@ -29,7 +29,7 @@ public class BookedAmount extends PanacheEntity {
     public Asset asset;
 
     @Column(nullable = false)
-    public LocalDate date;
+    public OffsetDateTime date;
 
     @ManyToOne(optional = false)
     public Wallet wallet;
