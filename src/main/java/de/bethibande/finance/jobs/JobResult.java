@@ -14,17 +14,7 @@ public sealed interface JobResult permits JobResult.Success, JobResult.Failure {
 
     }
 
-    final class Failure implements JobResult {
-
-        private final Throwable cause;
-
-        public Failure(final Throwable cause) {
-            this.cause = cause;
-        }
-
-        public Throwable getCause() {
-            return cause;
-        }
+    record Failure(Throwable cause) implements JobResult {
     }
 
 }

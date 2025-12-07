@@ -1,25 +1,28 @@
 package de.bethibande.finance.jobs;
 
-import java.util.concurrent.CompletionStage;
+import com.bethibande.process.annotation.EntityDTO;
+import de.bethibande.finance.model.jpa.WorkspaceEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 
-public abstract class Job<CONFIG> {
+import java.time.Instant;
 
-    private final String id;
-    protected final JobCategory category;
+@Entity
+@EntityDTO(excludeProperties = {"lockTimeout"}, name = "JobDTO")
+@EntityDTO(excludeProperties = {"id", "lockTimeout", "lastSuccessfulExecution"}, name = "JobDTOWithoutId")
+@EntityDTO(excludeProperties = {"lockTimeout", "workspace", "lastSuccessfulExecution"}, name = "JobDTOWithoutWorkspace")
+public class Job extends WorkspaceEntity {
 
-    public Job(final String id, final JobCategory category) {
-        this.id = id;
-        this.category = category;
-    }
+    @Column(nullable = false)
+    public String type;
 
-    public boolean isSystemJob() {
-        return false;
-    }
+    @Column(nullable = false)
+    public String configJson;
 
-    public JobCategory getCategory() {
-        return category;
-    }
+    public Instant nextScheduledExecution;
+    public Instant lastSuccessfulExecution;
+    public Instant lockTimeout;
 
-    public abstract CompletionStage<JobResult> run(final CONFIG config) throws Exception;
+    public String notes;
 
 }

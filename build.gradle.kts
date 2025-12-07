@@ -41,11 +41,12 @@ dependencies {
     implementation("io.quarkus:quarkus-security-jpa")
     implementation("io.quarkus:quarkus-security")
     implementation("io.quarkus:quarkus-smallrye-openapi")
+    implementation("io.quarkus:quarkus-scheduler")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
 
-    implementation("com.bethibande.process:annotations:1.3")
-    annotationProcessor("com.bethibande.process:processor:1.3")
+    implementation("com.bethibande.process:annotations:1.4")
+    annotationProcessor("com.bethibande.process:processor:1.4")
 }
 
 group = "de.bethibande.finance"
