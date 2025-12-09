@@ -2,8 +2,9 @@ package de.bethibande.finance.web.api.v2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.bethibande.finance.jobs.*;
-import de.bethibande.finance.model.jpa.Workspace;
+import de.bethibande.finance.jobs.JobService;
+import de.bethibande.finance.jobs.JobTask;
+import de.bethibande.finance.model.jpa.*;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.web.api.v2.crud.AbstractCRUDEndpoint;
 import de.bethibande.finance.web.api.v2.crud.WorkspacedParams;
@@ -34,6 +35,7 @@ public class JobEndpoint extends AbstractCRUDEndpoint {
     @Transactional
     public JobDTO createJob(final JobDTOWithoutId dto) {
         final Job job = new Job();
+        job.name = dto.name();
         job.type = dto.type();
         job.configJson = dto.configJson();
         job.notes = dto.notes();
@@ -55,6 +57,7 @@ public class JobEndpoint extends AbstractCRUDEndpoint {
         final Job job = Job.findById(dto.id());
         if (job == null) throw new NotFoundException();
 
+        job.name = dto.name();
         job.type = dto.type();
         job.configJson = dto.configJson();
         job.nextScheduledExecution = dto.nextScheduledExecution();

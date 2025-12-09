@@ -50,9 +50,15 @@ export function renderAmount(amount: number) {
     )
 }
 
-export function renderDate(date: Date) {
+export function renderDate(date?: Date) {
     return (
-        <p>{date.toLocaleDateString()}</p>
+        <p>{date && date.toLocaleDateString()}</p>
+    )
+}
+
+export function renderDateTime(date?: Date) {
+    return (
+        <p>{date && date.toLocaleString()}</p>
     )
 }
 

@@ -2,6 +2,7 @@ package de.bethibande.finance.jobs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bethibande.finance.model.jpa.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

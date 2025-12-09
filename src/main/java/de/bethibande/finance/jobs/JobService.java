@@ -1,6 +1,7 @@
 package de.bethibande.finance.jobs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bethibande.finance.model.jpa.Job;
 import io.quarkus.arc.All;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

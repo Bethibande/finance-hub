@@ -1,5 +1,6 @@
 package de.bethibande.finance.jobs;
 
+import de.bethibande.finance.model.jpa.Job;
 import org.slf4j.Logger;
 
 import java.time.Duration;

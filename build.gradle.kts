@@ -45,8 +45,8 @@ dependencies {
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
 
-    implementation("com.bethibande.process:annotations:1.4")
-    annotationProcessor("com.bethibande.process:processor:1.4")
+    implementation("com.bethibande.process:annotations:1.5")
+    annotationProcessor("com.bethibande.process:processor:1.5")
 }
 
 group = "de.bethibande.finance"

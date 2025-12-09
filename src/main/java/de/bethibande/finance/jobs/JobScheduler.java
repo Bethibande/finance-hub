@@ -1,6 +1,7 @@
 package de.bethibande.finance.jobs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bethibande.finance.model.jpa.Job;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -44,7 +45,7 @@ public class JobScheduler {
 
     @Transactional
     @Scheduled(every = "1m")
-    public void schedule() {
+    protected void schedule() {
         final List<Job> jobs = jobService.listPendingJobs();
 
         for (final Job job : jobs) {

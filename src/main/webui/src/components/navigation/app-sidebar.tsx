@@ -142,8 +142,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             children: [
                 {
                     text: "Users",
-                    href: "/users"
+                    href: "/admin/users",
                 },
+                {
+                    text: "Jobs",
+                    href: "/admin/jobs",
+                }
             ]
         }
     ];

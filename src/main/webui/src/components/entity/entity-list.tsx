@@ -21,8 +21,8 @@ export interface EntityListProps<TEntity, TID> {
     columns: ColumnDef<TEntity>[],
     i18nKey: string,
     updateViewConfig?: boolean,
-    Form: FunctionComponent<EntityFormProps<TEntity>>,
-    additionalActions?: (ctx: CellContext<TEntity, any>) => ReactNode,
+    Form?: FunctionComponent<EntityFormProps<TEntity>>,
+    additionalActions?: (ctx: CellContext<TEntity, unknown>) => ReactNode,
     version?: number,
 }
 
@@ -42,7 +42,7 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
             setViewConfig({
                 toolbar: (<h2>{i18next.t(i18nKey + ".title")}</h2>)
             })
-        }, [])
+        }, [i18nKey, setViewConfig])
     }
 
     useEffect(() => {
@@ -52,6 +52,7 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
     }, [props.version]);
 
     const prevQueryRef = useRef<DataQuery>(null)
+
     function update(query: DataQuery) {
         prevQueryRef.current = query;
         functions.list(query)
@@ -77,20 +78,24 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
                             <Button variant={"secondary"} size={"icon"}><ThreeDots/></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem onClick={() => {
-                                setEditingEntity(ctx.row.original)
-                                setDialogState(EntityDialogState.Editing)
-                            }}>{i18next.t("edit")}
-                            </DropdownMenuItem>
+                            {Form && (
+                                <DropdownMenuItem onClick={() => {
+                                    setEditingEntity(ctx.row.original)
+                                    setDialogState(EntityDialogState.Editing)
+                                }}>{i18next.t("edit")}
+                                </DropdownMenuItem>
+                            )}
 
                             {additionalActions && additionalActions(ctx)}
 
-                            <DropdownMenuItem onClick={() => {
-                                setEditingEntity(ctx.row.original)
-                                setDialogState(EntityDialogState.Closed)
-                                setDeleteDialogOpen(true)
-                            }} variant={"destructive"}>{i18next.t("delete")}
-                            </DropdownMenuItem>
+                            {Form && (
+                                <DropdownMenuItem onClick={() => {
+                                    setEditingEntity(ctx.row.original)
+                                    setDialogState(EntityDialogState.Closed)
+                                    setDeleteDialogOpen(true)
+                                }} variant={"destructive"}>{i18next.t("delete")}
+                                </DropdownMenuItem>
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
@@ -117,24 +122,29 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
                                 close={() => setDeleteDialogOpen(false)}
                                 display={editingEntity ? functions.format(editingEntity) : ""}
                                 onDelete={onDelete}/>
-            <EntityDialog Form={Form}
-                          state={dialogState}
-                          setState={setDialogState}
-                          entity={editingEntity}
-                          i18nKey={i18nKey}
-                          onSubmit={() => setVersion(version + 1)}/>
+            {Form && (
+                <EntityDialog Form={Form}
+                              state={dialogState}
+                              setState={setDialogState}
+                              entity={editingEntity}
+                              i18nKey={i18nKey}
+                              onSubmit={() => setVersion(version + 1)}/>
+            )}
 
             <div className={"flex justify-center w-full"}>
                 <div className={"flex flex-col gap-2 lg:w-2/3 w-full"}>
                     <div className={"flex justify-between items-center"}>
                         <div>
-                            <Button onClick={() => {
-                                setEditingEntity(null)
-                                setDialogState(EntityDialogState.Creating)
-                            }}>+ {i18next.t("add")}</Button>
+                            {Form && (
+                                <Button onClick={() => {
+                                    setEditingEntity(null)
+                                    setDialogState(EntityDialogState.Creating)
+                                }}>+ {i18next.t("add")}</Button>
+                            )}
                         </div>
                         <div>
-                            <Button variant={"outline"} size={"icon"} onClick={() => setVersion(version + 1)}><ArrowClockwise/></Button>
+                            <Button variant={"outline"} size={"icon"}
+                                    onClick={() => setVersion(version + 1)}><ArrowClockwise/></Button>
                         </div>
                     </div>
                     <DataTable pagination={true}

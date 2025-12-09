@@ -10,6 +10,7 @@ import {PartnerView} from "@/views/partner/PartnerView.tsx";
 import {WalletView} from "@/views/wallet/WalletView.tsx";
 import {UserView} from "@/views/users/UserView.tsx";
 import {TransactionView} from "@/views/payments/TransactionView.tsx";
+import {JobView} from "@/views/job/JobView.tsx";
 
 const primaryRoutes: RouteObject[] = [
     {
@@ -29,8 +30,12 @@ const primaryRoutes: RouteObject[] = [
         Component: AssetView,
     },
     {
-        path: "/users",
+        path: "/admin/users",
         Component: UserView,
+    },
+    {
+        path: "/admin/jobs",
+        Component: JobView,
     },
     {
         path: "/payments",

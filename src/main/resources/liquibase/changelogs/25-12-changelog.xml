@@ -54,4 +54,12 @@
             <column name="lockTimeout"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="1765278575877-1" author="bethibande">
+        <addColumn tableName="Job">
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

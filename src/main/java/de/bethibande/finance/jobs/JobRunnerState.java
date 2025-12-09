@@ -1,5 +1,7 @@
 package de.bethibande.finance.jobs;
 
+import de.bethibande.finance.model.jpa.Job;
+
 public sealed interface JobRunnerState permits JobRunnerState.Idle, JobRunnerState.Running {
 
     JobRunnerState IDLE = new Idle();
