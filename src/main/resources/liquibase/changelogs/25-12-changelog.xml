@@ -62,4 +62,10 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="1767274130907-1" author="bethibande">
+        <addColumn tableName="Transaction">
+            <column name="dataComponents" type="jsonb"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

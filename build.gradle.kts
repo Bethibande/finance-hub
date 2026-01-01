@@ -45,6 +45,8 @@ dependencies {
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
 
+    implementation("io.hypersistence:hypersistence-utils-hibernate-71:3.14.1")
+
     implementation("com.bethibande.process:annotations:1.5")
     annotationProcessor("com.bethibande.process:processor:1.5")
 }
