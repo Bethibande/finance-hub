@@ -17,22 +17,10 @@ import java.util.List;
 @EntityDTO(excludeProperties = {"id", "bookedAmounts"})
 @EntityDTO(excludeProperties = {"workspace", "bookedAmounts"})
 @EntityDTO(excludeProperties = {"bookedAmounts"}, expandProperties = {"asset", "partner", "wallet"}, name = "TransactionDTOExpanded")
-public class Transaction extends WorkspaceEntity {
-
-    @Column(nullable = false)
-    public String name;
-
-    @Column(nullable = false)
-    public BigDecimal amount;
-
-    @ManyToOne(optional = false)
-    public Asset asset;
+public class Transaction extends AbstractPayment {
 
     @Column(nullable = false)
     public Instant date;
-
-    @Column
-    public String notes;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,17 +30,7 @@ public class Transaction extends WorkspaceEntity {
     public List<BookedAmount> bookedAmounts;
 
     @ManyToOne
-    public Partner partner;
-
-    @ManyToOne
     @JsonIncludeProperties("id")
     public Transaction internalRef;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    public TransactionType type;
-
-    @ManyToOne(optional = false)
-    public Wallet wallet;
 
 }
