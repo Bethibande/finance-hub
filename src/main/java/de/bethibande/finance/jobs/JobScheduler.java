@@ -39,6 +39,8 @@ public class JobScheduler {
 
     @Transactional
     public void schedule(final Job job, final Instant nextExecution) {
+        if (!Job.getEntityManager().isOpen()) return;
+
         final Job actual = Job.findById(job.id);
         actual.nextScheduledExecution = nextExecution;
     }

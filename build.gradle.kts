@@ -83,8 +83,10 @@ tasks.withType<Test> {
     jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
 }
 tasks.withType<JavaCompile> {
-    dependsOn("openApiGenerate")
-
     options.encoding = "UTF-8"
     options.compilerArgs.add("-parameters")
+}
+
+tasks.withType<Assemble> {
+    dependsOn("openApiGenerate")
 }
