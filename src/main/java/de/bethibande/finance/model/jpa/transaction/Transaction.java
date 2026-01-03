@@ -11,10 +11,10 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-@EntityDTO(excludeProperties = "bookedAmounts")
-@EntityDTO(excludeProperties = {"id", "bookedAmounts"})
-@EntityDTO(excludeProperties = {"workspace", "bookedAmounts"})
-@EntityDTO(excludeProperties = {"bookedAmounts"}, expandProperties = {"asset", "partner", "wallet"}, name = "TransactionDTOExpanded")
+@EntityDTO(excludeProperties = {"bookedAmounts", "components.dataComponents"}, name = "TransactionDTOWithoutBookedAmounts")
+@EntityDTO(excludeProperties = {"id", "bookedAmounts", "components.dataComponents"}, name = "TransactionDTOWithoutIdAndBookedAmounts")
+@EntityDTO(excludeProperties = {"workspace", "bookedAmounts", "components.dataComponents"}, name = "TransactionDTOWithoutWorkspaceAndBookedAmounts")
+@EntityDTO(excludeProperties = {"bookedAmounts", "components.dataComponents"}, expandProperties = {"asset", "partner", "wallet"}, name = "TransactionDTOExpanded")
 public class Transaction extends AbstractPayment implements ComponentUtils {
 
     @Column(nullable = false)

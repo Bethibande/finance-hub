@@ -7,6 +7,7 @@ import de.bethibande.finance.model.jpa.partner.Partner;
 import de.bethibande.finance.model.jpa.partner.PartnerDTO;
 import de.bethibande.finance.model.jpa.partner.PartnerDTOWithoutId;
 import de.bethibande.finance.model.jpa.partner.PartnerDTOWithoutWorkspace;
+import de.bethibande.finance.model.jpa.recurring.RecurringPayment;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.security.Roles;
@@ -75,6 +76,7 @@ public class PartnerEndpoint extends AbstractCRUDEndpoint {
         if (Asset.count("provider.id = ?1", id) > 0) return true;
         if (Transaction.count("partner.id = ?1", id) > 0) return true;
         if (Wallet.count("provider.id = ?1", id) > 0) return true;
+        if (RecurringPayment.count("partner.id = ?1", id) > 0) return true;
         return false;
     }
 

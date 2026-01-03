@@ -14,6 +14,7 @@ import type {FieldValues, UseFormReturn} from "react-hook-form";
 export interface EntityFormProps<TEntity> {
     header?: ReactNode,
     footer?: ReactNode,
+    close: () => void,
     onSubmit?: (entity: TEntity) => void,
     entity: TEntity | null,
 }
@@ -61,6 +62,7 @@ export function EntityDialog<TEntity>(props: EntityDialogProps<TEntity>) {
                           setState(EntityDialogState.Closed);
                           if (onSubmit) onSubmit(entity);
                       }}
+                      close={close}
                       header={(
                           <DialogHeader className={"mb-4"}>
                               <DialogTitle>{i18next.t(keyHeader)}</DialogTitle>

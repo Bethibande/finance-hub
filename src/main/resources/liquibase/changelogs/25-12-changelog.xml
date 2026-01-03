@@ -68,4 +68,96 @@
             <column name="dataComponents" type="jsonb"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="1767343104112-1"
+               author="bethibande">
+        <createSequence incrementBy="50"
+                        sequenceName="RecurringPayment_seq"
+                        startValue="1"/>
+    </changeSet>
+    <changeSet id="1767343104112-2"
+               author="bethibande">
+        <createTable tableName="RecurringPayment">
+            <column name="id"
+                    type="BIGINT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_recurringpayment"/>
+            </column>
+            <column name="type"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="wallet_id"
+                    type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="partner_id"
+                    type="BIGINT"/>
+            <column name="name"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount"
+                    type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="asset_id"
+                    type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes"
+                    type="VARCHAR(1024)"/>
+            <column name="workspace_id"
+                    type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cronSchedule"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notBefore"
+                    type="DATETIME"/>
+            <column name="notAfter"
+                    type="DATETIME"/>
+            <column name="status"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastTransactionDate"
+                    type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1767343104112-3"
+               author="bethibande">
+        <addForeignKeyConstraint baseColumnNames="asset_id"
+                                 baseTableName="RecurringPayment"
+                                 constraintName="FK_RECURRINGPAYMENT_ON_ASSET"
+                                 referencedColumnNames="id"
+                                 referencedTableName="Asset"/>
+    </changeSet>
+    <changeSet id="1767343104112-4"
+               author="bethibande">
+        <addForeignKeyConstraint baseColumnNames="partner_id"
+                                 baseTableName="RecurringPayment"
+                                 constraintName="FK_RECURRINGPAYMENT_ON_PARTNER"
+                                 referencedColumnNames="id"
+                                 referencedTableName="Partner"/>
+    </changeSet>
+    <changeSet id="1767343104112-5"
+               author="bethibande">
+        <addForeignKeyConstraint baseColumnNames="wallet_id"
+                                 baseTableName="RecurringPayment"
+                                 constraintName="FK_RECURRINGPAYMENT_ON_WALLET"
+                                 referencedColumnNames="id"
+                                 referencedTableName="Wallet"/>
+    </changeSet>
+    <changeSet id="1767343104112-6"
+               author="bethibande">
+        <addForeignKeyConstraint baseColumnNames="workspace_id"
+                                 baseTableName="RecurringPayment"
+                                 constraintName="FK_RECURRINGPAYMENT_ON_WORKSPACE"
+                                 referencedColumnNames="id"
+                                 referencedTableName="Workspace"/>
+    </changeSet>
 </databaseChangeLog>

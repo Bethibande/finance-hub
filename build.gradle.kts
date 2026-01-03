@@ -47,6 +47,8 @@ dependencies {
 
     implementation("io.hypersistence:hypersistence-utils-hibernate-71:3.14.1")
 
+    implementation("com.cronutils:cron-utils:9.2.1")
+
     implementation("com.bethibande.process:annotations:1.5")
     annotationProcessor("com.bethibande.process:processor:1.5")
 }

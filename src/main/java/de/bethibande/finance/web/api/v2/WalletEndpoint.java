@@ -2,6 +2,7 @@ package de.bethibande.finance.web.api.v2;
 
 import de.bethibande.finance.model.jpa.*;
 import de.bethibande.finance.model.jpa.partner.Partner;
+import de.bethibande.finance.model.jpa.recurring.RecurringPayment;
 import de.bethibande.finance.model.jpa.transaction.BookedAmount;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
 import de.bethibande.finance.model.web.PagedResponse;
@@ -79,6 +80,7 @@ public class WalletEndpoint extends AbstractCRUDEndpoint {
     protected boolean hasDependents(final long id) {
         if (Transaction.count("wallet.id = ?1", id) > 0) return true;
         if (BookedAmount.count("wallet.id = ?1", id) > 0) return true;
+        if (RecurringPayment.count("wallet.id = ?1", id) > 0) return true;
         return false;
     }
 

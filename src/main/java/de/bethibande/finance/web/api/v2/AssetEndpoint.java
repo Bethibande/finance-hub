@@ -2,6 +2,7 @@ package de.bethibande.finance.web.api.v2;
 
 import de.bethibande.finance.model.jpa.*;
 import de.bethibande.finance.model.jpa.partner.Partner;
+import de.bethibande.finance.model.jpa.recurring.RecurringPayment;
 import de.bethibande.finance.model.jpa.transaction.BookedAmount;
 import de.bethibande.finance.model.jpa.transaction.Transaction;
 import de.bethibande.finance.model.web.PagedResponse;
@@ -81,6 +82,7 @@ public class AssetEndpoint extends AbstractCRUDEndpoint {
         if (Transaction.count("asset.id = ?1", id) > 0) return true;
         if (BookedAmount.count("asset.id = ?1", id) > 0) return true;
         if (ExchangeRate.count("base.id = ?1 OR quote.id = ?1", id) > 0) return true;
+        if (RecurringPayment.count("asset.id = ?1", id) > 0) return true;
         return false;
     }
 

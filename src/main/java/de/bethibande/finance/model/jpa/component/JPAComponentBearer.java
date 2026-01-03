@@ -1,5 +1,6 @@
 package de.bethibande.finance.model.jpa.component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.Type;
 @Embeddable
 public class JPAComponentBearer {
 
+    @JsonIgnore
     @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")
     public DataComponentMap dataComponents = new DataComponentMap();

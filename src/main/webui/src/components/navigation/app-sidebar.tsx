@@ -113,7 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 },
                 {
                     text: "Recurring payments",
-                    href: "/recurring-payments"
+                    href: "/recurring"
                 }
             ]
         },

@@ -78,6 +78,8 @@ public class RecurringPaymentEndpoint extends AbstractCRUDEndpoint {
     }
 
     @GET
+    @Transactional
+    @Path("/{workspace_id}")
     public PagedResponse<RecurringPaymentDTO> list(final @BeanParam WorkspacedParams params) {
         final PanacheQuery<RecurringPayment> query = RecurringPayment.find("workspace.id = ?1", params.getSort(), params.workspaceId)
                 .page(params.getPage());
