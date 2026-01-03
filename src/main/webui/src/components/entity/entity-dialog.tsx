@@ -71,7 +71,8 @@ export function EntityDialog<TEntity>(props: EntityDialogProps<TEntity>) {
                       )}
                       footer={(
                           <DialogFooter className={"mt-4"}>
-                              <Button variant={"secondary"} type={"reset"}
+                              <Button variant={"outline"}
+                                      type={"reset"}
                                       onClick={close}>{i18next.t("cancel")}</Button>
                               <Button>{editing ? i18next.t("save") : i18next.t("create")}</Button>
                           </DialogFooter>

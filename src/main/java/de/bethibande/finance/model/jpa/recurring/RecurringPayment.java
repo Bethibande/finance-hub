@@ -30,6 +30,21 @@ import java.util.*;
 @EntityDTO(excludeProperties = {"lastTransactionDate", "workspace"}, name = "RecurringPaymentDTOWithoutWorkspace")
 public class RecurringPayment extends AbstractPayment implements EntitySource {
 
+    public static void deleteAllOpenScheduledPayments(final long id) {
+        Transaction.delete(
+                "sourceDiscriminator = ?1 AND sourceId = ?2 AND size(bookedAmounts) = 0 AND status = ?3",
+                SourceDiscriminators.RECURRING_PAYMENTS,
+                id,
+                TransactionStatus.OPEN
+        );
+
+        Transaction.update( // Detach any remaining transactions
+                "sourceDiscriminator = NULL, sourceId = NULL WHERE sourceDiscriminator = ?1 AND sourceId = ?2",
+                SourceDiscriminators.RECURRING_PAYMENTS,
+                id
+        );
+    }
+
     public static CronDefinition cronDefinition() {
         return CronDefinitionBuilder.defineCron()
                 .withSeconds().and()

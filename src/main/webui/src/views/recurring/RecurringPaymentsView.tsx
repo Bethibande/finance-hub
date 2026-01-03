@@ -5,6 +5,14 @@ import type {ColumnDef} from "@tanstack/react-table";
 import type {RecurringPaymentDTO} from "@/generated";
 import i18next from "i18next";
 import {renderAmount, renderDate} from "@/components/data-table.tsx";
+import {useState} from "react";
+import {DropdownMenuItem} from "@/components/ui/dropdown-menu.tsx";
+import {ForceOverwriteDialog} from "@/views/recurring/ForceOverwriteDialog.tsx";
+
+interface ForceOverwriteState {
+    open: boolean;
+    payment: RecurringPaymentDTO | null;
+}
 
 export function RecurringPaymentsView() {
     const columns: ColumnDef<RecurringPaymentDTO>[] = [
@@ -51,10 +59,23 @@ export function RecurringPaymentsView() {
         },
     ]
 
+    const [forceOverwriteState, setForceOverwriteState] = useState<ForceOverwriteState>({open: false, payment: null});
+
     return (
-        <EntityList functions={RecurringPaymentFunctions}
-                    columns={columns}
-                    i18nKey={"recurring"}
-                    Form={RecurringPaymentsForm}/>
+        <>
+            <ForceOverwriteDialog open={forceOverwriteState.open}
+                                  setOpen={open => setForceOverwriteState({...forceOverwriteState, open})}
+                                  payment={forceOverwriteState.payment}/>
+
+            <EntityList functions={RecurringPaymentFunctions}
+                        columns={columns}
+                        i18nKey={"recurring"}
+                        additionalActions={({row}) => (
+                            <DropdownMenuItem onClick={() => setForceOverwriteState({open: true, payment: row.original})}>
+                                {i18next.t("recurring.forceOverwrite")}
+                            </DropdownMenuItem>
+                        )}
+                        Form={RecurringPaymentsForm}/>
+        </>
     )
 }

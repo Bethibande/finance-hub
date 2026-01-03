@@ -124,7 +124,9 @@ public class RecurringPaymentEndpoint extends AbstractCRUDEndpoint {
     }
 
     @Override
+    @Transactional
     protected void deleteById(final long id) {
-        RecurringPayment.deleteById(id); // TODO: Handle generated transactions
+        RecurringPayment.deleteAllOpenScheduledPayments(id);
+        RecurringPayment.deleteById(id);
     }
 }

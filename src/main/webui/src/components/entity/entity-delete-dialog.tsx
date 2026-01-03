@@ -22,7 +22,7 @@ export function EntityDeleteDialog(props: EntityDeleteDialogProps) {
                     <p>{i18next.t("entity.delete.message")}</p>
                 </div>
                 <DialogFooter>
-                    <Button variant={"secondary"} onClick={close}>{i18next.t("cancel")}</Button>
+                    <Button variant={"outline"} onClick={close}>{i18next.t("cancel")}</Button>
                     <Button variant={"destructive"} onClick={onDelete}>{i18next.t("delete")}</Button>
                 </DialogFooter>
             </DialogContent>

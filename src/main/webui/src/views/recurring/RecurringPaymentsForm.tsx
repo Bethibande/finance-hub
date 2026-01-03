@@ -87,12 +87,21 @@ function CoreDataForm(props: CoreDataFormProps) {
             {props.header}
 
             <FieldGroup>
-                <FormField fieldName={"name"}
-                           label={i18next.t("recurring.name")}
-                           Input={(props) => (
-                               <Input {...props} placeholder={i18next.t("recurring.name.placeholder")}/>
-                           )}
-                           control={form.control}/>
+                <div className={"flex gap-2"}>
+                    <FormField fieldName={"name"}
+                               label={i18next.t("recurring.name")}
+                               Input={(props) => (
+                                   <Input {...props} placeholder={i18next.t("recurring.name.placeholder")}/>
+                               )}
+                               control={form.control}/>
+                    <FormField fieldName={"status"}
+                               label={i18next.t("recurring.status")}
+                               Input={props => (<Select {...props} emptyLabel={""}
+                                                        options={Object.values(RecurringPaymentStatus)}
+                                                        keyGenerator={v => v}
+                                                        render={v => i18next.t("RecurringPaymentStatus." + v)}/>)}
+                               control={form.control}/>
+                </div>
 
                 <FormField fieldName={"cronSchedule"}
                            label={i18next.t("recurring.cronSchedule")}
@@ -115,14 +124,6 @@ function CoreDataForm(props: CoreDataFormProps) {
                                control={form.control}/>
                 </div>
 
-                <FormField fieldName={"status"}
-                           label={i18next.t("recurring.status")}
-                           Input={props => (<Select {...props} emptyLabel={""}
-                                                    options={Object.values(RecurringPaymentStatus)}
-                                                    keyGenerator={v => v}
-                                                    render={v => i18next.t("RecurringPaymentStatus." + v)}/>)}
-                           control={form.control}/>
-
                 <FormField fieldName={"notes"}
                            label={i18next.t("recurring.notes")}
                            Input={props => (<Textarea {...props} value={props.value || ""}/>)}
@@ -130,7 +131,8 @@ function CoreDataForm(props: CoreDataFormProps) {
             </FieldGroup>
 
             <DialogFooter className={"mt-4"}>
-                <Button variant={"secondary"} type={"reset"}
+                <Button variant={"outline"}
+                        type={"reset"}
                         onClick={props.close}>{i18next.t("cancel")}</Button>
                 <Button>{i18next.t("next")}</Button>
             </DialogFooter>
@@ -225,7 +227,8 @@ function PaymentDataForm(props: PaymentDataFormProps) {
             </FieldGroup>
 
             <DialogFooter className={"mt-4"}>
-                <Button variant={"secondary"} type={"reset"}
+                <Button variant={"outline"}
+                        type={"reset"}
                         onClick={props.close}>{i18next.t("back")}</Button>
                 <Button>{props.entity?.id ? i18next.t("save") : i18next.t("create")}</Button>
             </DialogFooter>

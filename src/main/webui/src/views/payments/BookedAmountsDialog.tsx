@@ -84,7 +84,7 @@ export function BookedAmountsDialog(props: BookedAmountsDialogProps) {
     ]
 
     function changeTransactionStatus(status: TransactionStatus) {
-        TransactionAPI.apiV2TransactionPatch({
+        TransactionAPI.apiV2TransactionPut({
             transactionDTOWithoutWorkspaceAndBookedAmounts: {
                 ...transaction,
                 assetId: transaction.asset!.id!,
