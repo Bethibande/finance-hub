@@ -38,7 +38,7 @@ public class PartnerEndpoint extends AbstractCRUDEndpoint {
         return PartnerDTO.from(partner);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     public PartnerDTO updatePartner(final PartnerDTOWithoutWorkspace dto) {
         final Partner partner = Partner.findById(dto.id());

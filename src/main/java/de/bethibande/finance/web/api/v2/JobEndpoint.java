@@ -54,7 +54,7 @@ public class JobEndpoint extends AbstractCRUDEndpoint {
         return JobDTO.from(job);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     public JobDTO updateJob(final JobDTOWithoutWorkspace dto) {
         final Job job = Job.findById(dto.id());

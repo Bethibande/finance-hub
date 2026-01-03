@@ -76,7 +76,7 @@ export function TransactionForm(props: EntityFormProps<TransactionDTOWithoutBook
 
     function submit(data: z.output<typeof formSchema>) {
         if (entity?.id) {
-            TransactionAPI.apiV2TransactionPatch({
+            TransactionAPI.apiV2TransactionPut({
                 transactionDTOWithoutWorkspaceAndBookedAmounts: {
                     ...entity,
                     ...data,

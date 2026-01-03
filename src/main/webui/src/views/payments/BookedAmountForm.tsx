@@ -51,7 +51,7 @@ export function BookedAmountForm(props: BookedAmountFormProps) {
 
     function submit(data: z.infer<typeof formSchema>) {
         if (entity?.id) {
-            BookedAmountAPI.apiV2BookedamountPatch({
+            BookedAmountAPI.apiV2BookedamountPut({
                 bookedAmountDTOWithoutTransaction: {...data, id: entity.id},
             }).then(onSubmit).catch(showError)
         } else {

@@ -27,7 +27,7 @@ public class WorkspaceEndpoint extends AbstractCRUDEndpoint {
         return WorkspaceDTO.from(workspace);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     public WorkspaceDTO updateWorkspace(final WorkspaceDTO dto) {
         final Workspace workspace = Workspace.findById(dto.id());

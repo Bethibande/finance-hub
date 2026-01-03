@@ -26,6 +26,7 @@ import {DialogFooter} from "@/components/ui/dialog.tsx";
 import {AssetForm} from "@/views/asset/AssetForm.tsx";
 import {WalletForm} from "@/views/wallet/WalletForm.tsx";
 import {PartnerForm} from "@/views/partner/PartnerForm.tsx";
+import {showError} from "@/lib/errors.tsx";
 
 interface CoreData {
     name: string;
@@ -61,7 +62,7 @@ function CoreDataForm(props: CoreDataFormProps) {
 
     const defaultValues: z.input<typeof formSchema> = {
         name: "",
-        cronSchedule: "* * 1 * * 1-5",
+        cronSchedule: "0 0 0 * * 1-5",
         notBefore: null,
         notAfter: null,
         status: RecurringPaymentStatus.Active,
@@ -98,7 +99,7 @@ function CoreDataForm(props: CoreDataFormProps) {
                            Input={(props) => (
                                <div className={"flex gap-2 flex-col"}>
                                    <Input {...props} placeholder={i18next.t("recurring.cronSchedule.placeholder")}/>
-                                   { isValidCron(props.value) && renderDateTime(CronExpressionParser.parse(props.value).next().toDate()) }
+                                   {isValidCron(props.value) && renderDateTime(CronExpressionParser.parse(props.value).next().toDate())}
                                </div>
                            )}
                            control={form.control}/>
@@ -169,7 +170,12 @@ function PaymentDataForm(props: PaymentDataFormProps) {
     })
 
     useEffect(() => {
-        form.reset(props.entity ? {...props.entity, assetId: props.entity.asset!.id, walletId: props.entity.wallet!.id, partnerId: props.entity.partner?.id} : defaultValues)
+        form.reset(props.entity ? {
+            ...props.entity,
+            assetId: props.entity.asset!.id,
+            walletId: props.entity.wallet!.id,
+            partnerId: props.entity.partner?.id
+        } : defaultValues)
     }, [props.entity]);
 
     function submit(data: z.output<typeof formSchema>) {
@@ -236,19 +242,36 @@ export function RecurringPaymentsForm(props: EntityFormProps<RecurringPaymentDTO
     const {workspace} = useWorkspace()
 
     useEffect(() => {
+        const updateRecurringPayment = async () => {
+            if (!coreData || !paymentData || !props.entity?.id) return;
+
+            const id = props.entity.id;
+            const payload = {
+                id,
+                ...coreData,
+                ...paymentData,
+                type: TransactionType.Payment,
+                notBefore: coreData.notBefore || undefined,
+                notAfter: coreData.notAfter || undefined,
+                partnerId: paymentData.partnerId || undefined
+            };
+
+            try {
+                const result = await RecurringPaymentApi.apiV2RecurringPut({
+                    recurringPaymentDTOWithoutWorkspace: payload
+                });
+
+                await RecurringPaymentApi.apiV2RecurringIdUpdatePaymentsPost({id});
+
+                props.onSubmit?.(result);
+            } catch (error) {
+                showError(error);
+            }
+        };
+
         if (coreData && paymentData) {
             if (props.entity?.id) {
-                RecurringPaymentApi.apiV2RecurringPatch({
-                    recurringPaymentDTOWithoutWorkspace: {
-                        id: props.entity.id,
-                        ...coreData,
-                        ...paymentData,
-                        type: TransactionType.Payment,
-                        notBefore: coreData.notBefore || undefined,
-                        notAfter: coreData.notAfter || undefined,
-                        partnerId: paymentData.partnerId || undefined
-                    }
-                }).then(props.onSubmit)
+                updateRecurringPayment().catch(showError);
             } else {
                 RecurringPaymentApi.apiV2RecurringPost({
                     recurringPaymentDTOWithoutId: {
@@ -260,7 +283,7 @@ export function RecurringPaymentsForm(props: EntityFormProps<RecurringPaymentDTO
                         partnerId: paymentData.partnerId || undefined,
                         workspaceId: workspace.id!
                     }
-                }).then(props.onSubmit)
+                }).then(props.onSubmit).catch(showError)
             }
         }
     }, [coreData, paymentData]);
@@ -271,7 +294,8 @@ export function RecurringPaymentsForm(props: EntityFormProps<RecurringPaymentDTO
                 setCoreData(d)
                 setPage(1)
             }} {...props}/>)}
-            {(page === 1 && coreData) && (<PaymentDataForm {...props} submit={setPaymentData} close={() => setPage(page - 1)}/>)}
+            {(page === 1 && coreData) && (
+                <PaymentDataForm {...props} submit={setPaymentData} close={() => setPage(page - 1)}/>)}
         </>
     )
 }

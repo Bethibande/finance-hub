@@ -51,7 +51,7 @@ export function WalletForm(props: EntityFormProps<WalletDTO>) {
     const {workspace} = useWorkspace();
     function submit(data: z.infer<typeof formSchema>) {
         if (entity?.id) {
-            WalletAPI.apiV2WalletPatch({
+            WalletAPI.apiV2WalletPut({
                 walletDTOWithoutWorkspace: {
                     ...data,
                     assetId: data.assetId || undefined,

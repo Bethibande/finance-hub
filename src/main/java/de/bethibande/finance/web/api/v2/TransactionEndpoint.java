@@ -46,7 +46,7 @@ public class TransactionEndpoint extends AbstractCRUDEndpoint {
         return TransactionDTOWithoutBookedAmounts.from(transaction);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     public TransactionDTOWithoutBookedAmounts updateTransaction(final TransactionDTOWithoutWorkspaceAndBookedAmounts dto) {
         final Transaction transaction = Transaction.findById(dto.id());
@@ -67,6 +67,10 @@ public class TransactionEndpoint extends AbstractCRUDEndpoint {
                 || transaction.wallet == null
                 || (transaction.internalRef == null && dto.internalRefId() != null)) {
             throw new NotFoundException();
+        }
+
+        if (transaction.isGenerated()) {
+            transaction.set(TransactionComponents.USER_MODIFIED, true);
         }
 
         return TransactionDTOWithoutBookedAmounts.from(transaction);
@@ -104,6 +108,7 @@ public class TransactionEndpoint extends AbstractCRUDEndpoint {
 
     @Override
     protected boolean hasDependents(final long id) {
+        if (Transaction.count("id = ?1 AND sourceId IS NOT NULL", id) > 0) return true;
         if (BookedAmount.count("transaction.id = ?1", id) > 0) return true;
         if (Transaction.count("internalRef.id = ?1", id) > 0) return true;
         return false;

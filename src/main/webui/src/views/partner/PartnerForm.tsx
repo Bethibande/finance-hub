@@ -42,7 +42,7 @@ export function PartnerForm(props: EntityFormProps<PartnerDTO>) {
 
     function submit(data: z.infer<typeof formSchema>) {
         if (entity?.id) {
-            PartnerAPI.apiV2PartnerPatch({
+            PartnerAPI.apiV2PartnerPut({
                 partnerDTOWithoutWorkspace: {...data, id: entity.id}
             }).then(onSubmit).catch(showError)
         } else {

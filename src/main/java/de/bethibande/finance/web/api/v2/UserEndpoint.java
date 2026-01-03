@@ -30,7 +30,7 @@ public class UserEndpoint {
         return UserDTOWithoutPassword.from(user);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     public UserDTOWithoutPassword updateUser(final UserDTOWithoutPassword userDTO) {
         final User user = User.findById(userDTO.id());

@@ -38,7 +38,7 @@ public class AssetEndpoint extends AbstractCRUDEndpoint {
         return AssetDTO.from(asset);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     public AssetDTO updateAsset(final AssetDTOWithoutWorkspace dto) {
         final Asset asset = Asset.findById(dto.id());

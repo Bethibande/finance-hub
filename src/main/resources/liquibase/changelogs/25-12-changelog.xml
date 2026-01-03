@@ -160,4 +160,26 @@
                                  referencedColumnNames="id"
                                  referencedTableName="Workspace"/>
     </changeSet>
+
+    <changeSet id="1767447413835-2"
+               author="bethibande">
+        <addColumn tableName="Transaction">
+            <column name="sourceDiscriminator"
+                    type="INT"/>
+            <column name="sourceId"
+                    type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1767447413835-1"
+               author="bethibande">
+        <modifyDataType columnName="amount"
+                        newDataType="DECIMAL"
+                        tableName="Transaction"/>
+    </changeSet>
+    <changeSet id="1767447472060-1" author="bethibande">
+        <createIndex tableName="Transaction" indexName="IDX_sourceDiscriminator_sourceId">
+            <column name="sourceDiscriminator"/>
+            <column name="sourceId"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

@@ -8,12 +8,20 @@ import de.bethibande.finance.model.jpa.recurring.RecurringPayment;
 import de.bethibande.finance.model.jpa.recurring.RecurringPaymentDTO;
 import de.bethibande.finance.model.jpa.recurring.RecurringPaymentDTOWithoutId;
 import de.bethibande.finance.model.jpa.recurring.RecurringPaymentDTOWithoutWorkspace;
+import de.bethibande.finance.model.jpa.transaction.Transaction;
+import de.bethibande.finance.model.jpa.transaction.TransactionComponents;
 import de.bethibande.finance.model.web.PagedResponse;
 import de.bethibande.finance.web.api.v2.crud.AbstractCRUDEndpoint;
 import de.bethibande.finance.web.api.v2.crud.WorkspacedParams;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
+
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Path("/api/v2/recurring")
 public class RecurringPaymentEndpoint extends AbstractCRUDEndpoint {
@@ -44,10 +52,13 @@ public class RecurringPaymentEndpoint extends AbstractCRUDEndpoint {
 
         payment.persist();
 
+        final List<Transaction> transactions = payment.generatePayments(Instant.now(), true);
+        Transaction.persist(transactions);
+
         return RecurringPaymentDTO.from(payment);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     public RecurringPaymentDTO patch(final RecurringPaymentDTOWithoutWorkspace dto) {
         final RecurringPayment payment = RecurringPayment.findById(dto.id());
@@ -77,6 +88,21 @@ public class RecurringPaymentEndpoint extends AbstractCRUDEndpoint {
         return RecurringPaymentDTO.from(payment);
     }
 
+    @POST
+    @Transactional
+    @Path("/{id}/updatePayments")
+    public void updatePayments(final @PathParam("id") long id,
+                               final @QueryParam("overwriteModified") @DefaultValue("false") boolean overwriteModified) {
+        final RecurringPayment payment = RecurringPayment.findById(id);
+        if (payment == null) throw new NotFoundException();
+
+        final Instant now = Instant.now();
+        final RecurringPayment.PaymentUpdateResult result = payment.updatePayments(now, overwriteModified);
+
+        Transaction.delete("id IN ?1", result.delete().stream().map(tx -> tx.id).toList());
+        Transaction.persist(result.create());
+    }
+
     @GET
     @Transactional
     @Path("/{workspace_id}")
@@ -99,6 +125,6 @@ public class RecurringPaymentEndpoint extends AbstractCRUDEndpoint {
 
     @Override
     protected void deleteById(final long id) {
-        RecurringPayment.deleteById(id);
+        RecurringPayment.deleteById(id); // TODO: Handle generated transactions
     }
 }

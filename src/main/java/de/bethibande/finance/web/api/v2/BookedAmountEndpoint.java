@@ -40,7 +40,7 @@ public class BookedAmountEndpoint {
         return BookedAmountDTO.from(amount);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     @Path("/bookedamount")
     public BookedAmountDTO updateBookedAmount(final BookedAmountDTOWithoutTransaction dto) {

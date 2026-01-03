@@ -54,7 +54,7 @@ function UserFormWithoutPassword(props: EntityFormProps<UserDTOWithoutPassword>)
 
     function submit(data: z.infer<typeof formSchema>) {
         if (entity?.id) {
-            UserAPI.apiV2UserPatch({
+            UserAPI.apiV2UserPut({
                 userDTOWithoutPassword: {name: data.name, roles: new Set([data.role]), id: entity.id}
             }).then(onSubmit).catch(showError)
         }

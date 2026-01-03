@@ -51,6 +51,8 @@ dependencies {
 
     implementation("com.bethibande.process:annotations:1.5")
     annotationProcessor("com.bethibande.process:processor:1.5")
+
+    testImplementation("io.quarkus:quarkus-junit5-mockito")
 }
 
 group = "de.bethibande.finance"

@@ -37,7 +37,7 @@ public class WalletEndpoint extends AbstractCRUDEndpoint {
         return WalletDTO.from(wallet);
     }
 
-    @PATCH
+    @PUT
     @Transactional
     public WalletDTO updateWallet(final WalletDTOWithoutWorkspace dto) {
         final Wallet wallet = Wallet.findById(dto.id());
