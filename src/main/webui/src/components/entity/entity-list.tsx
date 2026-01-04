@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import type {EntityFunctions} from "@/components/entity/entity-functions.ts";
 import {EntityDeleteDialog} from "@/components/entity/entity-delete-dialog.tsx";
+import type {SortOrder} from "@/lib/types.ts";
 
 export interface EntityListProps<TEntity, TID> {
     functions: EntityFunctions<TEntity, TID>,
@@ -24,15 +25,17 @@ export interface EntityListProps<TEntity, TID> {
     Form?: FunctionComponent<EntityFormProps<TEntity>>,
     additionalActions?: (ctx: CellContext<TEntity, unknown>) => ReactNode,
     version?: number,
+    defaultSort?: SortOrder[]
 }
 
 export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
-    const {functions, columns, i18nKey, Form, additionalActions, updateViewConfig} = props;
+    const {functions, columns, i18nKey, Form, additionalActions, updateViewConfig, defaultSort} = props;
 
     const [version, setVersion] = useState<number>(0)
     const [data, setData] = useState<TableData<TEntity>>({
         data: [],
         page: 0,
+        pages: 0,
         total: 0,
     });
 
@@ -58,6 +61,7 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
         functions.list(query)
             .then(page => setData({
                 page: page.page,
+                pages: page.totalPages,
                 total: page.totalElements,
                 data: page.data,
             }))
@@ -150,6 +154,7 @@ export function EntityList<TEntity, TID>(props: EntityListProps<TEntity, TID>) {
                     <DataTable pagination={true}
                                version={version}
                                data={data}
+                               defaultSortOrder={defaultSort}
                                columns={actualColumns}
                                update={update}
                                pinned={["actions"]}/>

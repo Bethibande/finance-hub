@@ -28,6 +28,7 @@ export interface DataQuery {
 export interface TableData<TData> {
     data: TData[],
     page: number,
+    pages: number,
     total: number,
 }
 
@@ -217,7 +218,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                         </Button>
                         <Button onClick={() => changePage(data.page + 1, sorting)}
                                 variant={"outline"}
-                                disabled={data.page + 1 >= Math.ceil(data.total / data.data.length)}>
+                                disabled={data.page + 1 >= data.pages}>
                             {i18next.t("table.next")}
                         </Button>
                     </div>

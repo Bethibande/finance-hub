@@ -133,6 +133,7 @@ export function BookedAmountsDialog(props: BookedAmountsDialogProps) {
     const [data, setData] = useState<TableData<BookedAmountDTO>>({
         data: [],
         page: 0,
+        pages: 0,
         total: 0
     })
 
@@ -140,7 +141,7 @@ export function BookedAmountsDialog(props: BookedAmountsDialogProps) {
     function updateTable(query: DataQuery) {
         functions
             .list(query)
-            .then(res => setData({data: res.data, page: res.page, total: res.totalElements}))
+            .then(res => setData({data: res.data, page: res.page, pages: res.totalPages, total: res.totalElements}))
             .catch(showError);
     }
 

@@ -1,4 +1,4 @@
-import type {DataQuery} from "@/components/data-table.tsx";
+    import type {DataQuery} from "@/components/data-table.tsx";
 import type {PagedResponse} from "@/lib/types.ts";
 
 export interface EntityFunctions<TEntity, TID> {

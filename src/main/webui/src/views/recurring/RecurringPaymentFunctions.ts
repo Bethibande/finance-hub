@@ -7,5 +7,5 @@ export const RecurringPaymentFunctions: EntityFunctions<RecurringPaymentDTO, num
     list: listV2(RecurringPaymentApi.apiV2RecurringWorkspaceIdGet.bind(RecurringPaymentApi)),
     delete: (id) => RecurringPaymentApi.apiV2RecurringIdDelete({id}),
     toId: e => e.id!,
-    format: e => e.name,
+    format: e => e.name!,
 }

@@ -54,7 +54,7 @@ export function AssetForm(props: EntityFormProps<AssetDTO>) {
                 assetDTOWithoutId: {...data, providerId: data.providerId || undefined, workspaceId: workspace.id!}
             }).then(onSubmit).catch(showError)
         } else {
-            new AssetEndpointApi().apiV2AssetPatch({
+            new AssetEndpointApi().apiV2AssetPut({
                 assetDTOWithoutWorkspace: {...data, providerId: data.providerId || undefined, id: entity.id}
             }).then(onSubmit).catch(showError)
         }

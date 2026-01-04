@@ -32,7 +32,7 @@ export function RecurringPaymentsView() {
         {
             id: "amount",
             header: i18next.t("recurring.amount"),
-            cell: ({row}) => renderAmount(row.original.amount),
+            cell: ({row}) => renderAmount(row.original.amount!),
             accessorKey: "amount",
             enableSorting: true,
         },

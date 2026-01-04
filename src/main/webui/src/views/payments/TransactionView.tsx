@@ -22,8 +22,8 @@ import {BookedAmountForm} from "@/views/payments/BookedAmountForm.tsx";
 export function deflate(dto: TransactionDTOExpanded): TransactionDTOWithoutBookedAmounts {
     return {
         ...dto,
-        assetId: dto.asset?.id!,
-        walletId: dto.wallet?.id!,
+        assetId: dto.asset!.id!,
+        walletId: dto.wallet!.id!,
         partnerId: dto.partner?.id,
     }
 }
@@ -105,7 +105,7 @@ export function TransactionView() {
 
     function complete() {
         if (bookedAmountStatus) {
-            TransactionAPI.apiV2TransactionPatch({
+            TransactionAPI.apiV2TransactionPut({
                 transactionDTOWithoutWorkspaceAndBookedAmounts: {
                     ...deflate(bookedAmountStatus),
                     status: TransactionStatus.Closed,
@@ -131,6 +131,12 @@ export function TransactionView() {
             <EntityList functions={TransactionFunctions}
                         columns={columns}
                         version={version}
+                        defaultSort={[
+                            {
+                                field: "date",
+                                direction: "Ascending"
+                            }
+                        ]}
                         additionalActions={({row}) => (
                             <>
                                 <DropdownMenuItem onClick={() => {

@@ -72,7 +72,7 @@ const router = createBrowserRouter([{
 
 function App() {
     return (
-        <div className={"bg-muted w-full h-full"}>
+        <div className={"bg-muted w-full h-full flex"}>
             <ViewConfigProvider>
                 <RouterProvider router={router}>
 

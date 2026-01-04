@@ -26,7 +26,7 @@ export default function MainLayout() {
     return (
         <SidebarProvider>
             <AppSidebar/>
-            <main className={"w-full h-full"}>
+            <main className={"w-full flex flex-col overflow-hidden"}>
                 <MainLayoutToolbar/>
                 <div className={"w-full h-full p-5 overflow-y-auto"}>
                     <Outlet/>
