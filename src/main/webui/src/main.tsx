@@ -101,6 +101,7 @@ i18next.init({
                 "recurring.forceOverwrite.title": "Force update payments",
                 "recurring.forceOverwrite": "Force update payments",
                 "recurring.forceOverwrite.description": "This will overwrite all future payments for this item, including payments you edited. Payments with booked amounts or payments in the past won't be modified.",
+                "JobType.update_recurring_payments": "Update recurring payments task",
                 "RecurringPaymentStatus.ACTIVE": "Active",
                 "RecurringPaymentStatus.SUSPENDED": "Suspended",
                 "RecurringPaymentStatus.EXPIRED": "Expired",

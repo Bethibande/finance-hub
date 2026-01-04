@@ -148,7 +148,9 @@ public class RecurringPayment extends AbstractPayment implements EntitySource {
             payments.add(createPaymentAt(currentDate.toInstant()));
         }
 
-        if (updateLastTransactionDate && (lastTransactionDate == null || payments.getLast().date.isAfter(this.lastTransactionDate))) {
+        if (updateLastTransactionDate
+                && !payments.isEmpty()
+                && (lastTransactionDate == null || payments.getLast().date.isAfter(this.lastTransactionDate))) {
             this.lastTransactionDate = payments.getLast().date;
         }
 

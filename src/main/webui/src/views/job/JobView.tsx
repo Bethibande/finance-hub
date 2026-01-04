@@ -56,7 +56,7 @@ export function JobView() {
 
     const AdditionalActions: (ctx: CellContext<JobDTO, unknown>) => ReactNode = ({row}) => (
         <DropdownMenuItem onClick={() => {
-            JobAPI.apiV2JobPatch({
+            JobAPI.apiV2JobPut({
                 jobDTOWithoutWorkspace: {...row.original, nextScheduledExecution: new Date()}
             }).then(() => setVersion(version + 1)).catch(showError)
         }}>

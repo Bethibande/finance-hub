@@ -1,10 +1,17 @@
 package de.bethibande.finance.jobs;
 
+import com.cronutils.model.Cron;
+import com.cronutils.model.definition.CronDefinition;
+import com.cronutils.model.time.ExecutionTime;
+import com.cronutils.parser.CronParser;
 import de.bethibande.finance.model.jpa.Job;
+import de.bethibande.finance.model.jpa.Workspace;
+import de.bethibande.finance.model.jpa.recurring.RecurringPayment;
 import org.slf4j.Logger;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.concurrent.Executor;
 
 public class JobContext<C> {
@@ -31,6 +38,14 @@ public class JobContext<C> {
         this.logger = logger;
     }
 
+    public void reschedule(final String cronExpression) {
+        final CronDefinition def = RecurringPayment.cronDefinition();
+        final Cron cron = new CronParser(def).parse(cronExpression);
+        final ExecutionTime time = ExecutionTime.forCron(cron);
+
+        reschedule(time.nextExecution(ZonedDateTime.now()).orElseThrow().toInstant());
+    }
+
     public void reschedule(final Instant nextExecution) {
         scheduler.schedule(job, nextExecution);
     }
@@ -41,6 +56,10 @@ public class JobContext<C> {
 
     public boolean isActive() {
         return runner.isActive(this);
+    }
+
+    public Workspace getWorkspace() {
+        return job.workspace;
     }
 
     public C getConfig() {
