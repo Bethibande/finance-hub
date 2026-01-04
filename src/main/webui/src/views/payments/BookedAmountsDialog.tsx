@@ -69,11 +69,11 @@ export function BookedAmountsDialog(props: BookedAmountsDialogProps) {
                         <Button variant={"secondary"}><ThreeDots/></Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => {
+                        <DropdownMenuItem disabled={transaction.status !== TransactionStatus.Open} onClick={() => {
                             setEditDialogEntity(row.original)
                             setEditDialogState(EntityDialogState.Editing)
                         }}>{i18next.t("edit")}</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {
+                        <DropdownMenuItem disabled={transaction.status !== TransactionStatus.Open} onClick={() => {
                             setEditDialogEntity(row.original)
                             setDeleteDialogOpen(true)
                         }} variant={"destructive"}>{i18next.t("delete")}</DropdownMenuItem>
