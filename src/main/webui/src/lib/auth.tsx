@@ -2,7 +2,7 @@ import {createContext, type ReactNode, useContext, useEffect, useState} from "re
 import {fetchClient} from "./api.ts";
 import {showError, showErrorMessage} from "./errors.tsx";
 import i18next from "i18next";
-import {AuthEndpointApi, type UserDTOWithoutPassword} from "@/generated";
+import {AuthEndpointApi, ResponseError, type UserDTOWithoutPassword} from "@/generated";
 
 export interface LoginResult {
     user?: UserDTOWithoutPassword;
@@ -10,22 +10,24 @@ export interface LoginResult {
 }
 
 async function login(username: string, password: string): Promise<LoginResult> {
-    const response = await new AuthEndpointApi().authLoginPostRaw({
-        credentials: {
-            username: username,
-            password: password
+    try {
+        const response = await new AuthEndpointApi().authLoginPostRaw({
+            credentials: {
+                username: username,
+                password: password
+            }
+        });
+
+        const user = (await response.raw.json()) as UserDTOWithoutPassword;
+        console.log("Logged in as " + user.name)
+        return {user};
+    } catch (e) {
+        if (e instanceof ResponseError) {
+            console.error('Login failed:', e.response.status);
+            return {user: undefined, error: e.response};
         }
-    });
-
-    if (!response.raw.ok) {
-        // Handle HTTP error (e.g. 401)
-        console.error('Login failed:', response.raw.status);
-        return {user: undefined, error: response.raw};
+        return {user: undefined, error: undefined};
     }
-
-    const user = (await response.raw.json()) as UserDTOWithoutPassword;
-    console.log("Logged in as " + user.name)
-    return {user};
 }
 
 async function logout() {
