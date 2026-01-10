@@ -15,12 +15,12 @@ import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "../ui/collaps
 import {Cash, ChevronDown, ClipboardData, Database, Sliders} from "react-bootstrap-icons";
 import {NavLink} from "react-router";
 import {cn} from "@/lib/utils.ts";
-import WorkspaceSelect from "./workspace-select.tsx";
 import UserItem from "./user-item.tsx";
 import {Separator} from "../ui/separator.tsx";
 import {useAuth} from "../../lib/auth.tsx";
 import type {UserDTOWithoutPassword} from "@/generated";
 import {Role} from "@/lib/types.ts";
+import WorkspaceSelect from "@/components/navigation/workspace/workspace-select.tsx";
 
 export interface NavItem {
     text: string;
